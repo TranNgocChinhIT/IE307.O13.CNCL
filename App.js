@@ -16,13 +16,16 @@ import React, { useState } from 'react';
 // 2. Một hàm để cập nhập giá trị
 // của biến và kích hoạt re-render
 
+
+//21521892 -Trần Ngọc Chinh
+
 const postsData = [
     {
         id: 1,
         avatar: require('./assets/leonui.jfif'),
-        username: 'Traveler',
-        text: 'Exploring... 😀 😃',
-        image: './assets/bgsea.jpg',
+        username: 'Ngọc Chinh',
+        text: 'Leo núi nè... 😀 😃',
+        image: 'https://vcdn1-ngoisao.vnecdn.net/2016/07/29/nui2-6373-1469791654.jpg?w=1200&h=0&q=100&dpr=1&fit=crop&s=W4EtcepKgiT3YFIzru6-pA',
         likes: 123,
         comments: 456,
         shares: 789,
@@ -31,9 +34,9 @@ const postsData = [
     {
         id: 2,
         avatar: require('./assets/sea.jfif'),
-        username: 'Traveler 2',
-        text: 'Exploring 2... 😀 😃',
-        image: './assets/sea.jfif',
+        username: 'Minh Huy',
+        text: 'Halo :))',
+        image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTwhiYYvhaeyCQE2qpv7BA0szEiO1fRr_7Qhg&usqp=CAU',
         likes: 164,
         comments: 356,
         shares: 168,
@@ -42,9 +45,9 @@ const postsData = [
     {
         id: 3,
         avatar: require('./assets/phongcanh3.jpg'),
-        username: 'Traveler 3',
-        text: 'Exploring 3... 😀 😃',
-        image: './assets/phongcanh2.jfif',
+        username: 'Thế Cường',
+        text: 'Xia xìa',
+        image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtBe1M6eolla2M8DW7HUGyUTbAdapJa_QUig&usqp=CAU',
         likes: 222,
         comments: 333,
         shares: 444,
@@ -53,9 +56,9 @@ const postsData = [
     {
         id: 4,
         avatar: require('./assets/phongcanh2.jfif'),
-        username: 'Traveler 4',
-        text: 'Exploring 4... 😀 😃',
-        image: './assets/phongcanh3.jpg',
+        username: 'Le Dung',
+        text: 'Xăm bai đi kha',
+        image: 'https://image.vtc.vn/files/ctv.kinhte/2019/08/06/biet_thu2-1512428.jpg',
         likes: 987,
         comments: 9876,
         shares: 111,
@@ -120,7 +123,7 @@ const Demo06_10 = () => {
 
     return (
       // <Lab1_2 />
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
             {posts.map((post) => (
                 <View style={styles.post} key={post.id}>
                     <View style={styles.postHeader}>
@@ -181,7 +184,7 @@ const Demo06_10 = () => {
                     </View>
                 </View>
             ))}
-        </View>
+        </ScrollView>
     );
 };
 
