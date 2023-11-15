@@ -1,7 +1,7 @@
 import React,{useState} from "react";
 import { View, Text,Alert, Image, StyleSheet,Switch,TextInput,Button } from "react-native";
 
-
+//jjj
 const App = () => {
   const [darkMode, setDarkMode] = useState(false);
   const [notifications, setNotifications] = useState(true);
