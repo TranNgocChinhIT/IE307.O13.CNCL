@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-
+//chinh
 import { Text, View, StyleSheet, TouchableOpacity, ScrollView, StatusBar, FlatList, Dimensions, Image, ImageBackground } from 'react-native';
 import ShowListHeader from '../component/ShowListHeader';
 import { dataNowMovieList } from '../data/dataNowMovieList';
