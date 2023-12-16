@@ -3,8 +3,16 @@ export const dataNowMovieList = [
         id: 1,
         title: "NGƯỜI VỢ CUỐI CÙNG",
         imagePath:"https://cinematone.info/public/poster-22/230718142724_Nguoi-Vo-Cuoi-Cung_oDHM8.jpg",
+        backdrop_path:"https://media.viez.vn/prod/2023/10/17/large_NVCC_Offical_Digital_f5a6e1254c.jpg",
         evaluate:9.1,
         time: "2hrs 12mins",
+        date: "03/11/2023",
+        content:"Lấy cảm hứng từ tiểu thuyết Hồ Oán Hận, của nhà văn Hồng Thái, Người Vợ Cuối Cùng là một bộ phim tâm lý cổ trang, lấy bối cảnh Việt Nam vào triều Nguyễn.LINH - Người vợ bất đắc dĩ của một viên quan tri huyện, xuất thân là con của một gia đình nông dân nghèo khó, vì không thể hoàn thành nghĩa vụ sinh con nối dõi nên đã chịu sự chèn ép của những người vợ lớn trong gia đình. Sự gặp gỡ tình cờ của cô và người yêu thời thanh mai trúc mã của mình - NH N đã dẫn đến nhiều câu chuyện bất ngờ xảy ra khiến cuộc sống cô hoàn toàn thay đổi.",
+        gendre:"Tâm lý, Tình cảm",
+        director:"Victor Vũ",
+        language:"Tiếng Viêt - Phụ Đề Tiếng Anh",
+        cast:"f",
+
     },
     {
         id:2,
@@ -40,5 +48,12 @@ export const dataNowMovieList = [
         imagePath: "https://rapchieuphim.com/photos/movie/nam-dem-kinh-hoang-poster.jpg",
         evaluate:7.4,
         time: "2hrs 05mins",
+    },
+    {
+        id:7,
+        title: "DORAEMON: NOBITA VÀ NHỮNG CHÚ BẠN KHỦNG LONG",
+        imagePath: "https://thuonghieuvaphapluat.vn/Images/Hanhnm/2020/12/01/Doraemon-Nobita-(6).jpg",
+        evaluate:10,
+        time: "1hrs 35mins",
     },
 ];

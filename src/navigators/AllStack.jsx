@@ -2,25 +2,26 @@ import React from "react";
 import { Text, View, StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import Home from "../Screens/Home";
-import Movie from "../Screens/Movie";
+import HomeStack from "../navigators/Home";
+import MovieScreen from "../Screens/Movie";
 import Seats from "../Screens/Seats";
 const Stack = createNativeStackNavigator();
+//adsdasdadsdasd
 const AllStack = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen
-        name="Home"
-        component={Home}
-        options={{ animation: "default"}}
+        name="HomeStack"
+        component={HomeStack}
+        options={{ animation: "default" }}
       />
       <Stack.Screen
-        name="Movie"
-        component={Movie}
+        name="MovieScreen"
+        component={MovieScreen}
         options={{ animation: "slide_from_right" }}
       />
       <Stack.Screen
-        name="Seats"
+        name="SeatsScreen"
         component={Seats}
         options={{ animation: "slide_from_bottom" }}
       />
