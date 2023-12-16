@@ -1,7 +1,4 @@
 import React, { useEffect, useState } from 'react';
-//chinh
-//cuong
-//test
 import { Text, View, StyleSheet, TouchableOpacity, ScrollView, StatusBar, FlatList, Dimensions, Image, ImageBackground } from 'react-native';
 import ShowListHeader from '../component/ShowListHeader';
 import { dataNowMovieList } from '../data/dataNowMovieList';
@@ -9,6 +6,8 @@ import { dataHeaderAdvertisement } from '../data/dataHeaderAdvertisement';
 import Casousel from 'react-native-snap-carousel';
 const { width: screenWidth } = Dimensions.get('window')
 import { useNavigation } from '@react-navigation/native';
+
+
 const Home = () => {
     const navigation = useNavigation();
     const sliderWidth = screenWidth;
@@ -19,7 +18,7 @@ const Home = () => {
 
         <View style={styles.itemContainer}>
             <TouchableOpacity 
-            onPress={() => navigation.navigate('Movie', { note: item })}
+            onPress={() => navigation.navigate("MovieScreen", { note: item })}
             >
                 <Image source={{ uri: item.imagePath }} style={styles.itemImg}></Image>
             </TouchableOpacity>
