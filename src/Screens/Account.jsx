@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, Button } from 'react-native';
 import React, { useContext } from 'react';
-import {AuthContext} from './AuthContext';
+import {AuthContext} from '../navigators/AuthContext';
 
 const Account = () => {
   const {setisAuthenticated} = useContext(AuthContext);

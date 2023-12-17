@@ -8,8 +8,8 @@ const { width: screenWidth } = Dimensions.get('window')
 import { useNavigation } from '@react-navigation/native';
 import MovieScreen from "./Movie";
 
-const Home = () => {
-    const navigation = useNavigation();
+const Home = ({navigation}) => {
+  //  const navigation = useNavigation();
     const sliderWidth = screenWidth;
     const itemWidth = screenWidth * 0.67;
     const itemWidthHeader = screenWidth * 0.8;
@@ -18,7 +18,7 @@ const Home = () => {
 
         <View style={styles.itemContainer}>
             <TouchableOpacity 
-            onPress={() => navigation.navigate("MovieScreen", { note: item })}
+            onPress={() => navigation.navigate('Movie', { note: item })}
             >
                 <Image source={{ uri: item.imagePath }} style={styles.itemImg}></Image>
             </TouchableOpacity>
