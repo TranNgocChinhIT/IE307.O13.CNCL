@@ -36,6 +36,7 @@ const Seats = ({navigation}) => {
     const [twoDSeatArray, setTwoDSeatArray] = useState(generateSeats());
     const [selectedSeatArray, setSelectedSeatArray] = useState([]);
 
+    const {  selectedDate: routeSelectedDate } = route.params; // Đổi tên selectedDate thành routeSelectedDate
 
     console.log(JSON.stringify(twoDSeatArray, null, 2));
     const selectSeat = (index, subindex, num) => {
