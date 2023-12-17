@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {  useRoute } from '@react-navigation/native';
 import { Text, View, StyleSheet, ScrollView, ImageBackground, Image, TouchableOpacity } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-
+import { useNavigation } from '@react-navigation/native';
 
 const Movie = () => {
     const navigation = useNavigation();
