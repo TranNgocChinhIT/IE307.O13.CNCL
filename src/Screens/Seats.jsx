@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { Text, View, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
 const timeArray = [
     '10:30',
@@ -55,34 +55,48 @@ const generateSeats = () => {
     return rowArray;
 };
 
-const selectSeat = (rowIndex, columnIndex, seatNumber) => {
-    // Copy array để tránh thay đổi trực tiếp state
-    let newSeatArray = [...twoDSeatArray];
-    newSeatArray[rowIndex][columnIndex].selected = !newSeatArray[rowIndex][columnIndex].selected;
 
-    // Cập nhật state với mảng ghế mới
-    setTwoDSeatArray(newSeatArray);
-
-    // Thực hiện các bước khác, như cập nhật giá vé
-    // ...
-};
 
 
 const Seats = () => {
 
+    const route = useRoute();
+    const { note } = route.params;
     const [dateArray, setDateArray] = useState(generateDate());
 
     const [selectedDateIndex, setSelectedDateIndex] = useState();
     const [price, setPrice] = useState(0);
 
+    const [totalSeats, setTotalSeats] = useState(0);
     const [twoDSeatArray, setTwoDSeatArray] = useState(generateSeats());
     const [selectedSeatArray, setSelectedSeatArray] = useState([]);
     const [selectedTimeIndex, setSelectedTimeIndex] = useState();
 
     console.log(JSON.stringify(twoDSeatArray, null, 2));
-    //generateDate();
+    const selectSeat = (index, subindex, num) => {
+        if (!twoDSeatArray[index][subindex].taken) {
+          let array = [...selectedSeatArray];
+          let temp = [...twoDSeatArray];
+          temp[index][subindex].selected = !temp[index][subindex].selected;
+      
+          if (!array.includes(num)) {
+            array.push(num);
+            setSelectedSeatArray(array);
+          } else {
+            const tempindex = array.indexOf(num);
+            if (tempindex > -1) {
+              array.splice(tempindex, 1);
+              setSelectedSeatArray(array);
+            }
+          }
+      
+          setPrice(array.length * 45.0);
+          setTotalSeats(array.length*1);
+          setTwoDSeatArray(temp);
+        }
+      };
     return (
-        <View style={{flex:1}}>
+        <View style={{flex:1,backgroundColor:'black'}}>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.container}>
             <ScrollView style={{ flexDirection: 'column' }}>
                 <View style={{ flexDirection: 'column' }}>
@@ -110,7 +124,7 @@ const Seats = () => {
                                                             selectSeat(index, subindex, subitem.number);
                                                         }}
                                                     >
-                                                        <View style={[styles.square, { backgroundColor: subitem.taken ? 'white' : '#FF3333' }]}>
+                                                        <View style={[styles.square, subitem.taken?{backgroundColor:'white'}:{},subitem.selected?{backgroundColor:'orange'}:{},]}>
                                                             <Text style={styles.txtSeat}>
                                                                 {subitem.number}
 
@@ -141,9 +155,28 @@ const Seats = () => {
                 </View>
             </ScrollView>
         </ScrollView >
-        <View style={{backgroundColor:'white',flex:0.12}}>
+        <View style={{backgroundColor:'white',flex:0.12,borderRadius: 15,borderWidth: 1, borderColor: 'black' }}>
+       
+            <View style={{flexDirection:'row'}}>
+                <View style={{flexDirection:'column',marginTop:15, marginLeft:10}}>
+                    <Text style={{ fontWeight:'bold',fontSize:14, }}>
+                        {note.title}
+                    </Text>
+                    <Text style={{ fontSize:15, }}>
+                        {price}.000 đ
+                    </Text>
+                    <Text style={{ fontSize:15, }}>
+                        {totalSeats} seats
 
-
+                    </Text>
+                </View>
+               
+                <TouchableOpacity style={styles.button}>
+                    <Text style={styles.textButton}>
+                        BOOK NOW
+                    </Text>
+                </TouchableOpacity>
+            </View>
         </View>
 
         </View>
@@ -163,7 +196,7 @@ const styles = StyleSheet.create({
     },
     square: {
         width: 30, 
-        height: 30, 
+        height:30, 
         backgroundColor: '#FF3333', 
     },
     seatContainer: {
@@ -225,13 +258,31 @@ const styles = StyleSheet.create({
     square3: {
         width: 30, 
         height: 30, 
-        backgroundColor: 'gray', 
+        backgroundColor: 'orange', 
         marginHorizontal:10,
     },
     noteSeats:{
         color:'brown',
         fontSize:20,
         fontWeight:'bold',
+    },
+    button:{
+        backgroundColor: '#FF3333',
+        width: 130,
+        height: 40,
+        borderRadius:25,
+       marginLeft:70,
+        marginTop:20,
+        justifyContent: 'flex-start',
+      
+    },
+    textButton:{
+        fontWeight:'bold',
+        fontSize:18,
+        color:'white',
+        justifyContent:'center',
+        alignSelf:'center',
+        marginTop:7,
     }
 });
 
