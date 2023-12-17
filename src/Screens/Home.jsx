@@ -7,7 +7,7 @@ import Casousel from 'react-native-snap-carousel';
 const { width: screenWidth } = Dimensions.get('window')
 import { useNavigation } from '@react-navigation/native';
 import MovieScreen from "./Movie";
-
+import LocationAndTime from './LocationAndTime';
 const Home = ({navigation}) => {
   //  const navigation = useNavigation();
     const sliderWidth = screenWidth;
@@ -38,7 +38,7 @@ const Home = ({navigation}) => {
             <Text style={{ color: 'white', marginLeft: 2, fontWeight: 'bold' }}>{item.title}</Text>
             <TouchableOpacity
             style={styles.buttonBook}
-            onPress={() => navigation.navigate('Seats', { note: item })}
+            onPress={() => navigation.navigate('LocationAndTime', { note: item })}
             >
                 
                     <Text style={styles.overlayText}>BOOK</Text>

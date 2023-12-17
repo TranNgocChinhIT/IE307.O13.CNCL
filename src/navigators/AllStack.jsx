@@ -5,6 +5,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import HomeStack from "./HomeStack";
 import Movie from "../Screens/Movie";
 import Seats from "../Screens/Seats";
+import LocationAndTime from "../Screens/LocationAndTime";
 const Stack = createNativeStackNavigator();
 
 
@@ -19,6 +20,11 @@ const AllStack = () => {
       <Stack.Screen
         name="Movie"
         component={Movie}
+        options={{ animation: "slide_from_right" }}
+      />
+      <Stack.Screen
+        name="LocationAndTime"
+        component={LocationAndTime}
         options={{ animation: "slide_from_right" }}
       />
       <Stack.Screen

@@ -1,28 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { Text, View, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
-const timeArray = [
-    '10:30',
-    '12:30',
-    '14:30',
-    '15:00',
-    '19:30',
-    '21:00',
-];
-const generateDate = () => {
-    const date = new Date();
-    let weekday = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    let weekdays = [];
-    for (let i = 0; i < 7; i++) {
-        let tempDate = {
-            date: new Date(date.getTime() + i * 24 * 60 * 60 * 1000).getDate(),
-            day: weekday[new Date(date.getTime() + i * 24 * 60 * 60 * 1000).getDay()],
-        };
-        weekdays.push(tempDate);
-    }
-    console.log(weekdays);
-    return weekdays;
-};
+
+
 const generateSeats = () => {
     let numRow = 8;
     let numColumn = 12;
@@ -41,36 +21,21 @@ const generateSeats = () => {
             columnArray.push(seatObject);
             start++;
         }
-        // if (i == 3) {
-        //     numColumn += 2;
-        // }
-        // if (numColumn < 10 && !reachnine) {
-        //     numColumn += 2;
-        // } else {
-        //     reachnine = true;
-        //     numColumn -= 2;
-        // }
         rowArray.push(columnArray);
     }
     return rowArray;
 };
-
-
-
-
 const Seats = () => {
 
     const route = useRoute();
     const { note } = route.params;
-    const [dateArray, setDateArray] = useState(generateDate());
-
-    const [selectedDateIndex, setSelectedDateIndex] = useState();
+   
     const [price, setPrice] = useState(0);
 
     const [totalSeats, setTotalSeats] = useState(0);
     const [twoDSeatArray, setTwoDSeatArray] = useState(generateSeats());
     const [selectedSeatArray, setSelectedSeatArray] = useState([]);
-    const [selectedTimeIndex, setSelectedTimeIndex] = useState();
+
 
     console.log(JSON.stringify(twoDSeatArray, null, 2));
     const selectSeat = (index, subindex, num) => {
