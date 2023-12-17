@@ -2,11 +2,12 @@ import React from "react";
 import { Text, View, StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import HomeStack from "../navigators/Home";
-import MovieScreen from "../Screens/Movie";
+import HomeStack from "./HomeStack";
+import Movie from "../Screens/Movie";
 import Seats from "../Screens/Seats";
 const Stack = createNativeStackNavigator();
-//adsdasdadsdasd
+
+
 const AllStack = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
@@ -16,17 +17,17 @@ const AllStack = () => {
         options={{ animation: "default" }}
       />
       <Stack.Screen
-        name="MovieScreen"
-        component={MovieScreen}
+        name="Movie"
+        component={Movie}
         options={{ animation: "slide_from_right" }}
       />
       <Stack.Screen
-        name="SeatsScreen"
+        name="Seats"
         component={Seats}
         options={{ animation: "slide_from_bottom" }}
       />
     </Stack.Navigator>
-  );
+    );
 };
 const style = StyleSheet.create({
   container: {},

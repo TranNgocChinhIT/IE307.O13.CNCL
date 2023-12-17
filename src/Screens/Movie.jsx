@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { Text, View, StyleSheet, ScrollView, ImageBackground, Image, TouchableOpacity } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import { useNavigation } from '@react-navigation/native';
 
-const MovieScreen = () => {
+
+const Movie = () => {
     const navigation = useNavigation();
     const route = useRoute();
     const { note } = route.params;
@@ -98,7 +98,7 @@ const MovieScreen = () => {
 
         </ScrollView>
         <TouchableOpacity style={styles.button}
-        onPress={() => navigation.navigate('SeatsScreen', { note })}
+        onPress={() => navigation.navigate('Seats', { note })}
         >
             <Text style={styles.textButton}>BOOK NOW</Text>
         </TouchableOpacity>
@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
     },
     title: {
         color: 'white',
-        fontWeigh: 'bold',
+        fontWeight: 'bold',
         marginTop: 10,
         alignSelf: 'center',
         fontSize: 18,
@@ -209,4 +209,4 @@ const styles = StyleSheet.create({
       }
 });
 
-export default MovieScreen;
+export default Movie;
