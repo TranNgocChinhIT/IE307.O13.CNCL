@@ -25,7 +25,7 @@ const generateSeats = () => {
     }
     return rowArray;
 };
-const Seats = () => {
+const Seats = ({navigation}) => {
 
     const route = useRoute();
     const { note } = route.params;
@@ -136,9 +136,11 @@ const Seats = () => {
                     </Text>
                 </View>
                
-                <TouchableOpacity style={styles.button}>
+                <TouchableOpacity style={styles.button}
+                onPress={() => navigation.navigate('PayScreens', { note })}
+                >
                     <Text style={styles.textButton}>
-                        BOOK NOW
+                    BOOK NOW
                     </Text>
                 </TouchableOpacity>
             </View>

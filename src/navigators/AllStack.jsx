@@ -6,6 +6,7 @@ import HomeStack from "./HomeStack";
 import Movie from "../Screens/Movie";
 import Seats from "../Screens/Seats";
 import LocationAndTime from "../Screens/LocationAndTime";
+import PayScreens from "../Screens/PayScreens";
 const Stack = createNativeStackNavigator();
 
 
@@ -31,6 +32,11 @@ const AllStack = () => {
         name="Seats"
         component={Seats}
         options={{ animation: "slide_from_bottom" }}
+      />
+      <Stack.Screen
+        name="PayScreens"
+        component={PayScreens}
+        options={{ animation: "slide_from_right" }}
       />
     </Stack.Navigator>
     );
