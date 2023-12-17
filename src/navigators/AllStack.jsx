@@ -2,7 +2,7 @@ import React from "react";
 import { Text, View, StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import HomeStack from "../navigators/Home";
+import HomeStack from "../navigators/HomeStack";
 import MovieScreen from "../Screens/Movie";
 import Seats from "../Screens/Seats";
 const Stack = createNativeStackNavigator();

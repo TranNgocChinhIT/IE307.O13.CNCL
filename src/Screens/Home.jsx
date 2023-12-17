@@ -6,7 +6,7 @@ import { dataHeaderAdvertisement } from '../data/dataHeaderAdvertisement';
 import Casousel from 'react-native-snap-carousel';
 const { width: screenWidth } = Dimensions.get('window')
 import { useNavigation } from '@react-navigation/native';
-
+import MovieScreen from "./Movie";
 
 const Home = () => {
     const navigation = useNavigation();
