@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { Text, View, StyleSheet, ScrollView, TouchableOpacity, Image, FlatList, ToastAndroid, } from 'react-native';
-
+import * as SecureStore from 'expo-secure-store';
 
 const timeArray = [
     '10:30',
@@ -58,10 +58,10 @@ const LocationAndTime = ({ navigation, route }) => {
     const [selectedMonth, setSelectedMonth] = useState(currentMonth);
     const [selectedYear, setSelectedYear] = useState(currentYear);
     const [cinemaArray, setCinemaArray] = useState(CINEMA_DATA)
-    const { note, selectedDate: routeSelectedDate } = route.params; // Đổi tên selectedDate thành routeSelectedDate
-
+   // const { note, selectedDate: routeSelectedDate } = route.params; // Đổi tên selectedDate thành routeSelectedDate
+    const [ticketData, setTicketData] = useState(route.params);
     const [selectedCinemaTimings, setSelectedCinemaTimings] = useState([]);
-
+    const { note } = route.params;
     const selectedDate = selectedDateIndex !== undefined ? dateArray[selectedDateIndex] : null;
 
     const [showTimings, setShowTimings] = useState(false);
@@ -92,44 +92,45 @@ const LocationAndTime = ({ navigation, route }) => {
     };
     const BookSeats = async () => {
         if (
-            //selectedSeatArray.length !== 0 &&
-            timeArray[selectedTimeIndex] !== undefined &&
-            dateArray[selectedDateIndex] !== undefined
+          //selectedSeatArray.length !== 0 &&
+          timeArray[selectedTimeIndex] !== undefined &&
+          dateArray[selectedDateIndex] !== undefined
         ) {
-            try {
-                await EncryptedStorage.setItem(
-                    'ticket',
-                    JSON.stringify({
-                        // seatArray: selectedSeatArray,
-                        time: timeArray[selectedTimeIndex],
-                        date: dateArray[selectedDateIndex],
-                        month: selectedMonth,
-                        year: selectedYear,
-                        ticketImage: route.params.PosterImage,
-                    }),
-                );
-            } catch (error) {
-                console.error(
-                    'Something went Wrong while storing in BookSeats Functions',
-                    error,
-                );
-            }
-            navigation.navigate('PayScreens', {
+          try {
+            await SecureStore.setItemAsync(
+              'ticket',
+              JSON.stringify({
                 // seatArray: selectedSeatArray,
                 time: timeArray[selectedTimeIndex],
                 date: dateArray[selectedDateIndex],
                 month: selectedMonth,
                 year: selectedYear,
+                note:note,
                 ticketImage: route.params.PosterImage,
-            });
-        } else {
-            ToastAndroid.showWithGravity(
-                'Please Select Seats, Date and Time of the Show',
-                ToastAndroid.SHORT,
-                ToastAndroid.BOTTOM,
+              })
             );
+          } catch (error) {
+            console.error('Something went Wrong while storing in BookSeats Functions', error);
+          }
+          navigation.navigate('Seats', {
+            // seatArray: selectedSeatArray,
+            time: timeArray[selectedTimeIndex],
+            date: dateArray[selectedDateIndex],
+            month: selectedMonth,
+            year: selectedYear,
+            note:note,
+            ticketImage: route.params.PosterImage,
+            
+          });
+        } else {
+          ToastAndroid.showWithGravity(
+            'Please Select Seats, Date and Time of the Show',
+            ToastAndroid.SHORT,
+            ToastAndroid.BOTTOM
+          );
         }
-    };
+      };
+      
 
     return (
         <View style={styles.container}>
@@ -174,6 +175,9 @@ const LocationAndTime = ({ navigation, route }) => {
                     />
                 </View>
                 <View style={styles.pickDateContainer}>
+                <Text style={styles.pickDate}>
+                        {note.title}
+                    </Text>
                     <Text style={styles.pickDate}>
                         {selectedDate ? formatDate(selectedDate.date, currentMonth, currentYear) : ''}
                     </Text>
@@ -232,6 +236,31 @@ const LocationAndTime = ({ navigation, route }) => {
                     />
 
                 </View>
+                <View style={styles.timingsContainer}>
+
+                        <FlatList
+                            data={timeArray}
+                            keyExtractor={(item) => item}
+                            horizontal
+                            bounces={false}
+                            contentContainerStyle={styles.margin}
+                            renderItem={({ item, index }) => {
+                                return (
+                                    <TouchableOpacity onPress={() => setSelectedTimeIndex(index)}>
+                                        <View
+                                            style={[
+                                                styles.timeContainer2,
+                                                index === 0 ? { marginLeft: 24 } : index === dateArray.length - 1 ? { marginRight: 24 } : {},
+                                                index === selectedTimeIndex ? { backgroundColor: 'orange' } : {},
+                                            ]}
+                                        >
+                                            <Text style={styles.timeText}>{item}</Text>
+                                        </View>
+                                    </TouchableOpacity>
+                                );
+                            }}
+                        />
+                    </View>
             </View>
             <View style={{ backgroundColor: 'white', flex: 0.1, borderRadius: 35, borderWidth: 1, borderColor: 'black' }}>
 
@@ -319,7 +348,7 @@ const styles = StyleSheet.create({
         fontSize: 18,
     },
     inforDate: {
-        // color: 'white',
+
         fontSize: 18,
     },
     separator: {
@@ -333,7 +362,7 @@ const styles = StyleSheet.create({
     pickTime: {
         alignItems: 'center',
         // justifyContent: 'center',
-        flex: 0.8,
+        flex: 0.6,
         marginTop: 10,
     },
     bar: {
@@ -357,16 +386,16 @@ const styles = StyleSheet.create({
     time: {
         color: 'white',
     },
-    // timeContainer: {
-    //     paddingVertical: 10,
-    //     borderWidth: 1,
-    //     borderColor: 'white',
-    //     paddingHorizontal: 20,
-    //     borderRadius: 25,
-    //     backgroundColor: 'black',
-    //     alignItems: 'center',
-    //     justifyContent: 'center',
-    // },
+    timeContainer2: {
+        paddingVertical: 10,
+        borderWidth: 1,
+        borderColor: 'white',
+        paddingHorizontal: 20,
+        borderRadius: 25,
+        backgroundColor: 'black',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
     timeText: {
         color: 'white',
     },

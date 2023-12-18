@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Linking, Image } from 'react-native';
 import MoMoPayment from 'react-native-momosdk';
 import { useRoute } from '@react-navigation/native';
-const PayScreens = ({ route }) => {
+import * as SecureStore from 'expo-secure-store';
+const PayScreens = ({ navigation, route }) => {
     //const route = useRoute();
     const [ticketData, setTicketData] = useState(route.params);
 
@@ -19,16 +20,18 @@ const PayScreens = ({ route }) => {
     };
 
     useEffect(() => {
-        (async () => {
+        const fetchData = async () => {
             try {
-                const ticket = await EncryptedStorage.getItem('ticket');
-                if (ticket !== undefined && ticket !== null) {
+                const ticket = await SecureStore.getItemAsync('ticket'); // Use getItemAsync instead of getItem
+                if (ticket !== null) {
                     setTicketData(JSON.parse(ticket));
                 }
             } catch (error) {
                 console.error('Something went wrong while getting Data', error);
             }
-        })();
+        };
+
+        fetchData(); // Invoke the async function
     }, []);
 
     if (ticketData !== route.params && route.params != undefined) {
@@ -38,16 +41,17 @@ const PayScreens = ({ route }) => {
         <View style={styles.container}>
             <View style={{ flex: 0.25, marginTop: 30, }}>
                 <View style={{ flexDirection: 'row' }}>
-                    {/* <Image style={styles.image} source={{ uri: note.imagePath }}>
+                    <Image style={styles.image} source={{ uri: ticketData.note.imagePath }}>
 
-                    </Image> */}
+                    </Image>
 
 
 
                     <View style={{ flexDirection: 'column', marginLeft: 10 }}>
-                        {/* <Text style={{fontSize:16,fontWeight:'bold'}}>
-                            {note.title}
-                        </Text> */}
+                        <Text style={{fontSize:16,fontWeight:'bold'}}>
+                            {ticketData.note.title}
+                        
+                        </Text>
                         <Text>
 
                             {ticketData?.date &&
@@ -55,7 +59,24 @@ const PayScreens = ({ route }) => {
                                 }/${ticketData.year}`
                             }
                         </Text>
+                        <Text>
 
+
+                            Time: {ticketData.time}
+                        </Text>
+                        <Text>
+
+                            Seats: {ticketData?.seatArray.slice(0, 3).map((item, index, arr) => (
+                                <React.Fragment key={index}>
+                                    {item}
+                                    {index === arr.length - 1 ? '' : ', '}
+                                </React.Fragment>
+                            ))}
+                        </Text>
+                        <Text style={{color:'red',fontSize:17,fontWeight:'bold'}}>
+
+                            Total payment: {ticketData.total}.000 đ
+                        </Text>
 
                     </View>
                 </View>

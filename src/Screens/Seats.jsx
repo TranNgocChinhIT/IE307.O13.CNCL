@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { Text, View, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
 
-
+import * as SecureStore from 'expo-secure-store';
 const generateSeats = () => {
     let numRow = 8;
     let numColumn = 12;
@@ -25,19 +25,17 @@ const generateSeats = () => {
     }
     return rowArray;
 };
-const Seats = ({navigation}) => {
+const Seats = ({navigation,route}) => {
 
-    const route = useRoute();
-    const { note } = route.params;
-   
+  
     const [price, setPrice] = useState(0);
-
+    const { note } = route.params;
     const [totalSeats, setTotalSeats] = useState(0);
     const [twoDSeatArray, setTwoDSeatArray] = useState(generateSeats());
     const [selectedSeatArray, setSelectedSeatArray] = useState([]);
-
-    const {  selectedDate: routeSelectedDate } = route.params; // Đổi tên selectedDate thành routeSelectedDate
-
+    const [ticketData, setTicketData] = useState(route.params);
+    const total = selectedSeatArray.length * 45.0;
+   // const [total, setTotal] = useState(price);
     console.log(JSON.stringify(twoDSeatArray, null, 2));
     const selectSeat = (index, subindex, num) => {
         if (!twoDSeatArray[index][subindex].taken) {
@@ -61,6 +59,68 @@ const Seats = ({navigation}) => {
           setTwoDSeatArray(temp);
         }
       };
+      useEffect(() => {
+        const fetchData = async () => {
+          try {
+            const ticket = await SecureStore.getItemAsync('ticket'); // Use getItemAsync instead of getItem
+            if (ticket !== null) {
+              setTicketData(JSON.parse(ticket));
+            }
+          } catch (error) {
+            console.error('Something went wrong while getting Data', error);
+          }
+        };
+    
+        fetchData(); // Invoke the async function
+      }, []);
+
+    if (ticketData !== route.params && route.params != undefined) {
+        setTicketData(route.params);
+    }
+      const BookSeats = async () => {
+        if (
+          selectedSeatArray.length !== 0 
+        //   timeArray[selectedTimeIndex] !== undefined &&
+        //   dateArray[selectedDateIndex] !== undefined
+        ) {
+          try {
+           
+            await SecureStore.setItemAsync(
+              'ticket',
+              JSON.stringify({
+                 seatArray: selectedSeatArray,
+                time: ticketData.time,
+                date: ticketData.date,
+                month: ticketData.month,
+                year: ticketData.year,
+                note:ticketData.note,
+                total:total,
+                quantity:totalSeats,
+                ticketImage: route.params.PosterImage,
+              })
+            );
+          } catch (error) {
+            console.error('Something went Wrong while storing in BookSeats Functions', error);
+          }
+          navigation.navigate('PayScreens', {
+           seatArray: selectedSeatArray,
+            time: ticketData.time,
+            date: ticketData.date,
+            month: ticketData.month,
+            year: ticketData.year,
+            note:ticketData.note,
+            total:total,
+            quantity:totalSeats,
+            ticketImage: route.params.PosterImage,
+          });
+        } else {
+          ToastAndroid.showWithGravity(
+            'Please Select Seats, Date and Time of the Show',
+            ToastAndroid.SHORT,
+            ToastAndroid.BOTTOM
+          );
+        }
+      };
     return (
         <View style={{flex:1,backgroundColor:'black'}}>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.container}>
@@ -72,6 +132,9 @@ const Seats = ({navigation}) => {
                             style={styles.screen}
                         />
                     </View>
+                    <Text style={styles.screenText}>
+                        {ticketData.note.title}
+                    </Text>
                     <Text style={styles.screenText}>
                         SCREEN
                     </Text>
@@ -125,9 +188,9 @@ const Seats = ({navigation}) => {
        
             <View style={{flexDirection:'row'}}>
                 <View style={{flexDirection:'column',marginTop:15, marginLeft:10}}>
-                    <Text style={{ fontWeight:'bold',fontSize:14, }}>
+                    {/* <Text style={{ fontWeight:'bold',fontSize:14, }}>
                         {note.title}
-                    </Text>
+                    </Text> */}
                     <Text style={{ fontSize:15, }}>
                         {price}.000 đ
                     </Text>
@@ -138,7 +201,7 @@ const Seats = ({navigation}) => {
                 </View>
                
                 <TouchableOpacity style={styles.button}
-                onPress={() => navigation.navigate('PayScreens', { note })}
+                onPress={BookSeats}
                 >
                     <Text style={styles.textButton}>
                     BOOK NOW
