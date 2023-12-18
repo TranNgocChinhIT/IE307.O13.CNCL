@@ -124,7 +124,7 @@ const LocationAndTime = ({ navigation, route }) => {
           });
         } else {
           ToastAndroid.showWithGravity(
-            'Please Select Seats, Date and Time of the Show',
+            'Please Select Date and Time of the Show',
             ToastAndroid.SHORT,
             ToastAndroid.BOTTOM
           );
@@ -175,9 +175,7 @@ const LocationAndTime = ({ navigation, route }) => {
                     />
                 </View>
                 <View style={styles.pickDateContainer}>
-                <Text style={styles.pickDate}>
-                        {note.title}
-                    </Text>
+            
                     <Text style={styles.pickDate}>
                         {selectedDate ? formatDate(selectedDate.date, currentMonth, currentYear) : ''}
                     </Text>

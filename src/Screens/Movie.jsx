@@ -98,7 +98,7 @@ const Movie = () => {
 
         </ScrollView>
         <TouchableOpacity style={styles.button}
-        onPress={() => navigation.navigate('Seats', { note })}
+        onPress={() => navigation.navigate('LocationAndTime', { note })}
         >
             <Text style={styles.textButton}>BOOK NOW</Text>
         </TouchableOpacity>

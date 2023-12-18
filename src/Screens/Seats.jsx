@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { Text, View, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
+import { Text, View, StyleSheet, ScrollView, TouchableOpacity, Image, ToastAndroid, } from 'react-native';
 
 import * as SecureStore from 'expo-secure-store';
 const generateSeats = () => {
@@ -35,6 +35,7 @@ const Seats = ({navigation,route}) => {
     const [selectedSeatArray, setSelectedSeatArray] = useState([]);
     const [ticketData, setTicketData] = useState(route.params);
     const total = selectedSeatArray.length * 45.0;
+   // const totalSeat = selectedSeatArray.length*1;
    // const [total, setTotal] = useState(price);
     console.log(JSON.stringify(twoDSeatArray, null, 2));
     const selectSeat = (index, subindex, num) => {
@@ -115,7 +116,7 @@ const Seats = ({navigation,route}) => {
           });
         } else {
           ToastAndroid.showWithGravity(
-            'Please Select Seats, Date and Time of the Show',
+            'Please Select Seats',
             ToastAndroid.SHORT,
             ToastAndroid.BOTTOM
           );
@@ -132,9 +133,7 @@ const Seats = ({navigation,route}) => {
                             style={styles.screen}
                         />
                     </View>
-                    <Text style={styles.screenText}>
-                        {ticketData.note.title}
-                    </Text>
+    
                     <Text style={styles.screenText}>
                         SCREEN
                     </Text>
@@ -186,7 +185,7 @@ const Seats = ({navigation,route}) => {
         </ScrollView >
         <View style={{backgroundColor:'white',flex:0.12,borderRadius: 15,borderWidth: 1, borderColor: 'black' }}>
        
-            <View style={{flexDirection:'row'}}>
+            <View style={{flexDirection:'row',justifyContent: 'space-between',}}>
                 <View style={{flexDirection:'column',marginTop:15, marginLeft:10}}>
                     {/* <Text style={{ fontWeight:'bold',fontSize:14, }}>
                         {note.title}
@@ -302,7 +301,7 @@ const styles = StyleSheet.create({
         width: 130,
         height: 40,
         borderRadius:25,
-       marginLeft:70,
+        marginRight:20,
         marginTop:20,
         justifyContent: 'flex-start',
       
