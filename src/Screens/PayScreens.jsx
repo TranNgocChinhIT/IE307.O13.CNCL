@@ -1,12 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Linking, Image, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Linking, Image, ScrollView, Alert } from 'react-native';
 import MoMoPayment from 'react-native-momosdk';
 import { useRoute } from '@react-navigation/native';
 import * as SecureStore from 'expo-secure-store';
+import Modal from 'react-native-modal';
 const PayScreens = ({ navigation, route }) => {
-    //const route = useRoute();
+    const momoLink = 'https://me.momo.vn/bmIeTAt8U7UgUxfBF5IPU8'; // Thay thế bằng đường link Momo của bạn
+
+    const handleMomoButtonClick = () => {
+        Linking.openURL(momoLink);
+    };
     const [ticketData, setTicketData] = useState(route.params);
     const [isMomoSelected, setIsMomoSelected] = useState(false);
+    const [isModalVisible, setIsModalVisible] = useState(false);
+
+
+    const handleModalClose = () => {
+        setIsModalVisible(false);
+        setIsMomoSelected(false);
+    };
     const handleOpenMomoApp = () => {
         const momoPaymentURL = 'momo://payment';
 
@@ -39,7 +51,15 @@ const PayScreens = ({ navigation, route }) => {
     }
     const handleMomoSelection = () => {
         setIsMomoSelected(!isMomoSelected);
-      };
+        if (!isMomoSelected) { 
+            Alert.alert(
+                'Hướng dẫn thanh toán',
+                'Quý khách vui lòng thanh toán số tiền chuyển khoản qua MOMO\nNội dung chuyển khoản: SDT+HOVATEN',
+                [{ text: 'OK', onPress: () => console.log('OK Pressed') }]
+            );
+        }
+        setIsModalVisible(true);
+    };
     return (
         <View style={styles.container}>
             <View style={{ flex: 0.25, marginTop: 30, marginBottom: 25 }}>
@@ -212,6 +232,7 @@ const PayScreens = ({ navigation, route }) => {
 
                         </View>
                     </TouchableOpacity>
+                    
                     <View style={styles.separator}></View>
                 </View>
 
@@ -223,7 +244,7 @@ const PayScreens = ({ navigation, route }) => {
                     <Text style={{ color: '#FF3333' }}> Terms of Use </Text>
                     and am purchasings tickers for age appropriate audience
                 </Text>
-                <TouchableOpacity style={styles.button} onPress={handleOpenMomoApp}>
+                <TouchableOpacity style={styles.button} onPress={handleMomoButtonClick}>
                     <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 18, }}>I AGREE AND CONTINUE</Text>
                 </TouchableOpacity>
             </View>
@@ -237,6 +258,14 @@ const styles = StyleSheet.create({
         flex: 1,
 
     },
+    modalContainer: {
+        backgroundColor: 'white',
+        padding: 22,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 4,
+        borderColor: 'rgba(0, 0, 0, 0.1)',
+      },
     button: {
         backgroundColor: '#FF3333',
         width: '80%',
@@ -279,7 +308,7 @@ const styles = StyleSheet.create({
     imageIcon: {
         width: 27,
         height: 27,
-        marginLeft:10,
+        marginLeft: 10,
     }
 
 });

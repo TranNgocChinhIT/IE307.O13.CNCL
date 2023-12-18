@@ -8,8 +8,8 @@ const { width: screenWidth } = Dimensions.get('window')
 import { useNavigation } from '@react-navigation/native';
 import MovieScreen from "./Movie";
 import LocationAndTime from './LocationAndTime';
-const Home = ({navigation}) => {
-  //  const navigation = useNavigation();
+const Home = ({ navigation }) => {
+    //  const navigation = useNavigation();
     const sliderWidth = screenWidth;
     const itemWidth = screenWidth * 0.67;
     const itemWidthHeader = screenWidth * 0.8;
@@ -17,8 +17,8 @@ const Home = ({navigation}) => {
     const renderItem = ({ item }) => (
 
         <View style={styles.itemContainer}>
-            <TouchableOpacity 
-            onPress={() => navigation.navigate('Movie', { note: item })}
+            <TouchableOpacity
+                onPress={() => navigation.navigate('Movie', { note: item })}
             >
                 <Image source={{ uri: item.imagePath }} style={styles.itemImg}></Image>
             </TouchableOpacity>
@@ -37,12 +37,12 @@ const Home = ({navigation}) => {
             </View >
             <Text style={{ color: 'white', marginLeft: 2, fontWeight: 'bold' }}>{item.title}</Text>
             <TouchableOpacity
-            style={styles.buttonBook}
-            onPress={() => navigation.navigate('LocationAndTime', { note: item })}
+                style={styles.buttonBook}
+                onPress={() => navigation.navigate('LocationAndTime', { note: item })}
             >
-                
-                    <Text style={styles.overlayText}>BOOK</Text>
-                
+
+                <Text style={styles.overlayText}>BOOK</Text>
+
             </TouchableOpacity>
         </View>
     )
@@ -52,7 +52,7 @@ const Home = ({navigation}) => {
             <Image source={{ uri: item.imagePath }} style={styles.itemHeader}></Image>
         </View>
     )
- 
+
     return (
         <ScrollView style={styles.container}>
             <ImageBackground
@@ -60,53 +60,55 @@ const Home = ({navigation}) => {
                 style={styles.backgroundImage}
 
             >
-                <View style={styles.headerContainer}>
-                    <Text style={styles.text} numberOfLines={1}>CGV*</Text>
 
-                    <Casousel
+                <Text style={styles.text} numberOfLines={1}>CGV*</Text>
 
-                        autoplay={true}
-                        autoplayTimeout={5}
-                        data={dataHeaderAdvertisement}
-                        renderItem={renderItemHeader}
-                        sliderWidth={sliderWidth}
-                        itemWidth={itemWidthHeader}
-                    />
+                <Casousel
 
-                    <View style={styles.title}>
+                    autoplay={true}
+                    autoplayTimeout={5}
+                    data={dataHeaderAdvertisement}
+                    renderItem={renderItemHeader}
+                    sliderWidth={sliderWidth}
+                    itemWidth={itemWidthHeader}
+                />
 
-                        <ShowListHeader title={'Now Showing'} />
-                        <ShowListHeader style={styles.Special} title={'      Special'} />
-                        <ShowListHeader title={'Coming Soon'} />
+                <View style={styles.title}>
 
-                    </View>
-
-                    {/* <Swiper
-                        autoplay={true}
-                        autoplayTimeout={3} 
-                        style={styles.swiper}
-                    >
-                        {dataHeaderAdvertisement.map(advertisement => (
-                            <View key={advertisement.id} style={styles.slide}>
-                                <Image source={{ uri: advertisement.imagePath }} style={styles.imageBanner} />
-                            </View>
-                        ))}
-                    </Swiper> */}
+                    <ShowListHeader title={'Now Showing'}  />
+                    <ShowListHeader style={styles.Special} title={'      Special'}  />
+                    <ShowListHeader title={'Coming Soon'}  />
+               
+            </View>
 
 
-                    <Casousel
-
-                        Layout='default'
-                        data={dataNowMovieList}
-                        renderItem={renderItem}
-                        sliderWidth={sliderWidth}
-                        itemWidth={itemWidth}
-                    />
 
 
-                </View>
-            </ImageBackground>
-        </ScrollView>
+            <Casousel
+
+                Layout='default'
+                data={dataNowMovieList}
+                renderItem={renderItem}
+                sliderWidth={sliderWidth}
+                itemWidth={itemWidth}
+            />
+            <View style={{ flex: 1, backgroundColor: 'transparent' }}>
+                <Text style={{ color: 'transparent' }}>
+                    n/
+                </Text>
+                <Text style={{ color: 'transparent' }}>
+                    n/
+                </Text>
+                <Text style={{ color: 'transparent' }}>
+                    n/
+                </Text>
+                <Text style={{ color: 'transparent' }}>
+                    n/
+                </Text>
+            </View>
+        </ImageBackground>
+            
+        </ScrollView >
 
     )
 
@@ -117,8 +119,8 @@ const styles = StyleSheet.create({
         //backgroundColor:'black'
     },
     headerContainer: {
-        marginTop: 20,
-        flex: 1,
+        //marginTop: 20,
+        //flex: 1,
     },
     itemHeaderContainer: {
         marginTop: 10,
@@ -132,13 +134,15 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         height: 420,
+        // flex:2,
     },
 
     backgroundImage: {
         flex: 1,
         resizeMode: 'cover',
         justifyContent: 'center',
-        marginTop: 20,
+
+
 
     },
     slide: {
@@ -149,7 +153,7 @@ const styles = StyleSheet.create({
     itemImg: {
         width: 220,
         height: 300,
-        borderRadius:2,
+        borderRadius: 2,
 
         justifyContent: 'center',
         marginBottom: 10,
@@ -158,6 +162,10 @@ const styles = StyleSheet.create({
     title: {
         flexDirection: 'row',
         marginTop: 20,
+        color: 'white',
+
+    },
+    headerText: {
         color: 'white',
 
     },
@@ -191,8 +199,8 @@ const styles = StyleSheet.create({
         borderRadius: 18,
         marginTop: 8,
         marginTop: 8,
-        activeOpacity:0.8,
-        opacity:0.8,
+        activeOpacity: 0.8,
+        opacity: 0.8,
         //elevation: 1000,
 
     },
@@ -211,9 +219,9 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 18,
         fontWeight: 'bold',
-        alignSelf:'center',
-        justifyContent:'center',
-        marginTop:7,
+        alignSelf: 'center',
+        justifyContent: 'center',
+        marginTop: 7,
 
 
 
@@ -233,7 +241,7 @@ const styles = StyleSheet.create({
         height: 120,
         justifyContent: 'center',
         borderRadius: 20,
-        resizeMode:'cover',
+        resizeMode: 'cover',
         borderColor: 'white',
         borderWidth: 3,
     },

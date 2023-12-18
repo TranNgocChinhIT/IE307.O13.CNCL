@@ -14,6 +14,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: "8px",
     flexDirection: "row",
     marginLeft: 20,
+    color:'white',
+    fontWeight:'bold'
   },
   container: {
     flex: 1,
