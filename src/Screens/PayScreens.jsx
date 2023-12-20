@@ -4,9 +4,11 @@ import MoMoPayment from 'react-native-momosdk';
 import { useRoute } from '@react-navigation/native';
 import * as SecureStore from 'expo-secure-store';
 import Modal from 'react-native-modal';
+import { useTicketContext } from '../navigators/DataContext';
 const PayScreens = ({ navigation, route }) => {
     const momoLink = 'https://me.momo.vn/bmIeTAt8U7UgUxfBF5IPU8'; // Thay thế bằng đường link Momo của bạn
 
+    const { ticketDataContext, setTicketDataContext } = useTicketContext();
     const handleMomoButtonClick = () => {
         Linking.openURL(momoLink);
     };
@@ -60,6 +62,24 @@ const PayScreens = ({ navigation, route }) => {
         }
         setIsModalVisible(true);
     };
+    const BookSeats =  () => {
+        const ticketInfo = {
+            seatArray: ticketData.seatArray,
+            time: ticketData.time,
+            date: ticketData.date,
+            month: ticketData.month,
+            year: ticketData.year,
+            note: ticketData.note,
+            total: ticketData.total,
+            totalSeats: ticketData.totalSeats,
+
+          };
+      
+          // Call the setTicketDataContext function with the ticket information
+          setTicketDataContext(ticketInfo);
+          Linking.openURL(momoLink);
+          navigation.navigate('Ticket')
+      };
     return (
         <View style={styles.container}>
             <View style={{ flex: 0.25, marginTop: 30, marginBottom: 25 }}>
@@ -222,7 +242,7 @@ const PayScreens = ({ navigation, route }) => {
                 </View>
                 <View>
 
-                    <TouchableOpacity onPress={handleMomoSelection}>
+                    <TouchableOpacity onPress={BookSeats}>
                         <View style={styles.inforContainer}>
                             <Image source={require('../assets/image/momo2.webp')}
                                 style={styles.imageIcon}>
@@ -244,7 +264,7 @@ const PayScreens = ({ navigation, route }) => {
                     <Text style={{ color: '#FF3333' }}> Terms of Use </Text>
                     and am purchasings tickers for age appropriate audience
                 </Text>
-                <TouchableOpacity style={styles.button} onPress={handleMomoButtonClick}>
+                <TouchableOpacity style={styles.button} onPress={BookSeats}>
                     <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 18, }}>I AGREE AND CONTINUE</Text>
                 </TouchableOpacity>
             </View>

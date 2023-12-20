@@ -44,21 +44,17 @@ const formatDate = (day, month, year) => {
 };
 const CINEMA_DATA = [
     { id: 1, name: 'Rạp 1', address: '123 Nguyễn Tri Phương, Quận 3, Thành phố Hồ Chí Minh' },
-    { id: 2, name: 'Rạp 2', address: '456 Lê Lợi, Quận 10, Thành phố Hồ Chí Minh' },
-    { id: 3, name: 'Rạp 3', address: '496 Nguyễn Trãi, Quận 3, Thành phố Hồ Chí Minh' },
+
 ];
 const LocationAndTime = ({ navigation, route }) => {
     const [dateArray, setDateArray] = useState(generateDate());
     const [selectedTimeIndex, setSelectedTimeIndex] = useState();
     const [selectedDateIndex, setSelectedDateIndex] = useState();
-    // const selectedDate = selectedDateIndex !== undefined ? dateArray[selectedDateIndex] : null;
     const [currentMonth, setCurrentMonth] = useState(new Date().getMonth() + 1);
     const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
     const [selectedCinema, setSelectedCinema] = useState();
     const [selectedMonth, setSelectedMonth] = useState(currentMonth);
     const [selectedYear, setSelectedYear] = useState(currentYear);
-    const [cinemaArray, setCinemaArray] = useState(CINEMA_DATA)
-   // const { note, selectedDate: routeSelectedDate } = route.params; // Đổi tên selectedDate thành routeSelectedDate
     const [ticketData, setTicketData] = useState(route.params);
     const [selectedCinemaTimings, setSelectedCinemaTimings] = useState([]);
     const { note } = route.params;
@@ -68,8 +64,6 @@ const LocationAndTime = ({ navigation, route }) => {
     const getTimingsForCinema = (cinema) => {
         const cinemaTimingsMap = {
             'Rạp 1': ['10:30', '14:30', '19:30'],
-            'Rạp 2': ['12:30', '15:00', '21:00'],
-            'Rạp 3': ['10:30', '12:30', '15:00', '19:30'],
         };
     
         const timings = cinemaTimingsMap[cinema] || [];
@@ -135,7 +129,7 @@ const LocationAndTime = ({ navigation, route }) => {
     return (
         <View style={styles.container}>
             <View style={{ flex: 0.9 }}>
-                <View style={{ flex: 0.25 }}>
+                <View style={{ flex: 0.3 }}>
                     <View style={{ alignItems: 'center' }}>
                         <Text style={styles.chooseText}>
                             Choose Date
@@ -180,12 +174,12 @@ const LocationAndTime = ({ navigation, route }) => {
                         {selectedDate ? formatDate(selectedDate.date, currentMonth, currentYear) : ''}
                     </Text>
                 </View>
+                
                 <View style={styles.separator}></View>
                 <View style={styles.pickTime}>
                     <FlatList
                         data={CINEMA_DATA}
                         keyExtractor={(item, index) => index.toString()}
-                        //horizontal
                         bounces={false}
                         contentContainerStyle={styles.margin}
                         renderItem={({ item, index }) => {
@@ -205,26 +199,31 @@ const LocationAndTime = ({ navigation, route }) => {
                                     </TouchableOpacity>
                                     <Text style={styles.addressText}>{item.address}</Text>
                                     {showTimings && (
+                                        <View style={styles.timingsContainer}>
+
                                         <FlatList
-                                        data={selectedCinemaTimings}
-                                        keyExtractor={(item) => item}
-                                        horizontal
-                                        bounces={false}
-                                        contentContainerStyle={styles.margin}
-                                        renderItem={({ item, index }) => (
-                                            <TouchableOpacity onPress={() => setSelectedTimeIndex(index)}>
-                                                <View
-                                                    style={[
-                                                        styles.timeContainer,
-                                                        index === 0 ? { marginLeft: 24 } : index === selectedCinemaTimings.length - 1 ? { marginRight: 24 } : {},
-                                                        index === selectedTimeIndex ? { backgroundColor: 'orange' } : {},
-                                                    ]}
-                                                >
-                                                    <Text style={styles.timeText}>{item}</Text>
-                                                </View>
-                                            </TouchableOpacity>
-                                        )}
+                                            data={timeArray}
+                                            keyExtractor={(item) => item}
+                                            horizontal
+                                            bounces={false}
+                                            contentContainerStyle={styles.margin}
+                                            renderItem={({ item, index }) => {
+                                                return (
+                                                    <TouchableOpacity onPress={() => setSelectedTimeIndex(index)}>
+                                                        <View
+                                                            style={[
+                                                                styles.timeContainer2,
+                                                                index === 0 ? { marginLeft: 24 } : index === dateArray.length - 1 ? { marginRight: 24 } : {},
+                                                                index === selectedTimeIndex ? { backgroundColor: 'orange' } : {},
+                                                            ]}
+                                                        >
+                                                            <Text style={styles.timeText}>{item}</Text>
+                                                        </View>
+                                                    </TouchableOpacity>
+                                                );
+                                            }}
                                         />
+                                    </View>
                                     )}
 
                                 </View>
@@ -234,38 +233,14 @@ const LocationAndTime = ({ navigation, route }) => {
                     />
 
                 </View>
-                <View style={styles.timingsContainer}>
-
-                        <FlatList
-                            data={timeArray}
-                            keyExtractor={(item) => item}
-                            horizontal
-                            bounces={false}
-                            contentContainerStyle={styles.margin}
-                            renderItem={({ item, index }) => {
-                                return (
-                                    <TouchableOpacity onPress={() => setSelectedTimeIndex(index)}>
-                                        <View
-                                            style={[
-                                                styles.timeContainer2,
-                                                index === 0 ? { marginLeft: 24 } : index === dateArray.length - 1 ? { marginRight: 24 } : {},
-                                                index === selectedTimeIndex ? { backgroundColor: 'orange' } : {},
-                                            ]}
-                                        >
-                                            <Text style={styles.timeText}>{item}</Text>
-                                        </View>
-                                    </TouchableOpacity>
-                                );
-                            }}
-                        />
-                    </View>
+        
             </View>
             <View style={{ backgroundColor: 'white', flex: 0.1, borderRadius: 35, borderWidth: 1, borderColor: 'black' }}>
 
                 <View style={{ flexDirection: 'column', alignSelf: 'center', justifyContent: 'center' }}>
-                    <View style={{ flexDirection: 'column' }}>
+                    <View style={{ flexDirection: 'column',alignItems:'center' }}>
                         <Text style={styles.inforDate}>
-                            {selectedDate ? formatDate(selectedDate.date, currentMonth, currentYear) : ''}
+                            {timeArray[selectedTimeIndex]}  {selectedDate ? formatDate(selectedDate.date, currentMonth, currentYear) : ''}
                         </Text>
 
                     </View>
@@ -359,8 +334,7 @@ const styles = StyleSheet.create({
     },
     pickTime: {
         alignItems: 'center',
-        // justifyContent: 'center',
-        flex: 0.6,
+        flex: 0.4,
         marginTop: 10,
     },
     bar: {
@@ -399,12 +373,13 @@ const styles = StyleSheet.create({
     },
     button: {
         backgroundColor: '#FF3333',
-        width: 80,
-        height: 30,
+        width: 300,
+        height: 40,
         borderRadius: 25,
         // marginLeft:70,
-        marginTop: 10,
-        alignSelf: 'center'
+        marginTop: 5,
+        alignSelf: 'center',
+        justifyContent:'center'
 
     },
     textButton: {

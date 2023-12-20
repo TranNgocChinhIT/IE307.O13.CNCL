@@ -15,47 +15,100 @@ const HomeStack = () => {
 
     >
       <Bottom.Navigator
-        screenOptions={({ route }) => ({
+        screenOptions={{
           tabBarHideOnKeyboard: true,
           headerShown: false,
           tabBarStyle: {
-            backgroundColor: "#FF3333",
-            borderRadius: 25,
-            marginBottom: 10,
+            backgroundColor: 'black',
+            borderTopWidth: 0,
+            borderRadius:100,
+            height: 70,
+          },
+        }
+
+        }>
+        <Bottom.Screen name="Home" component={Home} options={{
+          tabBarShowLabel: true,
+          tabBarIcon: ({ focused, color, size }) => {
+            const iconImage = focused
+              ? require('../assets/image/movie.png') // Đường dẫn đến hình ảnh icon khi được chọn
+              : require('../assets/image/movie.png');
+            return (
+              <View
+                style={[
+                  styles.activeTabBackground,
+                  focused ? { backgroundColor: '#FF3333' } : {},
+                ]}>
+                <Image source={iconImage} style={{ width: 25, height: 25,tintColor:'white' }} />
+              </View>
+            );
           },
           tabBarLabelStyle: {
-            color: 'white', 
-            fontSize: 12, 
+            color:'white',
           },
+        }} />
+        <Bottom.Screen name="Ticket" component={Ticket} options={{
+          tabBarShowLabel: true,
           tabBarIcon: ({ focused, color, size }) => {
-            let iconName;
-            if (route.name === "Home") {
-              iconName = focused
-                ? require('../assets/image/movie.png')
-                : require('../assets/image/movie.png');
-            } else if (route.name === "Ticket") {
-              iconName = focused
-              ? require('../assets/image/tickets.png')
+            const iconImage = focused
+              ? require('../assets/image/tickets.png') // Đường dẫn đến hình ảnh icon khi được chọn
               : require('../assets/image/tickets.png');
-            } else if (route.name === "News") {
-              iconName = focused
-              ? require('../assets/image/news.png')
-              : require('../assets/image/news.png');
-            } else if (route.name === "Account") {
-              iconName = focused
-              ? require('../assets/image/user.png')
-              : require('../assets/image/user.png');
-            }
-
-            iconStyle = focused ? styles.iconTabOnPress : styles.iconTab;
-            return <Image source={iconName} style={[iconStyle, { tintColor: '#FFFFFF' }]} />;
+            return (
+              <View
+                style={[
+                  styles.activeTabBackground,
+                  focused ? { backgroundColor: '#FF3333' } : {},
+                ]}>
+                <Image source={iconImage} style={{ width: 25, height: 25,tintColor:'white' }} />
+              </View>
+            );
           },
-        })}
-      >
-        <Bottom.Screen name="Home" component={Home} />
-        <Bottom.Screen name="Ticket" component={Ticket} />
-        <Bottom.Screen name="News" component={News} />
-        <Bottom.Screen name="Account" component={Account} />
+          tabBarLabelStyle: {
+            color:'white',
+          },
+        }}/>
+        <Bottom.Screen name="News" component={News} options={{
+          tabBarShowLabel: true,
+          tabBarIcon: ({ focused, color, size }) => {
+            const iconImage = focused
+              ? require('../assets/image/news.png') // Đường dẫn đến hình ảnh icon khi được chọn
+              : require('../assets/image/news.png');
+            return (
+              <View
+                style={[
+                  styles.activeTabBackground,
+                  focused ? { backgroundColor: '#FF3333' } : {},
+                ]}>
+                <Image source={iconImage} style={{ width: 25, height: 25,tintColor:'white' }} />
+              </View>
+            );
+          },
+          tabBarLabelStyle: {
+            color:'white',
+          },
+        }}/>
+        <Bottom.Screen name="Account" component={Account} options={{
+          tabBarShowLabel: true,
+          tabBarShowLabelColor: 'black',
+          tabBarIcon: ({ focused, color, size }) => {
+            const iconImage = focused
+              ? require('../assets/image/user.png') // Đường dẫn đến hình ảnh icon khi được chọn
+              : require('../assets/image/user.png');
+            return (
+              <View
+                style={[
+                  styles.activeTabBackground,
+                  focused ? { backgroundColor: '#FF3333' } : {},
+                ]}>
+               <Image source={iconImage} style={{ width: 30, height: 30,tintColor:'white' }} />
+             
+              </View>
+            );
+          },
+          tabBarLabelStyle: {
+            color:'white',
+          },
+        }}/>
       </Bottom.Navigator>
     </ImageBackground>
 
@@ -76,6 +129,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginTop: 20,
 
+  },
+  activeTabBackground: {
+    backgroundColor: 'black',
+    padding: 10,
+    borderRadius: 100,
   },
 });
 export default HomeStack;
