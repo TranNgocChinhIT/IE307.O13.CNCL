@@ -217,7 +217,7 @@ const Seats = ({ navigation, route }) => {
                 </ScrollView>
             </ScrollView >
             {selectedSeatArray.length > 0 && (
-                <View style={{ backgroundColor: 'white', flex: 0.12, borderRadius: 25, borderWidth: 1, borderColor: 'black' }}>
+                <View style={{ backgroundColor: '#FFFAF0', flex: 0.12, borderRadius: 25, borderWidth: 1, borderColor: 'black' }}>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                         <View style={{ flexDirection: 'column', marginTop: 10, marginLeft: 10 }}>
                             <Text style={{ fontWeight: 'bold', fontSize: 17 }}>

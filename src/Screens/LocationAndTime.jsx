@@ -235,7 +235,7 @@ const LocationAndTime = ({ navigation, route }) => {
                 </View>
         
             </View>
-            <View style={{ backgroundColor: 'white', flex: 0.1, borderRadius: 35, borderWidth: 1, borderColor: 'black' }}>
+            <View style={{ backgroundColor: '#FFFAF0', flex: 0.1, borderRadius: 35, borderWidth: 1, borderColor: 'black' }}>
 
                 <View style={{ flexDirection: 'column', alignSelf: 'center', justifyContent: 'center' }}>
                     <View style={{ flexDirection: 'column',alignItems:'center' }}>

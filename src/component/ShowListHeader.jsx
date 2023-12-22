@@ -13,8 +13,8 @@ const styles = StyleSheet.create({
     paddingVertical: "8px",
     paddingHorizontal: "8px",
     flexDirection: "row",
-    marginLeft: 20,
-    color:'white',
+    marginHorizontal:20,
+    color:'#FFFAFA',
     fontWeight:'bold'
   },
   container: {

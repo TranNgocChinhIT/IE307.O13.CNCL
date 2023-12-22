@@ -242,7 +242,7 @@ const PayScreens = ({ navigation, route }) => {
                 </View>
                 <View>
 
-                    <TouchableOpacity onPress={BookSeats}>
+                    <TouchableOpacity onPress={handleMomoSelection}>
                         <View style={styles.inforContainer}>
                             <Image source={require('../assets/image/momo2.webp')}
                                 style={styles.imageIcon}>

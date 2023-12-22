@@ -6,14 +6,18 @@ import { dataHeaderAdvertisement } from '../data/dataHeaderAdvertisement';
 import Casousel from 'react-native-snap-carousel';
 const { width: screenWidth } = Dimensions.get('window')
 import { useNavigation } from '@react-navigation/native';
-import MovieScreen from "./Movie";
-import LocationAndTime from './LocationAndTime';
+
+
 const Home = ({ navigation }) => {
-    //  const navigation = useNavigation();
     const sliderWidth = screenWidth;
     const itemWidth = screenWidth * 0.67;
     const itemWidthHeader = screenWidth * 0.8;
+    const [backgroundIndex, setBackgroundIndex] = useState(0);
+    const [pressedButton, setPressedButton] = useState(null);
 
+    const handlePress = (buttonName) => {
+        setPressedButton(buttonName);
+    };
     const renderItem = ({ item }) => (
 
         <View style={styles.itemContainer}>
@@ -53,13 +57,16 @@ const Home = ({ navigation }) => {
         </View>
     )
 
-    return (
-        <ScrollView style={styles.container}>
-            <ImageBackground
-                source={require('../assets/image/aquaman.jpg')}
-                style={styles.backgroundImage}
 
-            >
+    return (
+        <ImageBackground
+            source={require('../assets/image/aquaman.jpg')}
+            style={styles.backgroundImage}
+
+        >
+
+            <ScrollView style={styles.container}>
+
 
                 <Text style={styles.text} numberOfLines={1}>CGV*</Text>
 
@@ -75,40 +82,31 @@ const Home = ({ navigation }) => {
 
                 <View style={styles.title}>
 
-                    <ShowListHeader title={'Now Showing'}  />
-                    <ShowListHeader style={styles.Special} title={'      Special'}  />
-                    <ShowListHeader title={'Coming Soon'}  />
-               
-            </View>
+                    <TouchableOpacity onPress={() => handlePress('Now Showing')}>
+                        <ShowListHeader title={'Now Showing'} style={pressedButton === 'Now Showing' ? styles.pressedText : styles.normalText} />
+                    </TouchableOpacity>
 
+                    <TouchableOpacity onPress={() => handlePress('Special')}>
+                        <ShowListHeader style={[styles.Special, pressedButton === 'Special' ? styles.pressedText : styles.normalText]} title={'      Special'} />
+                    </TouchableOpacity>
 
+                    <TouchableOpacity onPress={() => handlePress('Coming Soon')}>
+                        <ShowListHeader title={'Coming Soon'} style={pressedButton === 'Coming Soon' ? styles.pressedText : styles.normalText} />
+                    </TouchableOpacity>
 
+                </View>
 
-            <Casousel
+                <Casousel
 
-                Layout='default'
-                data={dataNowMovieList}
-                renderItem={renderItem}
-                sliderWidth={sliderWidth}
-                itemWidth={itemWidth}
-            />
-            <View style={{ flex: 1, backgroundColor: 'transparent' }}>
-                <Text style={{ color: 'transparent' }}>
-                    n/
-                </Text>
-                <Text style={{ color: 'transparent' }}>
-                    n/
-                </Text>
-                <Text style={{ color: 'transparent' }}>
-                    n/
-                </Text>
-                <Text style={{ color: 'transparent' }}>
-                    n/
-                </Text>
-            </View>
+                    Layout='default'
+                    data={dataNowMovieList}
+                    renderItem={renderItem}
+                    sliderWidth={sliderWidth}
+                    itemWidth={itemWidth} />
+
+            </ScrollView >
         </ImageBackground>
-            
-        </ScrollView >
+
 
     )
 
@@ -116,7 +114,7 @@ const Home = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        //backgroundColor:'black'
+        // backgroundColor:'black'
     },
     headerContainer: {
         //marginTop: 20,
@@ -134,9 +132,16 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         height: 420,
-        // flex:2,
     },
-
+    normalText: {
+        color: 'white',
+    },
+    pressedText: {
+        color: 'black',
+    },
+    Special: {
+        fontWeight: 'bold',
+    },
     backgroundImage: {
         flex: 1,
         resizeMode: 'cover',
