@@ -6,5 +6,5 @@ const routerUser = Router();
 routerUser.get("/", getAllUser)
 routerUser.get("/:id", getUser)
 routerUser.put("/:id", updateUser)
-routerUser.delete('/:id',checkPremission, removeUser);
+routerUser.delete('/:id', removeUser);
 export default routerUser;

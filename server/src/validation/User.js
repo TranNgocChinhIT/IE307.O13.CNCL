@@ -81,6 +81,8 @@ const userValidator = Joi.object ({
         "string.min":"adress phai co it nhat {#limit} ky tu",
         "string.max":"adress phai co it hon {#limit + 1} ky tu",
     }),
-    role: Joi.string()
+    role: Joi.string(),
+    confirmationToken: Joi.string(),
+    confirmed: Joi.boolean(),
 })
 export {signUpValidator,signInValidator,userValidator};

@@ -1,5 +1,4 @@
-import mongoose from "mongoose"
-
+import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema(
   {
@@ -21,14 +20,21 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, "please add password"],
     },
-    region:{
+    region: {
       type: String,
       required: [true, "please add password"],
     },
     role: {
       type: String,
-      default: "member"
-    }
+      default: "member",
+    },
+    confirmationToken: {
+      type: String,
+    },
+    confirmed: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );
