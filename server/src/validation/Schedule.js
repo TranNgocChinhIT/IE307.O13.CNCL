@@ -1,11 +1,10 @@
 import Joi from "joi";
 
 const scheduleValidator = Joi.object({
-    screeningDate: Joi.date().required().iso().messages({
+    screeningDate: Joi.date().required().messages({
         "date.base": "Ngày chiếu phải là một ngày hợp lệ",
         "date.empty": "Ngày chiếu không được để trống",
         "any.required": "Ngày chiếu là bắt buộc",
-        "date.iso": "Ngày chiếu phải theo định dạng ISO",
     }),
     screeningTime: Joi.string().required().min(1).max(20).messages({
         "string.empty": "Thời gian chiếu không được để trống",

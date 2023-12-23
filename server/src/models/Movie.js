@@ -42,15 +42,27 @@ const movieSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    cast: {
+    cast: [
+      {
+        actorName: {
+          type: String,
+          required: true,
+        },
+        actorImage: {
+          type: String,
+          required: true,
+        },
+      },
+    ],
+    trailer: {
       type: String,
       required: true,
     },
     categoryID: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Category",
-      required: false,  // Đặt required thành false để cho phép trường categoryID không bắt buộc
-      default: null,  // Đặt giá trị mặc định là null cho trường hợp không có categoryID
+      required: false,
+      default: null,
     },
   },
   { timestamps: true }

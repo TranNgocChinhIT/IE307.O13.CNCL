@@ -60,13 +60,20 @@ const movieValidator = Joi.object({
         "string.min": "Ngôn ngữ phải có ít nhất {#limit} ký tự",
         "string.max": "Ngôn ngữ phải có ít hơn {#limit + 1} ký tự",
     }),
-    cast: Joi.string().required().min(3).max(255).messages({
-        "string.empty": "Dàn diễn viên không được để trống",
+    cast: Joi.array().items(Joi.object({
+        actorName: Joi.string().required().min(3).max(255),
+        actorImage: Joi.string().required().uri(),
+    })).required().messages({
+        "array.base": "Dàn diễn viên phải là một mảng",
+        "array.empty": "Dàn diễn viên không được để trống",
         "any.required": "Dàn diễn viên là bắt buộc",
-        "string.min": "Dàn diễn viên phải có ít nhất {#limit} ký tự",
-        "string.max": "Dàn diễn viên phải có ít hơn {#limit + 1} ký tự",
     }),
-    categoryID: Joi.string().allow('').messages({  
+    trailer: Joi.string().required().uri().messages({
+        "string.empty": "Đường dẫn trailer không được để trống",
+        "any.required": "Đường dẫn trailer là bắt buộc",
+        "string.uri": "Đường dẫn trailer không hợp lệ",
+    }),
+    categoryID: Joi.string().allow('').messages({
         "string.empty": "CategoryID không được để trống",
         "any.required": "CategoryID là bắt buộc",
     }),

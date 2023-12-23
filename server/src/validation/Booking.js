@@ -29,6 +29,12 @@ const bookingValidator = Joi.object({
       "any.required": "Trạng thái thanh toán là bắt buộc",
       "any.only": "Trạng thái thanh toán không hợp lệ",
     }),
+  selectedSeats: Joi.array().items(
+    Joi.string().required().messages({
+      "string.empty": "Ghế ngồi không được để trống",
+      "any.required": "Ghế ngồi là bắt buộc",
+    })
+  ),
 });
 
 export default bookingValidator;

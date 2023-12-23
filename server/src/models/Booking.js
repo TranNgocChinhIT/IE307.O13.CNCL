@@ -27,6 +27,12 @@ const bookingSchema = new mongoose.Schema(
       default: "pending",
       required: true,
     },
+    selectedSeats: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "MovieScheduleRelationship",
+      },
+    ],
   },
   { timestamps: true }
 );

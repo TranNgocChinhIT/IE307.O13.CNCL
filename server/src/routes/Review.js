@@ -1,29 +1,14 @@
-import mongoose from "mongoose";
+import { Router } from "express";
+import { createReview, getAllReviews, getReview, removeReview, updateReview } from "../controllers/Review.js";
+import checkPremission from "../middlewares/checkPremission.js";
 
-const reviewSchema = new mongoose.Schema(
-  {
-    booking: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Booking",
-      required: true,
-    },
-    user: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
-    rating: {
-      type: Number,
-      required: true,
-      min: 0,
-      max: 10,
-    },
-    comment: {
-      type: String,
-      required: true,
-    },
-  },
-  { timestamps: true }
-);
+const routerReview = Router();
 
-export default mongoose.model("Review", reviewSchema);
+routerReview.get("/", getAllReviews);
+routerReview.get("/:id", getReview);
+routerReview.put("/:id", updateReview);
+routerReview.post("/", createReview); 
+routerReview.delete('/:id',removeReview);
+
+export default routerReview;
+ 
