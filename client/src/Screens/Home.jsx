@@ -21,7 +21,7 @@ const Home = ({ navigation }) => {
     useEffect(() => {
         const fetchMovies = async () => {
             try {
-                const response = await axios.get("http://192.168.1.8:8000/api/movie");
+                const response = await axios.get("/movie");
                 const nowShowingMovies = response.data?.datas.filter(item => item.categoryID.slug === 'Now');
                 setMovies(response.data?.datas);
             } catch (error) {

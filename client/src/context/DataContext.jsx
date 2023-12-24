@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext } from 'react';
-
+import axios from "axios";
 const TicketContext = createContext();
 
 export const TicketProvider = ({ children }) => {
@@ -10,7 +10,8 @@ export const TicketProvider = ({ children }) => {
    
     setTicketData((prevTickets) => [...prevTickets, data]);
   };
-
+  axios.defaults.baseURL =
+  "http://192.168.76.98:8000/api/";
   return (
     <TicketContext.Provider value={{ ticketDataContext, setTicketDataContext, bookedTickets }}>
       {children}

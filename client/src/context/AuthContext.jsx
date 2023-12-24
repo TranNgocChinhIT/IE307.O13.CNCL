@@ -3,19 +3,12 @@ import React ,{createContext,useState} from 'react';
 const AuthContext = createContext();
 
 const AuthProvider = ({children}) => {
-  const [isAuthenticated, setisAuthenticated] = useState(false);
-  const [userToken, setUserToken] = useState(null);
-  const [userID, setUserID] = useState(null);
-  const [userUpdate, setUserUpdate] = useState(null);
-  const [cartItems, setCartItems] = useState([]);
+  const [isAuthenticated, setisAuthenticated] = useState(true);
+  const [user, setUser] = useState(null);
   const [isLogin,setIsLogin] =  useState(null);
   const logout = () => {
     // Xóa dữ liệu người dùng và token khỏi context
     setisAuthenticated(false);
-    setUserToken(null);
-    setUserID(null);
-    setUserUpdate(null);
-    setCartItems([]);
     setIsLogin(null);
   };
 
@@ -28,12 +21,7 @@ const AuthProvider = ({children}) => {
       .then((res) => {
         setisAuthenticated(true);
         setIsLogin(true);
-        const token = res.data.token;
-        setUserToken(token);
-        // Decode token để lấy thông tin người dùng
-        const decoded = jwtDecode(token);
-        setUserID(decoded.sub);
-        setCartItems([]);
+
       })
       .catch((e) => {
         console.log(`Login error ${e}`);
@@ -44,15 +32,9 @@ const AuthProvider = ({children}) => {
   return (
     <AuthContext.Provider
       value={{
-        userToken,
         isAuthenticated,
-        userID,
         login,
         logout,
-        userUpdate,
-        setUserUpdate,
-        cartItems,
-        setCartItems,
         isLogin,
         setIsLogin,
       }}

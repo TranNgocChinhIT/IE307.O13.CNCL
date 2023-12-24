@@ -11,17 +11,20 @@ const Stack = createStackNavigator();
 const AppNavigator = () => {
   const { isAuthenticated } = useContext(AuthContext);
 
-  return <NavigationContainer>
-      <Stack.Navigator>
-       
-          <Stack.Screen
-            name="AllStack"
-            component={AllStack}
-            options={{headerShown:false}}
-          />
-       
-      </Stack.Navigator>
+  return (
+    <NavigationContainer>
+        <Stack.Navigator>
+            {isAuthenticated
+                ? (
+                    <Stack.Screen name="AllStack" component={AllStack} options={{headerShown:false}}/>
+                )
+                : (
+                    <Stack.Screen name="AuthStack" component={AuthStack} options={{headerShown:false}}/>
+                )
+            }
+        </Stack.Navigator>
     </NavigationContainer>
+);
 };
 
 export default AppNavigator;

@@ -26,7 +26,7 @@ const Account = ({ navigation }) => {
       setIsLoading(true);
 
       try {
-        const response = await axios.get("http://192.168.76.98:8000/api/user/658737f3c077263ab5db1b08");
+        const response = await axios.get("/user/658737f3c077263ab5db1b08");
         setUserData(response.data.datas); // Assuming the user data is in response.data.datas
       } catch (error) {
         console.error("Error fetching user data:", error);
