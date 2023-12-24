@@ -6,14 +6,46 @@ import { dataHeaderAdvertisement } from '../data/dataHeaderAdvertisement';
 import Casousel from 'react-native-snap-carousel';
 const { width: screenWidth } = Dimensions.get('window')
 import { useNavigation } from '@react-navigation/native';
-
+import axios from "axios";
+import { MovieContext } from '../context/movieContext';
 
 const Home = ({ navigation }) => {
     const sliderWidth = screenWidth;
     const itemWidth = screenWidth * 0.67;
     const itemWidthHeader = screenWidth * 0.8;
     const [backgroundIndex, setBackgroundIndex] = useState(0);
-    const [pressedButton, setPressedButton] = useState(null);
+  
+    const [pressedButton, setPressedButton] = useState('Now');
+    const [movies, setMovies] = useState([]);
+
+    useEffect(() => {
+      const fetchMovies = async () => {
+        try {
+          const response = await axios.get("http://192.168.1.8:8000/api/movie");
+          const nowShowingMovies = response.data?.datas.filter(item => item.categoryID.slug === 'Now');
+          setMovies(response.data?.datas);
+        } catch (error) {
+          console.error("Error fetching movies:", error);
+        }
+      };
+  
+      fetchMovies();
+    }, []);
+
+    // const [movies, setMovies] = useState([]);
+
+    // useEffect(() => {
+    //     const fetchMovies = async () => {
+    //         try {
+    //             const response = await axios.get('/api/movie'); 
+    //             setMovies(response.data?.movies);
+    //         } catch (error) {
+    //             console.error('Error fetching movies:', error);
+    //         }
+    //     };
+
+    //     fetchMovies();
+    // }, []);
 
     const handlePress = (buttonName) => {
         setPressedButton(buttonName);
@@ -32,6 +64,7 @@ const Home = ({ navigation }) => {
                     style={{ width: 13, height: 13, marginTop: 3 }}
                 />
                 <Text style={{ color: 'white', marginLeft: 2 }}>{item.evaluate}</Text>
+                {/* <Text style={{ color: 'white', marginLeft: 2 }}>{item.categoryID.slug}</Text> */}
                 <Image
                     source={require("../assets/image/time.png")}
                     style={{ width: 11, height: 11, marginLeft: 14, marginTop: 5, tintColor: 'white' }}
@@ -56,6 +89,16 @@ const Home = ({ navigation }) => {
             <Image source={{ uri: item.imagePath }} style={styles.itemHeader}></Image>
         </View>
     )
+    const filteredMovies = movies.filter(item => {
+        if (pressedButton === 'Now Showing') {
+          return item.categoryID.slug === 'Now';
+        } else if (pressedButton === 'Special') {
+          return item.categoryID.slug === 'Special';
+        } else if (pressedButton === 'Coming Soon') {
+          return item.categoryID.slug === 'Coming_Soon';
+        }
+        return true; // Default case, show all movies
+      });
 
 
     return (
@@ -99,7 +142,8 @@ const Home = ({ navigation }) => {
                 <Casousel
 
                     Layout='default'
-                    data={dataNowMovieList}
+                    //data={dataNowMovieList}
+                    data={filteredMovies}
                     renderItem={renderItem}
                     sliderWidth={sliderWidth}
                     itemWidth={itemWidth} />

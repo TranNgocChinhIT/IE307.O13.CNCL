@@ -194,7 +194,7 @@ const LocationAndTime = ({ navigation, route }) => {
                                                     ? { backgroundColor: '#CC0000' }
                                                     : {},
                                             ]}>
-                                            <Text style={styles.nameText}>{item.name}</Text>
+                                            <Text style={styles.nameText}>Rạp Dĩ An</Text>
                                         </View>
                                     </TouchableOpacity>
                                     <Text style={styles.addressText}>{item.address}</Text>
