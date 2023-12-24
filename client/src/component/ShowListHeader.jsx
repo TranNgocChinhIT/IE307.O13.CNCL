@@ -1,9 +1,13 @@
 import React, { useState } from "react";
 
-import { Text, View, StyleSheet } from "react-native";
+import { Text, TouchableOpacity, StyleSheet } from "react-native";
 
 const ShowListHeader = (props) => {
-  return <Text style={styles.text}>{props.title}</Text>;
+  return (
+    <TouchableOpacity onPress={props.onPress} style={styles.container}>
+      <Text style={styles.text}>{props.title}</Text>
+    </TouchableOpacity>
+  );
 };
 const styles = StyleSheet.create({
   text: {
@@ -22,6 +26,13 @@ const styles = StyleSheet.create({
     paddingVertical: "8px",
     paddingHorizontal: "8px",
     color: "Black",
+  },
+  normalText: {
+    color: "red",
+    //color: "#FFFAFA",
+  },
+  pressedText: {
+    color: "red", // Màu sắc khi được nhấn
   },
 });
 

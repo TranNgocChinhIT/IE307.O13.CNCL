@@ -14,22 +14,22 @@ const Home = ({ navigation }) => {
     const itemWidth = screenWidth * 0.67;
     const itemWidthHeader = screenWidth * 0.8;
     const [backgroundIndex, setBackgroundIndex] = useState(0);
-  
+
     const [pressedButton, setPressedButton] = useState('Now');
     const [movies, setMovies] = useState([]);
 
     useEffect(() => {
-      const fetchMovies = async () => {
-        try {
-          const response = await axios.get("http://192.168.1.8:8000/api/movie");
-          const nowShowingMovies = response.data?.datas.filter(item => item.categoryID.slug === 'Now');
-          setMovies(response.data?.datas);
-        } catch (error) {
-          console.error("Error fetching movies:", error);
-        }
-      };
-  
-      fetchMovies();
+        const fetchMovies = async () => {
+            try {
+                const response = await axios.get("http://192.168.1.8:8000/api/movie");
+                const nowShowingMovies = response.data?.datas.filter(item => item.categoryID.slug === 'Now');
+                setMovies(response.data?.datas);
+            } catch (error) {
+                console.error("Error fetching movies:", error);
+            }
+        };
+
+        fetchMovies();
     }, []);
 
     // const [movies, setMovies] = useState([]);
@@ -91,14 +91,14 @@ const Home = ({ navigation }) => {
     )
     const filteredMovies = movies.filter(item => {
         if (pressedButton === 'Now Showing') {
-          return item.categoryID.slug === 'Now';
+            return item.categoryID.slug === 'Now';
         } else if (pressedButton === 'Special') {
-          return item.categoryID.slug === 'Special';
+            return item.categoryID.slug === 'Special';
         } else if (pressedButton === 'Coming Soon') {
-          return item.categoryID.slug === 'Coming_Soon';
+            return item.categoryID.slug === 'Coming_Soon';
         }
         return true; // Default case, show all movies
-      });
+    });
 
 
     return (
@@ -125,16 +125,16 @@ const Home = ({ navigation }) => {
 
                 <View style={styles.title}>
 
-                    <TouchableOpacity onPress={() => handlePress('Now Showing')}>
-                        <ShowListHeader title={'Now Showing'} style={pressedButton === 'Now Showing' ? styles.pressedText : styles.normalText} />
+                    <TouchableOpacity >
+                        <ShowListHeader title={'Now Showing'} onPress={() => handlePress('Now Showing')} />
                     </TouchableOpacity>
 
-                    <TouchableOpacity onPress={() => handlePress('Special')}>
-                        <ShowListHeader style={[styles.Special, pressedButton === 'Special' ? styles.pressedText : styles.normalText]} title={'      Special'} />
+                    <TouchableOpacity>
+                        <ShowListHeader  onPress={() => handlePress('Special')} title={'      Special'} />
                     </TouchableOpacity>
 
-                    <TouchableOpacity onPress={() => handlePress('Coming Soon')}>
-                        <ShowListHeader title={'Coming Soon'} style={pressedButton === 'Coming Soon' ? styles.pressedText : styles.normalText} />
+                    <TouchableOpacity >
+                        <ShowListHeader title={'Coming Soon'} onPress={() => handlePress('Coming Soon')} />
                     </TouchableOpacity>
 
                 </View>

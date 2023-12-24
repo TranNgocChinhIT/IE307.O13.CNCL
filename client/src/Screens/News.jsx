@@ -1,6 +1,11 @@
 import React from 'react';
 
-import { Text, View, StyleSheet, Linking,Button } from 'react-native';
+import { Text, View, StyleSheet, Linking, Button,Image } from 'react-native';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import Review from './NewDetails/Review';
+import NewMovie from './NewDetails/NewMovie';
+import Character from './NewDetails/Character';
+const Tab = createMaterialTopTabNavigator();
 const openYouTubeApp = () => {
     // Tạo URL cho ứng dụng YouTube với video ID
     const youtubeUrl = `https://www.youtube.com/watch?v=ygvNCEbMusE`;
@@ -11,18 +16,49 @@ const openYouTubeApp = () => {
     );
 };
 const News = () => {
-
     return (
-        <View style={styles.container}>
-            <Text>
-                <Button
-                    title="Open YouTube Video"
-                    onPress={openYouTubeApp}
-                />
-            </Text>
+        <Tab.Navigator
+            screenOptions={({ route }) => ({
+                tabBarIcon: ({ focused, color, size }) => {
+                    let iconName;
+                    if (route.name === 'Review') {
+                        iconName = focused
+                            ? require('../assets/image/feedback.png')
+                            : require('../assets/image/feedback.png');
+          
+                    }
+                    else if (route.name === 'News') {
+                        iconName = focused
+                            ? require('../assets/image/newspaper.png')
+                            : require('../assets/image/newspaper.png');
+                    }
+                    else if (route.name === 'Character') {
+                        iconName = focused
+                            ? require('../assets/image/character.png')
+                            : require('../assets/image/character.png');
+                    }
+                  
+                    return <Image source={iconName} style={{ width: 20, height: 20 }} />;
 
-        </View>
-    )
+                },
+            })}
+        >
+            <Tab.Screen name="Review" component={Review} options={{
+                tabBarLabel: 'Review',
+                tabBarLabelStyle: { fontSize: 10 },
+            }} />
+            <Tab.Screen name="News" component={NewMovie} options={{
+                tabBarLabel: 'News',
+                tabBarLabelStyle: { fontSize: 10 },
+            }} />
+            <Tab.Screen name="Character" component={Character} options={{
+                tabBarLabel: 'Character',
+                tabBarLabelStyle: { fontSize: 10 },
+            }} />
+            
+        </Tab.Navigator>
+
+    );
 };
 const styles = StyleSheet.create({
     container: {},

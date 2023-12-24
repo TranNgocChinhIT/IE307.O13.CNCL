@@ -288,4 +288,149 @@ export const dataNowMovieList = [
           trailer:"https://www.youtube.com/watch?v=1H9HPbWt3es",
 
     },
+    {
+      id:8,
+      title: "NHÀ VỊT DI CƯ",
+      imagePath: "https://touchcinema.com/uploads/phim-2021/700x1000-migration-poster.jpg",
+      backdrop_path:"https://i.ex-cdn.com/giadinhmoi.vn/files/content/2022/09/28/bong-dung-trung-so-01-1636.jpg",
+      evaluate:2,
+      time: "1hrs 23mins",
+      date: "29/12/2023",
+      content:"Nhà Vịt Di Cư theo chân một gia đình vịt trời gồm vịt bố, vịt mẹ, cậu con trai tuổi teen Dax và vịt út Gwen, trong lần đầu tiên trải nghiệm chuyến di cư tiến về phía nam để trú đông. Thế nhưng, niềm vui vẻ sự háo hức kéo dài không bao lâu, gia đình vịt nhận ra, họ đang bay ngược chiều với tất cả các đàn vịt khác. Không kịp quay đầu, họ bất ngờ gặp phải loạt “chướng ngại vật” là những tòa nhà cao tầng của thành phố hiện đại. Liên tiếp sau đó là những thước phim đầy kịch tính nhưng vô cùng hài hước của nhà vịt trong quá trình khám phá đô thị mới.",
+      gendre:"Hoạt Hình",
+      director:"Benjamin Renner",
+      language:"Tiếng Anh - Phụ đề Tiếng Việt; Lồng tiếng",
+      cast: [
+          {
+            actorName: "Kumail Nanjiani",
+            actorImage: "https://media1.popsugar-assets.com/files/thumbor/FpfDfAVcjVr_3OtwxHlbFVDj8IU/fit-in/1024x1024/filters:format_auto-!!-:strip_icc-!!-/2020/03/24/725/n/1922398/ed186d6b990b1a18_GettyImages-880530556/i/hot-kumail-nanjiani-pictures.jpg",
+          },
+          {
+            actorName: "Elizabeth Banks",
+            actorImage: "https://celebmafia.com/wp-content/uploads/2019/11/elizabeth-banks-charlies-angels-premiere-in-london-9.jpg",
+          },
+         
+        ],
+        trailer:"https://www.youtube.com/watch?v=865RCGVYcSc",
+
+  },
+  {
+    id:9,
+    title: "ĐIỀU ƯỚC",
+    imagePath: "https://bazaarvietnam.vn/wp-content/uploads/2023/01/HBVN-phim-chieu-rap-2023-wish-1024x683.jpg",
+    backdrop_path:"https://bazaarvietnam.vn/wp-content/uploads/2023/01/HBVN-phim-chieu-rap-2023-wish-1024x683.jpg",
+    evaluate:7.5,
+    time: "1hrs 30mins",
+    date: "14/11/2023",
+    content:"Phim Điều Ước - Wish lấy bối cảnh ở vương quốc ma thuật Rosas, mang đến một câu chuyện nhiều màu sắc với âm nhạc lôi cuốn về cuộc hành trình của cô gái trẻ Asha và người bạn đồng hành là chú dê Valentino nhằm giải cứu Vương quốc của những điều ước.",
+    gendre:"Hoạt Hình",
+    director:"Benjamin Renner",
+    language:"Tiếng Anh - Phụ đề Tiếng Việt; Lồng tiếng",
+    cast: [
+        {
+          actorName: "Chris Pien",
+          actorImage: "https://s.hdnux.com/photos/43/44/15/9323389/3/1200x0.jpg",
+        },
+        {
+          actorName: "Alan Tudyk",
+          actorImage: "https://celebmafia.com/wp-content/uploads/2019/11/elizabeth-banks-charlies-angels-premiere-in-london-9.jpg",
+        },
+        
+      ],
+      trailer:"https://www.youtube.com/watch?v=xvyWeTBgJK4",
+
+},
+
+{
+  id:10,
+  title: "TOP GUN MAVERICK",
+  imagePath: "https://www.themoviedb.org/t/p/original/6plTmebpsVcqcXCuNAfIg0LCQQB.jpg",
+  backdrop_path:"https://images.hdqwalls.com/download/top-gun-maverick-movie-4k-l2-1920x1080.jpg",
+  evaluate:8.5,
+  time: "2hrs 10mins",
+  date: "27/05/2022",
+  content:"Sau hơn ba mươi năm phục vụ, Pete “Maverick” Mitchell từng nổi danh là một phi công thử nghiệm quả cảm hàng đầu của Hải quân, né tránh cơ hội thăng chức, điều khiến anh cảm thấy bị bó buộc, để trở về làm chính mình.",
+  gendre:"Hành Động, Phiêu Lưu",
+  director:"Joseph Kosinski",
+  language:"Tiếng Anh - Phụ đề Tiếng Việt",
+  cast: [
+      {
+        actorName: "Tom Cruise",
+        actorImage: "https://images.mubicdn.net/images/cast_member/2184/cache-2992-1547409411/image-w856.jpg",
+      },
+      {
+        actorName: "Justin Marks",
+        actorImage: "https://tse2.mm.bing.net/th?id=OIP.796OIOJof_F9H77CxkzO9gHaFi&pid=Api&P=0&h=220",
+      },
+      {
+        actorName: "Peter Craig",
+        actorImage: "https://4.bp.blogspot.com/-OJ4Xdu-exZo/V_IgYQqMoNI/AAAAAAAACss/ysb7B3N1WO4Bw6islmparlm4ehMngURIwCLcB/s1600/Peter%2BCraig.jpg",
+      },
+      
+    ],
+    trailer:"https://www.youtube.com/watch?v=ZR99nOkEolM",
+
+},
+{
+  id:11,
+  title: "ĐẾ CHẾ NAPOLEON",
+  imagePath: "https://fr.web.img6.acsta.net/pictures/23/07/17/15/06/1535719.jpg",
+  backdrop_path:"https://cdn.theplaylist.net/wp-content/uploads/2016/04/03142755/Napoleon-Joaquin-Phoenix-Ridley-Scott.jpg",
+  evaluate:7.4,
+  time: "2hrs 38mins",
+  date: "01/12/2023",
+  content:"Bộ phim là cái nhìn nguyên bản và cá nhân về nguồn gốc của Napoléon Bonaparte và quá trình leo lên ngôi hoàng đế nhanh chóng, tàn nhẫn của ông. Câu chuyện được kể qua lăng kính của vợ ông, mối quan hệ phức tạp và thường xuyên bất ổn, cùng Josephine, một tình yêu đích thực.",
+  gendre:"Hành Động, Phiêu Lưu, Tâm Lý, Tiểu Sử",
+  director:"Ridley Scott",
+  language:"Tiếng Anh - Phụ đề Tiếng Việt",
+  cast: [
+      {
+        actorName: "Vanessa Kirby",
+        actorImage: "https://es.web.img3.acsta.net/pictures/18/07/13/10/45/0111353.jpg",
+      },
+      {
+        actorName: "Joaquin Phoenix",
+        actorImage: "https://cdn.britannica.com/63/215263-050-6C78005B/American-actor-Joaquin-Phoenix-2020.jpg",
+      },
+     
+        {
+          actorName: "Ludivine Sagnier",
+          actorImage: "https://image.tmdb.org/t/p/original/hHYq2MfSF9R26pVNJBjVUZPCvMM.jpg",
+        },
+       
+    ],
+    trailer:"https://www.youtube.com/watch?v=jcHOy5PARhY",
+
+},
+{
+  id:11,
+  title: "ĐẾ CHẾ NAPOLEON",
+  imagePath: "https://fr.web.img6.acsta.net/pictures/23/07/17/15/06/1535719.jpg",
+  backdrop_path:"https://cdn.theplaylist.net/wp-content/uploads/2016/04/03142755/Napoleon-Joaquin-Phoenix-Ridley-Scott.jpg",
+  evaluate:7.4,
+  time: "2hrs 38mins",
+  date: "01/12/2023",
+  content:"Bộ phim là cái nhìn nguyên bản và cá nhân về nguồn gốc của Napoléon Bonaparte và quá trình leo lên ngôi hoàng đế nhanh chóng, tàn nhẫn của ông. Câu chuyện được kể qua lăng kính của vợ ông, mối quan hệ phức tạp và thường xuyên bất ổn, cùng Josephine, một tình yêu đích thực.",
+  gendre:"Hành Động, Phiêu Lưu, Tâm Lý, Tiểu Sử",
+  director:"Ridley Scott",
+  language:"Tiếng Anh - Phụ đề Tiếng Việt",
+  cast: [
+      {
+        actorName: "Vanessa Kirby",
+        actorImage: "https://es.web.img3.acsta.net/pictures/18/07/13/10/45/0111353.jpg",
+      },
+      {
+        actorName: "Joaquin Phoenix",
+        actorImage: "https://cdn.britannica.com/63/215263-050-6C78005B/American-actor-Joaquin-Phoenix-2020.jpg",
+      },
+     
+        {
+          actorName: "Ludivine Sagnier",
+          actorImage: "https://image.tmdb.org/t/p/original/hHYq2MfSF9R26pVNJBjVUZPCvMM.jpg",
+        },
+       
+    ],
+    trailer:"https://www.youtube.com/watch?v=jcHOy5PARhY",
+
+},
 ];
