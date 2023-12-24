@@ -1,65 +1,128 @@
-import React, { useState, useEffect } from 'react';
-import { View, Image, Button, StyleSheet } from 'react-native';
-import * as ImagePicker from 'expo-image-picker';
+import React, { useContext, useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  Button,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
+import axios from "axios";
+import Icon from "react-native-vector-icons/Ionicons";
+import { AuthContext } from "../navigators/AuthContext";
 
-const Account = () => {
-  const [image, setImage] = useState();
+const Account = ({ navigation }) => {
+  const { userID, logout, userUpdate, setUserUpdate } = useContext(AuthContext);
+  const [userData, setUserData] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const [modalVisible, setModalVisible] = useState(false);
+  const handleOnPressLogout = () => {
+    logout();
+  };
 
-  const uploadImage = async () => {
-    try {
-      await ImagePicker.
-        ImagePicker.requestCameraPermissionsAsync();
-      let result = await ImagePicker.
-        launchCameraAsync({
-          cameraType: ImagePicker.CameraType.front,
-          allowsEditing: true,
-          aspect: [1, 1],
-          quality: 1,
-        });
-      if (!result.canceled) {
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
 
-        await saveImage(result.assets[0].uri);
+      try {
+        const response = await axios.get("http://192.168.76.98:8000/api/user/658737f3c077263ab5db1b08");
+        setUserData(response.data.datas); // Assuming the user data is in response.data.datas
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      } finally {
+        setIsLoading(false);
       }
-    } catch (error) {
-      alert("Eroor uploading iamge: " + error.message);
-      setModalVisible(false);
-    }
-  }
-  const saveImage = async () => {
-    try {
-      setImage(image);
-      setModalVisible(false);
-    } catch (error) {
-      throw error;
-    }
-  }
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <View style={styles.container}>
-      <View style={{marginTop:20,}}>
-        <Image
-          source={require("../assets/image/panda.png")}
-          style={{ width: 100, height: 100, borderRadius:100, }}
-        />
+      <View>
+        <View style={styles.header}>
+          <View style={styles.headerTitle}>
+            <Image
+              source={{
+                uri: "https://internet-israel.com/wp-content/uploads/2018/07/React_Native_Logo-768x403.png",
+              }}
+              style={styles.imageStyle}
+            />
+            <Text style={styles.textBoldHeader}></Text>
+          </View>
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate("EditAccount", { initialUserData: userData })
+            }
+          >
+            <Icon
+              name="enter-outline"
+              size={30}
+              color={"#2196f3"}
+              style={styles.headerIcon}
+            />
+          </TouchableOpacity>
+        </View>
+            <Text style={styles.textBold}>Name:</Text>
+            <Text style={styles.textStyle}>{userData?.userName}</Text>
+            <Text style={styles.textBold}>Email:</Text>
+            <Text style={styles.textStyle}>{userData?.email}</Text>
+            <Text style={styles.textBold}>Phone:</Text>
+            <Text style={styles.textStyle}>{userData?.phone}</Text>
+            <Text style={styles.textBold}>Address:</Text>
+            <Text style={styles.textStyle}>{userData?.region}</Text>
+    
       </View>
-      <Button title="Chọn ảnh" onPress={uploadImage} />
-      {image && <Image source={{ uri: { image } }} style={styles.image} />}
+      <Button title="Logout" onPress={handleOnPressLogout} />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  activityIndicatorContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: "50%",
+  },
   container: {
     flex: 1,
-    // justifyContent: 'center',
-    alignItems: 'center',
+    margin: 10,
   },
-  image: {
-    marginTop: 10,
-    width: 200,
-    height: 200,
-    resizeMode: 'cover',
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  headerTitle:{
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  headerIcon: {
+    marginLeft: 30,
+  },
+  imageStyle: {
+    width: 80,
+    height: 80,
+    borderRadius: 100,
+    margin: 5,
+  },
+  textStyle: {
+    fontSize: 16,
+    color: "#333",
+    margin: 10,
+  },
+  textBold: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#333",
+  },
+  textBoldHeader: {
+    fontSize: 23,
+    fontWeight: "bold",
+    color: "#333",
+    alignItems: "center",
+    marginLeft: 30,
   },
 });
 

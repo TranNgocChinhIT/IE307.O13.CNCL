@@ -1,10 +1,10 @@
 import React from "react";
-import Account from "../Screens/Account";
 import Home from "../Screens/Home";
 import News from "../Screens/News";
 import Ticket from "../Screens/Ticket";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Text, View, StyleSheet, Image, ImageBackground } from "react-native";
+import Account from "../Screens/Account";
 const Bottom = createBottomTabNavigator();
 
 const HomeStack = () => {
