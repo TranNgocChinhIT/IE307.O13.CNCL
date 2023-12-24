@@ -1,7 +1,7 @@
 import React, { useState,useContext } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity, TextInput,Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import {AuthContext} from '../navigators/AuthContext';
+import {AuthContext} from '../context/AuthContext';
 
 const Login = () => {
   const navigation = useNavigation();

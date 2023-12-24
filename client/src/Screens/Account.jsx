@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import axios from "axios";
 import Icon from "react-native-vector-icons/Ionicons";
-import { AuthContext } from "../navigators/AuthContext";
+import { AuthContext } from "../context/AuthContext";
 
 const Account = ({ navigation }) => {
   const { userID, logout, userUpdate, setUserUpdate } = useContext(AuthContext);

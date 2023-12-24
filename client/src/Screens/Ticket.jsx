@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Text, View, StyleSheet, FlatList, Image } from 'react-native';
-import { useTicketContext } from '../navigators/DataContext';
+import { useTicketContext } from '../context/DataContext';
 
 const Ticket = () => {
     const { ticketDataContext } = useTicketContext();

@@ -8,7 +8,7 @@ import {
   StyleSheet,
 } from "react-native";
 import axios from "axios";
-import { AuthContext } from "../navigators/AuthContext";
+import { AuthContext } from "../context/AuthContext";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 const EditAccount = ({ route, navigation }) => {

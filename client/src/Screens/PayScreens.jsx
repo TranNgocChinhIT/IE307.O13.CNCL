@@ -4,7 +4,7 @@ import MoMoPayment from 'react-native-momosdk';
 import { useRoute } from '@react-navigation/native';
 import * as SecureStore from 'expo-secure-store';
 import Modal from 'react-native-modal';
-import { useTicketContext } from '../navigators/DataContext';
+import { useTicketContext } from '../context/DataContext';
 const PayScreens = ({ navigation, route }) => {
     const momoLink = 'https://me.momo.vn/bmIeTAt8U7UgUxfBF5IPU8'; // Thay thế bằng đường link Momo của bạn
 
