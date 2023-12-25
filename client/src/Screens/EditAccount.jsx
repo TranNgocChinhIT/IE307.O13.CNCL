@@ -1,85 +1,37 @@
-import React, { useContext, useState, useEffect,useLayoutEffect } from "react";
-import {
-  ScrollView,
-  View,
-  Text,
-  Button,
-  TextInput,
-  StyleSheet,
-} from "react-native";
+import React, { useContext, useState, useEffect, useLayoutEffect } from "react";
+import { ScrollView, View, Text, TextInput, StyleSheet } from "react-native";
 import axios from "axios";
 import { AuthContext } from "../context/AuthContext";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
-const EditAccount = ({ route, navigation }) => {
-  const { userUpdate, setUserUpdate, userID } = useContext(AuthContext);
-  const { initialUserData } = route.params;
-  const [newUserData, setNewUserData] = useState({
-    firstname: initialUserData.name?.firstname || "",
-    lastname: initialUserData.name?.lastname || "",
-    username: initialUserData.username || "",
-    email: initialUserData.email || "",
-    phone: initialUserData.phone || "",
-    number: initialUserData.address?.number || "",
-    street: initialUserData.address?.street || "",
-    city: initialUserData.address?.city || "",
+const EditAccount = ({ navigation }) => {
+  const { user, setUser } = useContext(AuthContext);
+  const [updatedUser, setUpdatedUser] = useState({
+    userName: "",
+    email: "",
+    phone: "",
+    region: "",
   });
 
-  const handleUpdateProfile = () => {
-    // Perform PUT request to update user profile
-    axios
-      .put(`https://fakestoreapi.com/users/${userID}`, {
-        address: {
-          geolocation: {
-            lat: initialUserData.address?.geolocation?.lat || "",
-            long: initialUserData.address?.geolocation?.long || "",
-          },
-          city: newUserData.city,
-          street: newUserData.street,
-          number: newUserData.number,
-          zipcode: initialUserData.address?.zipcode || "",
-        },
-        id: initialUserData.id,
-        email: newUserData.email,
-        username: newUserData.username,
-        password: initialUserData.password,
-        name: {
-          firstname: newUserData.firstname,
-          lastname: newUserData.lastname,
-        },
-        phone: newUserData.phone,
-        __v: initialUserData.__v || 0,
-      })
-      .then(() => {
-        // Update local state and navigate back
-        setUserUpdate({
-          address: {
-            geolocation: {
-              lat: initialUserData.address?.geolocation?.lat || "",
-              long: initialUserData.address?.geolocation?.long || "",
-            },
-            city: newUserData.city,
-            street: newUserData.street,
-            number: newUserData.number,
-            zipcode: newUserData.address?.zipcode || "",
-          },
-          id: initialUserData.id,
-          email: newUserData.email,
-          username: newUserData.username,
-          password: initialUserData.password,
-          name: {
-            firstname: newUserData.firstname,
-            lastname: newUserData.lastname,
-          },
-          phone: newUserData.phone,
-          __v: initialUserData.__v || 0,
-        });
-        navigation.goBack();
-      })
-      .catch((error) => {
-        console.error("Error updating user profile:", error);
-      });
-  };
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      try {
+        const response = await axios.get(`/user/${user.userID}`);
+        setUpdatedUser(response.data.datas);
+      } catch (error) {
+        console.error("Lỗi khi lấy chi tiết người dùng:", error);
+      }
+    };
+
+    const unsubscribe = navigation.addListener("focus", () => {
+      if (user.userID) {
+        fetchUserDetails();
+      }
+    });
+
+    return unsubscribe;
+  }, [navigation, user.userID]);
+
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
@@ -93,80 +45,52 @@ const EditAccount = ({ route, navigation }) => {
       ),
     });
   }, [navigation, handleUpdateProfile]);
+
+  const handleInputChange = (field, value) => {
+    setUpdatedUser((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleUpdateProfile = async () => {
+    try {
+      const response = await axios.put(`/user/${user.userID}`, updatedUser);
+      setUpdatedUser(response.data.datas);
+      navigation.goBack();
+    } catch (error) {
+      console.error("Lỗi khi cập nhật thông tin người dùng:", error);
+    }
+  };
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.headerTitle}>
-        <View>
-          <Text style={styles.textBold}>FirstName</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="First Name"
-            value={newUserData.firstname}
-            onChangeText={(text) =>
-              setNewUserData({ ...newUserData, firstname: text })
-            }
-          />
-        </View>
-        <View style={styles.headerLastName}>
-          <Text style={styles.textBold}>LastName</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Last Name"
-            value={newUserData.lastname}
-            onChangeText={(text) =>
-              setNewUserData({ ...newUserData, lastname: text })
-            }
-          />
-        </View>
+        <Text style={styles.textBold}>Tên người dùng:</Text>
+        <TextInput
+          style={styles.input}
+          value={updatedUser.userName}
+          onChangeText={(text) => handleInputChange("userName", text)}
+        />
+
+        <Text style={styles.textBold}>Email:</Text>
+        <TextInput
+          style={styles.input}
+          value={updatedUser.email}
+          onChangeText={(text) => handleInputChange("email", text)}
+        />
+
+        <Text style={styles.textBold}>Số điện thoại:</Text>
+        <TextInput
+          style={styles.input}
+          value={updatedUser.phone}
+          onChangeText={(text) => handleInputChange("phone", text)}
+        />
+
+        <Text style={styles.textBold}>Khu vực:</Text>
+        <TextInput
+          style={styles.input}
+          value={updatedUser.region}
+          onChangeText={(text) => handleInputChange("region", text)}
+        />
       </View>
-      <Text style={styles.textBold}>Username</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Username"
-        value={newUserData.username}
-        onChangeText={(text) =>
-          setNewUserData({ ...newUserData, username: text })
-        }
-      />
-      <Text style={styles.textBold}>Email</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        value={newUserData.email}
-        onChangeText={(text) => setNewUserData({ ...newUserData, email: text })}
-      />
-      <Text style={styles.textBold}>Phone</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Phone Number"
-        value={newUserData.phone}
-        onChangeText={(text) => setNewUserData({ ...newUserData, phone: text })}
-      />
-      <Text style={styles.textBold}>House Number</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="House Number"
-        value={newUserData.number.toString()}
-        onChangeText={(text) =>
-          setNewUserData({ ...newUserData, number: text })
-        }
-      />
-      <Text style={styles.textBold}>Street</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Street"
-        value={newUserData.street}
-        onChangeText={(text) =>
-          setNewUserData({ ...newUserData, street: text })
-        }
-      />
-      <Text style={styles.textBold}>City</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="City"
-        value={newUserData.city}
-        onChangeText={(text) => setNewUserData({ ...newUserData, city: text })}
-      />
     </ScrollView>
   );
 };
@@ -179,12 +103,8 @@ const styles = StyleSheet.create({
   checkIcon: {
     marginRight: 20,
   },
-  headerLastName: {
-    marginRight: 40,
-  },
   headerTitle: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: "column",
   },
   textBold: {
     fontSize: 20,

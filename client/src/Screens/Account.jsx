@@ -1,43 +1,31 @@
 import React, { useContext, useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  Button,
-  Image,
-  StyleSheet,
-  TouchableOpacity,
-  ActivityIndicator,
-} from "react-native";
+import { View, Text, Button, Image, StyleSheet, TouchableOpacity } from "react-native";
 import axios from "axios";
 import Icon from "react-native-vector-icons/Ionicons";
 import { AuthContext } from "../context/AuthContext";
 
 const Account = ({ navigation }) => {
-  const { userID, logout, userUpdate, setUserUpdate } = useContext(AuthContext);
+  const { user, logout } = useContext(AuthContext);
   const [userData, setUserData] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
 
-  const handleOnPressLogout = () => {
-    logout();
+ 
+  const fetchUserData = async () => {
+    try {
+      const response = await axios.get(`/user/${user.userID}`);
+      setUserData(response.data.datas);
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
+    // Gọi API mỗi khi màn hình Account được hiển thị
+    const unsubscribe = navigation.addListener('focus', () => {
+      fetchUserData();
+    });
 
-      try {
-        const response = await axios.get("/user/658737f3c077263ab5db1b08");
-        setUserData(response.data.datas); // Assuming the user data is in response.data.datas
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
-
+    return unsubscribe;
+  }, [navigation]);
   return (
     <View style={styles.container}>
       <View>
@@ -51,40 +39,29 @@ const Account = ({ navigation }) => {
             />
             <Text style={styles.textBoldHeader}></Text>
           </View>
-          <TouchableOpacity
-            onPress={() =>
-              navigation.navigate("EditAccount", { initialUserData: userData })
-            }
-          >
-            <Icon
-              name="enter-outline"
-              size={30}
-              color={"#2196f3"}
-              style={styles.headerIcon}
-            />
+          <TouchableOpacity onPress={() => navigation.navigate('EditAccount')}>
+            <Icon name="enter-outline" size={30} color={"#2196f3"} style={styles.headerIcon} />
           </TouchableOpacity>
         </View>
+        {userData && (
+          <>
             <Text style={styles.textBold}>Name:</Text>
-            <Text style={styles.textStyle}>{userData?.userName}</Text>
+            <Text style={styles.textStyle}>{userData.userName}</Text>
             <Text style={styles.textBold}>Email:</Text>
-            <Text style={styles.textStyle}>{userData?.email}</Text>
+            <Text style={styles.textStyle}>{userData.email}</Text>
             <Text style={styles.textBold}>Phone:</Text>
-            <Text style={styles.textStyle}>{userData?.phone}</Text>
+            <Text style={styles.textStyle}>{userData.phone}</Text>
             <Text style={styles.textBold}>Address:</Text>
-            <Text style={styles.textStyle}>{userData?.region}</Text>
-    
+            <Text style={styles.textStyle}>{userData.region}</Text>
+          </>
+        )}
       </View>
-      <Button title="Logout" onPress={handleOnPressLogout} />
+      <Button title="Logout" onPress={logout} />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  activityIndicatorContainer: {
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: "50%",
-  },
   container: {
     flex: 1,
     margin: 10,
@@ -94,7 +71,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
-  headerTitle:{
+  headerTitle: {
     flexDirection: "row",
     alignItems: "center",
   },

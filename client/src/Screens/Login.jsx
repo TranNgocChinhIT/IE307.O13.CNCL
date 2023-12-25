@@ -5,23 +5,13 @@ import {AuthContext} from '../context/AuthContext';
 
 const Login = () => {
   const navigation = useNavigation();
-  const [userName, setUserName] = useState("johnd");
-  const [password, setPassword] = useState("m38rmF$");
-  const { login,isLogin ,setIsLogin } = useContext(AuthContext);
+  const [email, setEmail] = useState("dangkihoa@gmail.com");
+  const [password, setPassword] = useState("123456789");
+  const { login } = useContext(AuthContext);
 
-  useEffect(() => {
-    // Khi giá trị isLogin thay đổi, kiểm tra và hiển thị thông báo
-    if (isLogin === false) {
-      Alert.alert(
-        "Login failed",
-        "Incorrect email or password. Please try again.",
-        [{ text: "OK" }]
-      );
-    }
-  }, [isLogin]); 
-  const handleLogin = async (userName, password) => {
+  const handleLogin = async (email, password) => {
     try {
-      await login(userName, password);
+      await login(email, password);
       
     } catch (error) {
       console.error(error)
@@ -49,9 +39,9 @@ const Login = () => {
         ></Image>
         <TextInput
           style={styles.textI}
-          placeholder="userName"
-          value={userName}
-          onChangeText={setUserName}
+          placeholder="Email"
+          value={email}
+          onChangeText={setEmail}
         />
       </View>
       <View style={styles.containerTextInput}>
@@ -64,6 +54,8 @@ const Login = () => {
         <TextInput
           style={styles.textI}
           placeholder="Password"
+          secureTextEntry={true}
+          autoComplete="password"
           value={password}
           onChangeText={setPassword}
         />
@@ -73,7 +65,7 @@ const Login = () => {
       </View>
       <TouchableOpacity
         style={styles.button}
-        onPress={() => handleLogin(userName, password)}
+        onPress={() => handleLogin(email, password)}
       >
         <Text style={styles.textLogin}>LOG IN</Text>
       </TouchableOpacity>

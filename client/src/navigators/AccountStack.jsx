@@ -12,6 +12,7 @@ const AccountStack = () => {
       <Stack.Screen
         name="Account"
         component={Account}
+        options={{headerShown:false}}
       />
       <Stack.Screen
         name="EditAccount"

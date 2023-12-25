@@ -1,33 +1,43 @@
-import React ,{createContext,useState} from 'react';
+import React, { createContext, useState, useEffect } from 'react';
+import axios from 'axios';
 
 const AuthContext = createContext();
 
-const AuthProvider = ({children}) => {
+const AuthProvider = ({ children }) => {
   const [isAuthenticated, setisAuthenticated] = useState(true);
-  const [user, setUser] = useState(null);
-  const [isLogin,setIsLogin] =  useState(null);
+  const [user, setUser] = useState({
+    userID: '',
+    accessToken: '',
+  });
+
   const logout = () => {
-    // Xóa dữ liệu người dùng và token khỏi context
+    // Clear user data and token from context
     setisAuthenticated(false);
-    setIsLogin(null);
+    setUser({
+      userID: '',
+      accessToken: '',
+    });
   };
 
-  const login = (email, password) => {
-    axios
-      .post("https://fakestoreapi.com/auth/login", {
+  const login = async (email, password) => {
+    try {
+      const response = await axios.post('auth/signin', {
         email,
         password,
-      })
-      .then((res) => {
-        setisAuthenticated(true);
-        setIsLogin(true);
-
-      })
-      .catch((e) => {
-        console.log(`Login error ${e}`);
-        setIsLogin(false);
       });
+
+      setisAuthenticated(true);
+      setUser({
+        userID: response.data.user._id,
+        accessToken: response.data.accessToken,
+      });
+    } catch (error) {
+      console.error(`Login error: ${error.message}`);
+    }
   };
+
+  useEffect(() => {
+  }, [user]);
 
   return (
     <AuthContext.Provider
@@ -35,8 +45,8 @@ const AuthProvider = ({children}) => {
         isAuthenticated,
         login,
         logout,
-        isLogin,
-        setIsLogin,
+        user,
+        setUser,
       }}
     >
       {children}

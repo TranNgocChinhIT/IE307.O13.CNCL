@@ -5,6 +5,7 @@ import Ticket from "../Screens/Ticket";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Text, View, StyleSheet, Image, ImageBackground } from "react-native";
 import Account from "../Screens/Account";
+import AccountStack from "./AccountStack";
 const Bottom = createBottomTabNavigator();
 
 const HomeStack = () => {
@@ -87,7 +88,7 @@ const HomeStack = () => {
             color:'white',
           },
         }}/>
-        <Bottom.Screen name="Account" component={Account} options={{
+        <Bottom.Screen name="AccountStack" component={AccountStack} options={{
           tabBarShowLabel: true,
           tabBarShowLabelColor: 'black',
           tabBarIcon: ({ focused, color, size }) => {
