@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const scheduleSchema = new mongoose.Schema(
   {
     screeningDate: {
-      type: Date,
+      type: String,
       required: true,
     },
     screeningTime: {

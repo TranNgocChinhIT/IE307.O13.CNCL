@@ -1,93 +1,70 @@
-import { View, Text, StyleSheet } from 'react-native'
-import React, { useEffect, useState, FlatList } from 'react';
+import { View, Text, StyleSheet, Image, Dimensions, FlatList } from 'react-native';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-
+import Casousel from 'react-native-snap-carousel';
+const { width: screenWidth } = Dimensions.get('window')
 const TicketPending = () => {
-  // const [bookings, setBookings] = useState([]);
-  // const [error, setError] = useState(null);
-
-  // useEffect(() => {
-  //   const fetchBookings = async () => {
-  //     try {
-  //       const response = await axios.get('/booking'); // Replace with your actual API URL
-  //       setBookings(response.data.datas);
-  //     } catch (error) {
-  //       console.error('Error fetching bookings:', error);
-  //       setError(error.message || 'An error occurred while fetching bookings.');
-  //     }
-  //   };
-
-  //   fetchBookings();
-  // }, []);
-
-  // if (error) {
-  //   return (
-  //     <View>
-  //       <Text>Error: {error}</Text>
-  //     </View>
-  //   );
-  // }
-
-  // if (!bookings || bookings.length === 0) {
-  //   return (
-  //     <View>
-  //       <Text>No bookings found for this user.</Text>
-  //     </View>
-  //   );
-  // }
   const [userBookings, setUserBookings] = useState([]);
+  const [movieSchedules, setMovieSchedules] = useState([]);
   const [error, setError] = useState(null);
-
+  const sliderWidth = screenWidth;
+  const itemWidth = screenWidth * 0.67;
+  const itemWidthHeader = screenWidth * 0.8;
   useEffect(() => {
     const fetchUserBookings = async () => {
       try {
-        // Đặt userId là id của người dùng bạn muốn lấy danh sách đặt vé
-        const user = '658295aeb31ceea07b228b6f';
-
+        const user = '6588ceb8b642502ef8f3d2d6';
         const response = await axios.get(`/booking/user/${user}`);
-
         setUserBookings(response.data.datas);
       } catch (error) {
-        console.error("Lỗi khi lấy danh sách đặt vé:", error);
-        setError(error.message || "Có lỗi xảy ra khi lấy danh sách đặt vé.");
+        console.error("Error fetching user bookings:", error);
+        setError(error.message || "An error occurred while fetching user bookings.");
       }
     };
 
     fetchUserBookings();
   }, []);
+  const filteredBookings = userBookings.filter(item => item.paymentStatus === 'pending');
+  const renderItem = ({ item }) => (
+    <View style={styles.ticketItem}>
+      <View style={{ flexDirection: 'row' }}>
+        <Image
+          style={styles.image}
+          source={{ uri: item.movieScheduleRelationship.movie.imagePath }}
+        />
+        <View style={{ flexDirection: 'column', marginLeft: 10 }}>
+          <Text style={{ fontWeight: 'bold' }}>{item.movieScheduleRelationship.movie.title}</Text>
+          <Text >{item.movieScheduleRelationship.schedule.screeningTime}, {item.movieScheduleRelationship.schedule.screeningDate}</Text>
+          {/* <Text>
+  Seats: {item?.selectedSeats && (
+    item.selectedSeats.slice(0, 3).map((seatId, index, arr) => (
+      <React.Fragment key={index}>
+        {index > 0 && ', '}
+        {item.movieScheduleRelationship.seats.find(seat => seat._id === seatId)?.number}
+      </React.Fragment>
+    ))
+  )}
+</Text> */}
+          <Text>Number of Tickets: {item.numberOfTickets}</Text>
+          <Text>Total Amount: {item.totalAmount}</Text>
+          <Text>Payment Status: {item.paymentStatus}</Text>
+        </View>
+      </View>
+    </View>
+  );
+
   return (
     <View style={styles.container}>
-      {userBookings.map(booking => (
-        <View key={booking._id} style={styles.bookingContainer}>
-        <View style={styles.ticketItem}>
-          <View style={{ flexDirection: 'row' }}>
 
-            {/* <Image style={styles.image} source={{ uri: item.note.imagePath }}>
-
-            </Image> */}
-            <View style={{ flexDirection: 'column', marginLeft: 10, }}>
-              {/* <Text style={{ fontWeight: 'bold' }}>{item.note.title}</Text> */}
-              <Text>Number of Tickets: {booking.numberOfTickets}</Text>
-          <Text>Total Amount: {booking.totalAmount}</Text>
-          <Text>Payment Status: {booking.paymentStatus}</Text>
-
-              {/* <Text>
-
-                Seats: {item?.seatArray.slice(0, 3).map((item, index, arr) => (
-                  <React.Fragment key={index}>
-                    {item}
-                    {index === arr.length - 1 ? '' : ', '}
-                  </React.Fragment>
-                ))}
-              </Text> */}
-            </View>
-          </View>
-        </View>
-        </View>
-      ))}
+      <FlatList
+        data={filteredBookings}
+        renderItem={renderItem}
+        keyExtractor={(item, index) => index.toString()}
+        horizontal={false}
+      />
 
     </View>
-  )
+  );
 };
 
 const styles = StyleSheet.create({
@@ -104,11 +81,7 @@ const styles = StyleSheet.create({
     borderColor: '#CCCCCC',
     borderRadius: 8,
   },
-  productList: {
-    // Add styles for FlatList if needed
-  },
   ticketItem: {
-    // Add styles for each ticket item if needed
     marginBottom: 10,
     padding: 10,
     borderWidth: 1,
@@ -119,7 +92,6 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
   },
-
 });
 
 export default TicketPending;
