@@ -19,23 +19,26 @@ const AuthProvider = ({ children }) => {
     });
   };
 
-  const login = async (email, password) => {
-    try {
-      const response = await axios.post('auth/signin', {
-        email,
-        password,
-      });
-
+  const login = (email, password) => {
+    axios.post('auth/signin', {
+      email,
+      password,
+    })
+    .then(response => {
       setisAuthenticated(true);
       setUser({
         userID: response.data.user._id,
         accessToken: response.data.accessToken,
       });
-    } catch (error) {
+    })
+    .catch(error => {
       console.error(`Login error: ${error.message}`);
-    }
+    });
   };
+  let accessToken = user.accessToken;
 
+  //default axios setting
+  //axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
   useEffect(() => {
   }, [user]);
 

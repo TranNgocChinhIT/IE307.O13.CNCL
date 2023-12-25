@@ -1,95 +1,115 @@
-import React, { useState,useContext,useEffect } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, TextInput,Alert } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import {AuthContext} from '../context/AuthContext';
+import React, { useState, useContext, useEffect } from "react";
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  TextInput,
+  Alert,
+} from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { AuthContext } from "../context/AuthContext";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 const Login = () => {
   const navigation = useNavigation();
   const [email, setEmail] = useState("dangkihoa@gmail.com");
   const [password, setPassword] = useState("123456789");
+  const [showPassword, setShowPassword] = useState(false); // Thêm state để theo dõi trạng thái hiển thị mật khẩu
   const { login } = useContext(AuthContext);
 
   const handleLogin = async (email, password) => {
     try {
       await login(email, password);
-      
     } catch (error) {
-      console.error(error)
+      console.error(error);
     }
+  };
+
+  const handleTogglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
 
   const handleOnPressSignup = () => {
     navigation.navigate("Signup");
   };
+
   return (
     <View>
       <Image
         style={styles.imageStyle}
-        source={{
-          uri: "https://internet-israel.com/wp-content/uploads/2018/07/React_Native_Logo-768x403.png",
-        }}
+        source={require("../assets/image/login.jpg")}
       />
-      <Text style={styles.text}>Welcome</Text>
-      <View style={styles.containerTextInput}>
-        <Image
-          style={styles.imageTextInput}
-          source={{
-            uri: "https://clipground.com/images/email-icon-clipart-transparent-1.png",
-          }}
-        ></Image>
-        <TextInput
-          style={styles.textI}
-          placeholder="Email"
-          value={email}
-          onChangeText={setEmail}
-        />
-      </View>
-      <View style={styles.containerTextInput}>
-        <Image
-          style={styles.imageTextInput}
-          source={{
-            uri: "https://tse1.mm.bing.net/th?id=OIP.PO4tSlis-6R6EjopPKu0xQHaEH&pid=Api&P=0&h=220",
-          }}
-        ></Image>
-        <TextInput
-          style={styles.textI}
-          placeholder="Password"
-          secureTextEntry={true}
-          autoComplete="password"
-          value={password}
-          onChangeText={setPassword}
-        />
-      </View>
-      <View style={styles.forgotContainer}>
-        <Text style={styles.Forgot}>Forgot password?</Text>
-      </View>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => handleLogin(email, password)}
-      >
-        <Text style={styles.textLogin}>LOG IN</Text>
-      </TouchableOpacity>
-      <Text style={styles.text}> Or login with</Text>
+      <View>
+        <Text style={styles.text}>DreamCiné</Text>
+        <View style={styles.containerTextInput}>
+          <MaterialIcons
+            name="alternate-email"
+            size={20}
+            color="#666"
+            style={styles.iconStyle}
+          />
+          <TextInput
+            style={styles.textI}
+            placeholder="Email"
+            value={email}
+            onChangeText={setEmail}
+          />
+        </View>
+        <View style={styles.containerTextInput}>
+          <Ionicons
+            name="ios-lock-closed-outline"
+            size={20}
+            color="#666"
+            style={styles.iconStyle}
+          />
+          <TextInput
+            style={styles.textI}
+            placeholder="Password"
+            secureTextEntry={!showPassword}
+            autoComplete="password"
+            value={password}
+            onChangeText={setPassword}
+          />
+          {/* Thêm nút con mắt */}
+          <TouchableOpacity onPress={handleTogglePasswordVisibility} style={styles.eyeIcon}>
+            <Ionicons
+              name={showPassword ? "ios-eye" : "ios-eye-off"}
+              size={20}
+              color="#666"
+            />
+          </TouchableOpacity>
+        </View>
 
-      <View style={styles.imageContainer}>
-        <Image
-          style={styles.imageStyle2}
-          source={{
-            uri: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Facebook_logo_36x36.svg/1200px-Facebook_logo_36x36.svg.png",
-          }}
-        />
-        <Image
-          style={styles.imageStyle2}
-          source={{
-            uri: "https://tse1.mm.bing.net/th?id=OIP.AfKMLf4rKX7EqOSAVpujIQHaEK&pid=Api&P=0&h=220",
-          }}
-        />
-      </View>
-      <View style={styles.signUpContainer}>
-        <Text>Don't have an account? </Text>
-        <TouchableOpacity onPress={handleOnPressSignup}>
-          <Text style={styles.signUpText}>Sign up here.</Text>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => handleLogin(email, password)}
+        >
+          <Text style={styles.textLogin}>Login</Text>
         </TouchableOpacity>
+
+        <View style={styles.signUpContainer}>
+          <Text>Don't have an account? </Text>
+          <TouchableOpacity onPress={handleOnPressSignup}>
+            <Text style={styles.signUpText}>Sign up here.</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+      <View style={styles.imageContainer}>
+        <MaterialIcons
+          name="facebook"
+          size={50}
+          color="#042f66"
+          style={styles.logoStyle}
+        />
+        <Ionicons
+          name="logo-google"
+          size={50}
+          color="#042f66"
+          style={styles.logoStyle}
+        />
       </View>
     </View>
   );
@@ -102,18 +122,17 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   imageStyle: {
-    width: 80,
-    height: 80,
-    borderRadius: 100,
-    alignSelf: "center",
-
-    marginTop: 120,
+    height: "37%",
+    width: "100%",
+    resizeMode: "cover",
+    borderRadius: 8,
   },
   text: {
     alignSelf: "center",
-    marginTop: 20,
+    marginTop: 50,
     fontSize: 25,
     fontWeight: "bold",
+    color: "#042f66",
   },
   textInput: {
     height: 50,
@@ -133,7 +152,7 @@ const styles = StyleSheet.create({
     color: "#FF1493",
   },
   button: {
-    backgroundColor: "#FF8C00",
+    backgroundColor: "#154c79",
 
     padding: 10,
     borderRadius: 10,
@@ -166,7 +185,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   signUpText: {
-    color: "blue",
+    color: "#042f66",
   },
   forgotContainer: {
     alignItems: "flex-end",
@@ -207,11 +226,19 @@ const styles = StyleSheet.create({
     marginTop: 25,
     flexDirection: "row",
   },
-  imageTextInput: {
+  iconStyle: {
     width: 27,
     height: 27,
     marginTop: 11,
     marginLeft: 12,
+  },
+  logoStyle:{
+    marginLeft:5,
+  },
+  eyeIcon: {
+    position: "absolute",
+    right: 10,
+    top: 15,
   },
 });
 export default Login;

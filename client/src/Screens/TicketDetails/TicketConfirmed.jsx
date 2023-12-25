@@ -2,8 +2,9 @@ import { View, Text, StyleSheet, Image, Dimensions, FlatList } from 'react-nativ
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Casousel from 'react-native-snap-carousel';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 const { width: screenWidth } = Dimensions.get('window')
-const TicketConfirmed = () => {
+const TicketConfirmed = ({ navigation }) => {
   const [userBookings, setUserBookings] = useState([]);
   const [movieSchedules, setMovieSchedules] = useState([]);
   const [error, setError] = useState(null);
@@ -13,7 +14,7 @@ const TicketConfirmed = () => {
   useEffect(() => {
     const fetchUserBookings = async () => {
       try {
-        const user = '6588ceb8b642502ef8f3d2d6';
+        const user = '658737f3c077263ab5db1b08';
         const response = await axios.get(`/booking/user/${user}`);
         setUserBookings(response.data.datas);
       } catch (error) {
@@ -37,16 +38,21 @@ const TicketConfirmed = () => {
           <Text >{item.movieScheduleRelationship.schedule.screeningTime}, {item.movieScheduleRelationship.schedule.screeningDate}</Text>
           <Text>
 
-                                    Seats: {item?.selectedSeats.slice(0, 3).map((item, index, arr) => (
-                                        <React.Fragment key={index}>
-                                            {item}
-                                            {index === arr.length - 1 ? '' : ', '}
-                                        </React.Fragment>
-                                    ))}
-                                </Text>
+            Seats: {item?.selectedSeats.slice(0, 3).map((item, index, arr) => (
+              <React.Fragment key={index}>
+                {item}
+                {index === arr.length - 1 ? '' : ', '}
+              </React.Fragment>
+            ))}
+          </Text>
           <Text>Number of Tickets: {item.numberOfTickets}</Text>
           <Text>Total Amount: {item.totalAmount}</Text>
           <Text>Payment Status: {item.paymentStatus}</Text>
+          <TouchableOpacity style={styles.button} 
+          onPress={() => navigation.navigate('Reviews', { note: item })}>
+            <Text style={styles.textButton}>Reviews</Text>
+
+          </TouchableOpacity>
         </View>
       </View>
     </View>
@@ -59,7 +65,7 @@ const TicketConfirmed = () => {
         data={filteredBookings}
         renderItem={renderItem}
         keyExtractor={(item, index) => index.toString()}
-        horizontal={false}  
+        horizontal={false}
       />
 
     </View>
@@ -89,7 +95,25 @@ const styles = StyleSheet.create({
   },
   image: {
     width: 100,
-    height: 100,
+    height: 150,
+  },
+  button: {
+
+    backgroundColor: '#FF3333',
+    width: 100,
+    height: 30,
+    borderRadius: 10,
+    marginTop: 8,
+    marginTop: 8,
+    activeOpacity: 0.8,
+    opacity: 0.8,
+  },
+  textButton: {
+    color: 'white',
+    alignSelf: 'center',
+    justifyContent: 'center',
+    marginTop: 4,
+    fontWeight: 'bold',
   },
 });
 

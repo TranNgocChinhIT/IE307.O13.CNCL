@@ -27,7 +27,7 @@ const News = () => {
                             : require('../assets/image/feedback.png');
           
                     }
-                    else if (route.name === 'News') {
+                    else if (route.name === 'NewsMovie') {
                         iconName = focused
                             ? require('../assets/image/newspaper.png')
                             : require('../assets/image/newspaper.png');
@@ -47,7 +47,7 @@ const News = () => {
                 tabBarLabel: 'Review',
                 tabBarLabelStyle: { fontSize: 10 },
             }} />
-            <Tab.Screen name="News" component={NewMovie} options={{
+            <Tab.Screen name="NewsMovie" component={NewMovie} options={{
                 tabBarLabel: 'News',
                 tabBarLabelStyle: { fontSize: 10 },
             }} />
