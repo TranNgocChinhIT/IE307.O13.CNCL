@@ -1,11 +1,10 @@
 import React from "react";
 import Home from "../Screens/Home";
-import News from "../Screens/News";
 import Ticket from "../Screens/Ticket";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Text, View, StyleSheet, Image, ImageBackground } from "react-native";
-import Account from "../Screens/Account";
 import AccountStack from "./AccountStack";
+import NewStack from "../Screens/News";
 const Bottom = createBottomTabNavigator();
 
 const HomeStack = () => {
@@ -68,7 +67,7 @@ const HomeStack = () => {
             color:'white',
           },
         }}/>
-        <Bottom.Screen name="News" component={News} options={{
+        <Bottom.Screen name="News" component={NewStack} options={{
           tabBarShowLabel: true,
           tabBarIcon: ({ focused, color, size }) => {
             const iconImage = focused

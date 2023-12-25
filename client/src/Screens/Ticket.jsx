@@ -9,7 +9,7 @@ import TicketPending from './TicketDetails/TicketPending';
 import TicketConfirmed from './TicketDetails/TicketConfirmed';
 const Tab = createMaterialTopTabNavigator();
 
-const News = () => {
+const TicketStack = () => {
     return (
         <Tab.Navigator
             screenOptions={({ route }) => ({
@@ -50,4 +50,4 @@ const styles = StyleSheet.create({
     container: {},
 });
 
-export default News;
+export default TicketStack;

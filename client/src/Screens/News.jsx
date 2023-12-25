@@ -15,7 +15,7 @@ const openYouTubeApp = () => {
         console.error('Error opening YouTube:', err)
     );
 };
-const News = () => {
+const NewStack = () => {
     return (
         <Tab.Navigator
             screenOptions={({ route }) => ({
@@ -27,7 +27,7 @@ const News = () => {
                             : require('../assets/image/feedback.png');
           
                     }
-                    else if (route.name === 'News') {
+                    else if (route.name === 'News2') {
                         iconName = focused
                             ? require('../assets/image/newspaper.png')
                             : require('../assets/image/newspaper.png');
@@ -47,7 +47,7 @@ const News = () => {
                 tabBarLabel: 'Review',
                 tabBarLabelStyle: { fontSize: 10 },
             }} />
-            <Tab.Screen name="News" component={NewMovie} options={{
+            <Tab.Screen name="NewMovie" component={NewMovie} options={{
                 tabBarLabel: 'News',
                 tabBarLabelStyle: { fontSize: 10 },
             }} />
@@ -64,4 +64,4 @@ const styles = StyleSheet.create({
     container: {},
 });
 
-export default News;
+export default NewStack;
