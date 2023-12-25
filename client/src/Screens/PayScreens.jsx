@@ -77,7 +77,7 @@ const PayScreens = ({ navigation, route }) => {
       
           // Call the setTicketDataContext function with the ticket information
           setTicketDataContext(ticketInfo);
-          Linking.openURL(momoLink);
+         // Linking.openURL(momoLink);
           navigation.navigate('Ticket')
       };
     return (
