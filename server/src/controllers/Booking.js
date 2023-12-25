@@ -140,6 +140,7 @@ const updateSeatsStatus = async (movieScheduleRelationshipId, selectedSeats) => 
             const seatIndex = movieScheduleRelationship.seats.flat().findIndex(seat => seat._id == seatId);
             if (seatIndex !== -1) {
                 movieScheduleRelationship.seats.flat()[seatIndex].taken = true;
+                movieScheduleRelationship.seats.flat()[seatIndex].selected = false;
             }
         }
 

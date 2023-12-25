@@ -121,6 +121,7 @@ const Home = ({ navigation }) => {
                     renderItem={renderItemHeader}
                     sliderWidth={sliderWidth}
                     itemWidth={itemWidthHeader}
+                    loop
                 />
 
                 <View style={styles.title}>
@@ -289,9 +290,8 @@ const styles = StyleSheet.create({
         width: 280,
         height: 120,
         justifyContent: 'center',
-        borderRadius: 20,
+        borderRadius: 15,
         resizeMode: 'cover',
-        borderColor: 'white',
         borderWidth: 3,
     },
     swiper: {
