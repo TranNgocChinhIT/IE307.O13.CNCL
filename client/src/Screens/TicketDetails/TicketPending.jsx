@@ -37,14 +37,20 @@ const TicketPending = () => {
           <Text >{item.movieScheduleRelationship.schedule.screeningTime}, {item.movieScheduleRelationship.schedule.screeningDate}</Text>
           {/* <Text>
   Seats: {item?.selectedSeats && (
-    item.selectedSeats.slice(0, 3).map((seatId, index, arr) => (
-      <React.Fragment key={index}>
-        {index > 0 && ', '}
-        {item.movieScheduleRelationship.seats.find(seat => seat._id === seatId)?.number}
-      </React.Fragment>
-    ))
+    item.selectedSeats.slice(0, 3).map((selectedSeatId, index, arr) => {
+      const matchingSeat = item.movieScheduleRelationship.seats.find(seat => seat._id === selectedSeatId);
+      const seatNumber = matchingSeat ? matchingSeat.number : 'Unknown';
+
+      return (
+        <React.Fragment key={index}>
+          {index > 0 && ', '}
+          {seatNumber}
+        </React.Fragment>
+      );
+    })
   )}
 </Text> */}
+
           <Text>Number of Tickets: {item.numberOfTickets}</Text>
           <Text>Total Amount: {item.totalAmount}</Text>
           <Text>Payment Status: {item.paymentStatus}</Text>
@@ -90,7 +96,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: 100,
-    height: 100,
+    height: 150,
   },
 });
 

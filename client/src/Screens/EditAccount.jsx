@@ -52,8 +52,10 @@ const EditAccount = ({ navigation }) => {
 
   const handleUpdateProfile = async () => {
     try {
-      const response = await axios.put(`/user/${user.userID}`, updatedUser);
+      const response = await axios.put(`/user/${user.userID}`,updatedUser);
       setUpdatedUser(response.data.datas);
+      console.log("updatedUser:", updatedUser);
+
       navigation.goBack();
     } catch (error) {
       console.error("Lỗi khi cập nhật thông tin người dùng:", error);
