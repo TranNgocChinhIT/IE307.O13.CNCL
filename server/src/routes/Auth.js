@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { signUp,signIn, confirmRegistration } from "../controllers/Auth.js";
+import checkPremission from "../middlewares/checkPremission.js";
 
 const routerAuth = Router();
 
