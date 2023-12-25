@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 const Signup = () => {
   const navigation = useNavigation();
@@ -53,18 +54,16 @@ const Signup = () => {
     <View style={styles.container}>
       <Image
         style={styles.imageStyle}
-        source={{
-          uri: "https://internet-israel.com/wp-content/uploads/2018/07/React_Native_Logo-768x403.png",
-        }}
+        source={require("../assets/image/login.jpg")}
       />
-      <Text style={styles.text}>Create New Account</Text>
+      <Text style={styles.text}>Account Signup</Text>
 
       <View style={styles.inputContainer}>
-        <Image
+        <Ionicons
+          name="person-outline"
+          size={20}
+          color="#666"
           style={styles.inputIcon}
-          source={{
-            uri: "https://tse4.explicit.bing.net/th?id=OIP.5ylLzBNwByczTaKBCAi9IgHaHa&pid=Api&P=0&h=220",
-          }}
         />
         <TextInput
           style={styles.input}
@@ -74,9 +73,11 @@ const Signup = () => {
         />
       </View>
       <View style={styles.inputContainer}>
-        <Image
+        <Ionicons
+          name="call-outline"
+          size={20}
+          color="#666"
           style={styles.inputIcon}
-          source={{ uri: "https://your-phone-icon-url" }}
         />
         <TextInput
           style={styles.input}
@@ -87,11 +88,11 @@ const Signup = () => {
       </View>
 
       <View style={styles.inputContainer}>
-        <Image
+        <Ionicons
+          name="mail-outline"
+          size={20}
+          color="#666"
           style={styles.inputIcon}
-          source={{
-            uri: "https://clipground.com/images/email-icon-clipart-transparent-1.png",
-          }}
         />
         <TextInput
           style={styles.input}
@@ -102,11 +103,11 @@ const Signup = () => {
       </View>
 
       <View style={styles.inputContainer}>
-        <Image
+        <Ionicons
+          name="lock-closed-outline"
+          size={20}
+          color="#666"
           style={styles.inputIcon}
-          source={{
-            uri: "https://tse1.mm.bing.net/th?id=OIP.PO4tSlis-6R6EjopPKu0xQHaEH&pid=Api&P=0&h=220",
-          }}
         />
         <TextInput
           style={styles.input}
@@ -118,11 +119,11 @@ const Signup = () => {
       </View>
 
       <View style={styles.inputContainer}>
-        <Image
+        <Ionicons
+          name="lock-closed-outline"
+          size={20}
+          color="#666"
           style={styles.inputIcon}
-          source={{
-            uri: "https://tse1.mm.bing.net/th.id=OIP.PO4tSlis-6R6EjopPKu0xQHaEH&pid=Api&P=0&h=220",
-          }}
         />
         <TextInput
           style={styles.input}
@@ -133,9 +134,11 @@ const Signup = () => {
         />
       </View>
       <View style={styles.inputContainer}>
-        <Image
+        <Ionicons
+          name="location-outline"
+          size={20}
+          color="#666"
           style={styles.inputIcon}
-          source={{ uri: "https://your-region-icon-url" }}
         />
         <TextInput
           style={styles.input}
@@ -163,7 +166,6 @@ const Signup = () => {
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -182,6 +184,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     fontSize: 25,
     fontWeight: "bold",
+    color:"#042f66",
   },
   inputContainer: {
     height: 50,
@@ -191,7 +194,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     alignSelf: "center",
     borderRadius: 8,
-    marginTop: 25,
+    marginTop: 20,
     flexDirection: "row",
   },
   inputIcon: {
@@ -205,7 +208,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   button: {
-    backgroundColor: "#FF8C00",
+    backgroundColor: "#042f66",
     padding: 10,
     borderRadius: 10,
     marginTop: 15,
@@ -224,7 +227,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   signInText: {
-    color: "blue",
+    color: "#042f66",
   },
   successMessage: {
     marginTop: 15,
