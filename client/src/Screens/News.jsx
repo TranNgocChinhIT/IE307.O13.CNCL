@@ -19,7 +19,11 @@ const NewStack = () => {
                             : require('../assets/image/feedback.png');
           
                     }
+<<<<<<< HEAD
                     else if (route.name === 'NewMovie') {
+=======
+                    else if (route.name === 'NewsMovie') {
+>>>>>>> 18b61c0949dd8fe2a957d1769d231ab6dc07b845
                         iconName = focused
                             ? require('../assets/image/newspaper.png')
                             : require('../assets/image/newspaper.png');
@@ -39,7 +43,11 @@ const NewStack = () => {
                 tabBarLabel: 'Review',
                 tabBarLabelStyle: { fontSize: 10 },
             }} />
+<<<<<<< HEAD
             <Tab.Screen name="NewMovie" component={NewMovie} options={{
+=======
+            <Tab.Screen name="NewsMovie" component={NewMovie} options={{
+>>>>>>> 18b61c0949dd8fe2a957d1769d231ab6dc07b845
                 tabBarLabel: 'News',
                 tabBarLabelStyle: { fontSize: 10 },
             }} /> 

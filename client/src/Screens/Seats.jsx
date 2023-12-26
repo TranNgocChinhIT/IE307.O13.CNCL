@@ -2,44 +2,59 @@ import React, { useState, useEffect } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { Text, View, StyleSheet, ScrollView, TouchableOpacity, Image, ToastAndroid, Animated } from 'react-native';
 import { PinchGestureHandler, State } from 'react-native-gesture-handler';
+import axios from 'axios';
 
 import * as SecureStore from 'expo-secure-store';
-const generateSeats = () => {
-    let numRow = 8;
-    let numColumn = 12;
-    let rowArray = [];
-    let start = 1;
-    let reachnine = false;
 
-    for (let i = 0; i < numRow; i++) {
-        let columnArray = [];
-        for (let j = 0; j < numColumn; j++) {
-            let seatObject = {
-                number: String.fromCharCode(65 + i) + (j + 1),
-                taken: Boolean(Math.round(Math.random())),
-                selected: false,
-            };
-            columnArray.push(seatObject);
-            start++;
-        }
-        rowArray.push(columnArray);
-    }
-    return rowArray;
-};
 const Seats = ({ navigation, route }) => {
-
-
+    const [movieScheduleID, setMovieScheduleID] = useState();
+    
     const [price, setPrice] = useState(0);
     const { note } = route.params;
+    const { schedule } = route.params;
     const [totalSeats, setTotalSeats] = useState(0);
-    const [twoDSeatArray, setTwoDSeatArray] = useState(generateSeats());
     const [selectedSeatArray, setSelectedSeatArray] = useState([]);
     const [ticketData, setTicketData] = useState(route.params);
     const total = selectedSeatArray.length * 45.0;
     const [scale, setScale] = useState(1);
+    const [twoDSeatArray, setTwoDSeatArray] = useState();
+    
+    const fetchData = async () => {
+        try {
+          const response = await axios.get('/movieSchedule');
+          const data = response.data.datas;
+          const filteredSchedules = data.filter(
+            (movieSchedule) =>
+              movieSchedule.movie._id === note._id && movieSchedule.schedule._id === schedule
+          );
+    
+          if (filteredSchedules.length > 0) {
+            const matchingMovieScheduleID = filteredSchedules[0]._id;
+            setMovieScheduleID(matchingMovieScheduleID);
+    
+            const seatsResponse = await axios.get(`/movieSchedule/${matchingMovieScheduleID}`);
+            const seatsData = seatsResponse.data.datas.seats;
+            const sanitizedSeatsData = seatsData.map((row) => row.map(({ _id, ...rest }) => rest));
+            setTwoDSeatArray(sanitizedSeatsData);
+          }
+        } catch (error) {
+          console.error('Something went wrong while getting Data', error);
+        }
+      };
+    
+      useEffect(() => {
+        fetchData();
+      }, [note, schedule]);
+    
+      useEffect(() => {
+        const unsubscribe = navigation.addListener('focus', () => {
+          fetchData();
+        });
+    
+        // Unsubscribe when the component is unmounted
+        return unsubscribe;
+      }, [navigation]); 
 
-
-    console.log(JSON.stringify(twoDSeatArray, null, 2));
     const selectSeat = (index, subindex, num) => {
         if (!twoDSeatArray[index][subindex].taken) {
             let array = [...selectedSeatArray];
