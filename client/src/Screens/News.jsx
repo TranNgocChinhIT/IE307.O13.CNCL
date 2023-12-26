@@ -6,15 +6,7 @@ import Review from './NewDetails/Review';
 import NewMovie from './NewDetails/NewMovie';
 import Character from './NewDetails/Character';
 const Tab = createMaterialTopTabNavigator();
-const openYouTubeApp = () => {
-    // Tạo URL cho ứng dụng YouTube với video ID
-    const youtubeUrl = `https://www.youtube.com/watch?v=ygvNCEbMusE`;
 
-    // Mở URL trong trình duyệt mặc định của thiết bị
-    Linking.openURL(youtubeUrl).catch((err) =>
-        console.error('Error opening YouTube:', err)
-    );
-};
 const NewStack = () => {
     return (
         <Tab.Navigator
@@ -27,11 +19,7 @@ const NewStack = () => {
                             : require('../assets/image/feedback.png');
           
                     }
-<<<<<<< HEAD
-                    else if (route.name === 'NewsMovie') {
-=======
-                    else if (route.name === 'News2') {
->>>>>>> b1f6598421ca07c265cbb28ef5e038bc54e1bde0
+                    else if (route.name === 'NewMovie') {
                         iconName = focused
                             ? require('../assets/image/newspaper.png')
                             : require('../assets/image/newspaper.png');
@@ -51,14 +39,10 @@ const NewStack = () => {
                 tabBarLabel: 'Review',
                 tabBarLabelStyle: { fontSize: 10 },
             }} />
-<<<<<<< HEAD
-            <Tab.Screen name="NewsMovie" component={NewMovie} options={{
-=======
             <Tab.Screen name="NewMovie" component={NewMovie} options={{
->>>>>>> b1f6598421ca07c265cbb28ef5e038bc54e1bde0
                 tabBarLabel: 'News',
                 tabBarLabelStyle: { fontSize: 10 },
-            }} />
+            }} /> 
             <Tab.Screen name="Character" component={Character} options={{
                 tabBarLabel: 'Character',
                 tabBarLabelStyle: { fontSize: 10 },

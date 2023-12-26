@@ -14,7 +14,7 @@ const ReviewMovie = () => {
   const [userData, setUserData] = useState(null);
   const userId = note.user.toString();
 
-const movieId = note.movieScheduleRelationship.movie._id.toString();
+  const movieId = note.movieScheduleRelationship.movie._id.toString();
 
   const [loading, setLoading] = useState(false);
   const [posts, setPosts] = useState([]);
@@ -25,11 +25,11 @@ const movieId = note.movieScheduleRelationship.movie._id.toString();
   const handleSubmit = async () => {
     try {
       setLoading(true);
-      const {data} = await axios.post("http://192.168.1.8:8000/api/review", {
-         user: userId,
-         movie: movieId,
-         rating: rating,
-         comment: comment,
+      const { data } = await axios.post("/review", {
+        user: userId,
+        movie: movieId,
+        rating: rating,
+        comment: comment,
       });
       setLoading(false);
       setPosts([...posts, data?.post]);

@@ -3,16 +3,18 @@ import { ScrollView, View, Text, TextInput, StyleSheet } from "react-native";
 import axios from "axios";
 import { AuthContext } from "../context/AuthContext";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 const EditAccount = ({ navigation }) => {
   const { user, setUser } = useContext(AuthContext);
   const [updatedUser, setUpdatedUser] = useState({
     userName: "",
-    email: "",
-    phone: "",
     region: "",
   });
-
+  const [userNameUpdate, setUserNameUpdate] = useState('');
+  const [emailUpdate, setEmailUpdate] = useState('');
+  const [phoneUpdate, setPhoneUpdate] = useState('');
+  const [regionUpdate, setRegionUpdate] = useState('');
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
@@ -48,20 +50,43 @@ const EditAccount = ({ navigation }) => {
 
   const handleInputChange = (field, value) => {
     setUpdatedUser((prev) => ({ ...prev, [field]: value }));
+    setUserNameUpdate((prev) =>
+      field === 'userName' ? value : prev
+    );
+    setEmailUpdate((prev) =>
+      field === 'email' ? value : prev
+    );
+    setPhoneUpdate((prev) =>
+      field === 'phone' ? value : prev
+    );
+    setRegionUpdate((prev) =>
+      field === 'region' ? value : prev
+    );
+
   };
 
+
+  const [loading, setLoading] = useState(false);
+  const [posts, setPosts] = useState([]);
   const handleUpdateProfile = async () => {
     try {
-      const response = await axios.put(`/user/${user.userID}`,updatedUser);
-      setUpdatedUser(response.data.datas);
-      console.log("updatedUser:", updatedUser);
-
-      navigation.goBack();
+      setLoading(true);
+      const { data } = await axios.put(`/user/${user.userID}`, {
+        userName: userNameUpdate,
+        region: regionUpdate,
+      });
+      setPosts([...posts, data?.post]);
+      setLoading(false);
     } catch (error) {
       console.error("Lỗi khi cập nhật thông tin người dùng:", error);
     }
-  };
 
+    console.log(user.userID)
+    console.log(userNameUpdate)
+    console.log(emailUpdate)
+    console.log(phoneUpdate)
+    console.log(regionUpdate)
+  };
   return (
     <ScrollView style={styles.container}>
       <View style={styles.headerTitle}>
@@ -77,6 +102,7 @@ const EditAccount = ({ navigation }) => {
           style={styles.input}
           value={updatedUser.email}
           onChangeText={(text) => handleInputChange("email", text)}
+          editable={false}
         />
 
         <Text style={styles.textBold}>Số điện thoại:</Text>
@@ -84,6 +110,7 @@ const EditAccount = ({ navigation }) => {
           style={styles.input}
           value={updatedUser.phone}
           onChangeText={(text) => handleInputChange("phone", text)}
+          editable={false}
         />
 
         <Text style={styles.textBold}>Khu vực:</Text>
@@ -93,6 +120,9 @@ const EditAccount = ({ navigation }) => {
           onChangeText={(text) => handleInputChange("region", text)}
         />
       </View>
+      <TouchableOpacity onPress={handleUpdateProfile}>
+        <Text>fvfv</Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 };
