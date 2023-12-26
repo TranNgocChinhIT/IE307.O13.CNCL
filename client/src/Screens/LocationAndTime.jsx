@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Image,
   FlatList,
+  Alert,
   ToastAndroid,
 } from "react-native";
 import * as SecureStore from "expo-secure-store";
@@ -87,6 +88,8 @@ const LocationAndTime = ({ navigation, route }) => {
   const [ticketData, setTicketData] = useState(route.params);
   const [selectedCinemaTimings, setSelectedCinemaTimings] = useState([]);
   const { note } = route.params;
+
+
   const selectedDate =
     selectedDateIndex !== undefined ? dateArray[selectedDateIndex] : null;
 
@@ -102,6 +105,7 @@ const LocationAndTime = ({ navigation, route }) => {
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
+
       });
   }, []);
   const getTimingsForCinema = (cinema) => {

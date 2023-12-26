@@ -8,7 +8,7 @@ import * as SecureStore from 'expo-secure-store';
 
 const Seats = ({ navigation, route }) => {
     const [movieScheduleID, setMovieScheduleID] = useState();
-    
+    const [seats, setSeats] = useState();
     const [price, setPrice] = useState(0);
     const { note } = route.params;
     const { schedule } = route.params;
@@ -31,11 +31,13 @@ const Seats = ({ navigation, route }) => {
           if (filteredSchedules.length > 0) {
             const matchingMovieScheduleID = filteredSchedules[0]._id;
             setMovieScheduleID(matchingMovieScheduleID);
-    
+            console.log(matchingMovieScheduleID)
             const seatsResponse = await axios.get(`/movieSchedule/${matchingMovieScheduleID}`);
             const seatsData = seatsResponse.data.datas.seats;
+            setSeats(seatsData)
             const sanitizedSeatsData = seatsData.map((row) => row.map(({ _id, ...rest }) => rest));
             setTwoDSeatArray(sanitizedSeatsData);
+
           }
         } catch (error) {
           console.error('Something went wrong while getting Data', error);
@@ -44,7 +46,7 @@ const Seats = ({ navigation, route }) => {
     
       useEffect(() => {
         fetchData();
-      }, [note, schedule]);
+      }, []);
     
       useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {

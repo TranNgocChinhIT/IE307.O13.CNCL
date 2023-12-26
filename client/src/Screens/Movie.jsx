@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState,useContext } from 'react';
 import { useRoute } from '@react-navigation/native';
-import { Text, View, StyleSheet, ScrollView, ImageBackground, Image, TouchableOpacity, FlatList, Dimensions, Linking } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
+import { Text, View, StyleSheet, ScrollView, ImageBackground, Image, TouchableOpacity, FlatList, Dimensions, Linking,ToastAndroid } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import Casousel from 'react-native-snap-carousel';
+import { AuthContext } from "../context/AuthContext";
 const { width: screenWidth } = Dimensions.get('window')
 const Movie = () => {
     const navigation = useNavigation();
@@ -12,6 +11,7 @@ const Movie = () => {
     const sliderWidth = screenWidth;
     const itemWidth = screenWidth * 0.67;
     const itemWidthHeader = screenWidth * 0.8;
+    const { user , isAuthenticated } = useContext(AuthContext);
     const renderCast = ({ item }) => (
 
         <View style={styles.itemHeaderContainer}>
@@ -26,6 +26,18 @@ const Movie = () => {
             console.error('Error opening YouTube:', err)
         );
     };
+    const handleBookButtonPress = () => {
+        if (isAuthenticated && user && user.userID) {
+          // Nếu đã đăng nhập và có userID, điều hướng đến màn hình LocationAndTime
+          navigation.navigate('LocationAndTime', { note });
+        } else {
+            ToastAndroid.showWithGravity(
+                "Please Login to book tickets.",
+                ToastAndroid.SHORT,
+                ToastAndroid.BOTTOM
+              );
+        }
+      };
     return (
         <View style={{ flex: 1, backgroundColor: 'black' }}>
             <ScrollView
@@ -149,8 +161,7 @@ const Movie = () => {
 
             </ScrollView>
             <TouchableOpacity style={styles.button}
-                onPress={() => navigation.navigate('LocationAndTime', { note })}
-            >
+                onPress={handleBookButtonPress}>
                 <Text style={styles.textButton}>BOOK NOW</Text>
             </TouchableOpacity>
         </View>
