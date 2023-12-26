@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Text, View, StyleSheet, TouchableOpacity, ScrollView, StatusBar, FlatList, Dimensions, Image, ImageBackground } from 'react-native';
+import React, { useEffect, useState,useContext } from 'react';
+import { Text, View, StyleSheet, TouchableOpacity, ScrollView, StatusBar, FlatList, Dimensions, Image, ImageBackground,ToastAndroid } from 'react-native';
 import ShowListHeader from '../component/ShowListHeader';
 import { dataNowMovieList } from '../data/dataNowMovieList';
 import { dataHeaderAdvertisement } from '../data/dataHeaderAdvertisement';
@@ -7,6 +7,7 @@ import Casousel from 'react-native-snap-carousel';
 const { width: screenWidth } = Dimensions.get('window')
 import { useNavigation } from '@react-navigation/native';
 import axios from "axios";
+import { AuthContext } from "../context/AuthContext";
 import { MovieContext } from '../context/movieContext';
 
 const Home = ({ navigation }) => {
@@ -17,7 +18,7 @@ const Home = ({ navigation }) => {
 
     const [pressedButton, setPressedButton] = useState('Now');
     const [movies, setMovies] = useState([]);
-
+    const { user , isAuthenticated } = useContext(AuthContext);
     useEffect(() => {
         const fetchMovies = async () => {
             try {
@@ -75,7 +76,7 @@ const Home = ({ navigation }) => {
             <Text style={{ color: 'white', marginLeft: 2, fontWeight: 'bold' }}>{item.title}</Text>
             <TouchableOpacity
                 style={styles.buttonBook}
-                onPress={() => navigation.navigate('LocationAndTime', { note: item })}
+                onPress={() => handleBookButtonPress(item)}
             >
 
                 <Text style={styles.overlayText}>BOOK</Text>
@@ -83,6 +84,19 @@ const Home = ({ navigation }) => {
             </TouchableOpacity>
         </View>
     )
+    const handleBookButtonPress = (movie) => {
+        if (isAuthenticated && user && user.userID) {
+          // Nếu đã đăng nhập, điều hướng đến màn hình LocationAndTime
+          navigation.navigate('LocationAndTime', { note: movie });
+        } else {
+          // Nếu chưa đăng nhập, hiển thị thông báo lỗi
+          ToastAndroid.showWithGravity(
+            "Please Login to book tickets.",
+            ToastAndroid.SHORT,
+            ToastAndroid.BOTTOM
+          );
+        }
+      };
     const renderItemHeader = ({ item }) => (
 
         <View style={styles.itemHeaderContainer}>
