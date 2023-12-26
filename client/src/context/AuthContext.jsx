@@ -38,15 +38,9 @@ const AuthProvider = ({ children }) => {
   let accessToken = user.accessToken;
 
   //default axios setting
-<<<<<<< HEAD
 // <<<<<<< HEAD
-//   //axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
-// =======
-//   axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
-// >>>>>>> b1f6598421ca07c265cbb28ef5e038bc54e1bde0
-=======
   axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
->>>>>>> 18b61c0949dd8fe2a957d1769d231ab6dc07b845
+
   useEffect(() => {
   }, [user]);
 
