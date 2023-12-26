@@ -7,19 +7,16 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 
 const EditAccount = ({ navigation }) => {
   const { user, setUser } = useContext(AuthContext);
-  const [updatedUser, setUpdatedUser] = useState({
-    userName: "",
-    region: "",
-  });
+  const [updatedUser, setUpdatedUser] = useState([]);
   const [userNameUpdate, setUserNameUpdate] = useState('');
-  const [emailUpdate, setEmailUpdate] = useState('');
-  const [phoneUpdate, setPhoneUpdate] = useState('');
   const [regionUpdate, setRegionUpdate] = useState('');
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
         const response = await axios.get(`/user/${user.userID}`);
         setUpdatedUser(response.data.datas);
+        setUserNameUpdate(response.data.datas.userName);
+        setRegionUpdate(response.data.datas.region);
       } catch (error) {
         console.error("Lỗi khi lấy chi tiết người dùng:", error);
       }
@@ -53,17 +50,13 @@ const EditAccount = ({ navigation }) => {
     setUserNameUpdate((prev) =>
       field === 'userName' ? value : prev
     );
-    setEmailUpdate((prev) =>
-      field === 'email' ? value : prev
-    );
-    setPhoneUpdate((prev) =>
-      field === 'phone' ? value : prev
-    );
+    
     setRegionUpdate((prev) =>
       field === 'region' ? value : prev
     );
 
   };
+
 
 
   const [loading, setLoading] = useState(false);
@@ -99,7 +92,7 @@ const EditAccount = ({ navigation }) => {
         <TextInput
           style={styles.input}
           value={updatedUser.email}
-          onChangeText={(text) => handleInputChange("email", text)}
+    
           editable={false}
         />
 
@@ -107,7 +100,7 @@ const EditAccount = ({ navigation }) => {
         <TextInput
           style={styles.input}
           value={updatedUser.phone}
-          onChangeText={(text) => handleInputChange("phone", text)}
+          
           editable={false}
         />
 
@@ -150,5 +143,4 @@ const styles = StyleSheet.create({
     padding: 10,
   },
 });
-
 export default EditAccount;

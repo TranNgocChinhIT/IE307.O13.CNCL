@@ -33,21 +33,7 @@ const Home = ({ navigation }) => {
         fetchMovies();
     }, []);
 
-    // const [movies, setMovies] = useState([]);
-
-    // useEffect(() => {
-    //     const fetchMovies = async () => {
-    //         try {
-    //             const response = await axios.get('/api/movie'); 
-    //             setMovies(response.data?.movies);
-    //         } catch (error) {
-    //             console.error('Error fetching movies:', error);
-    //         }
-    //     };
-
-    //     fetchMovies();
-    // }, []);
-
+ 
     const handlePress = (buttonName) => {
         setPressedButton(buttonName);
     };
