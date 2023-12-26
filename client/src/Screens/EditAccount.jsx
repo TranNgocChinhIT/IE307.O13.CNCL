@@ -83,8 +83,6 @@ const EditAccount = ({ navigation }) => {
 
     console.log(user.userID)
     console.log(userNameUpdate)
-    console.log(emailUpdate)
-    console.log(phoneUpdate)
     console.log(regionUpdate)
   };
   return (
