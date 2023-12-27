@@ -1,10 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useContext } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Linking, Image, ScrollView, Alert } from 'react-native';
 import MoMoPayment from 'react-native-momosdk';
 import { useRoute } from '@react-navigation/native';
 import * as SecureStore from 'expo-secure-store';
 import Modal from 'react-native-modal';
 import { useTicketContext } from '../context/DataContext';
+import axios from "axios";
+
+import { AuthContext } from '../context/AuthContext';
+
 const PayScreens = ({ navigation, route }) => {
     const momoLink = 'https://me.momo.vn/bmIeTAt8U7UgUxfBF5IPU8'; // Thay thế bằng đường link Momo của bạn
 
@@ -12,10 +16,10 @@ const PayScreens = ({ navigation, route }) => {
     const handleMomoButtonClick = () => {
         Linking.openURL(momoLink);
     };
+    const { user, setUser } = useContext(AuthContext);
     const [ticketData, setTicketData] = useState(route.params);
     const [isMomoSelected, setIsMomoSelected] = useState(false);
     const [isModalVisible, setIsModalVisible] = useState(false);
-
 
     const handleModalClose = () => {
         setIsModalVisible(false);
@@ -62,23 +66,37 @@ const PayScreens = ({ navigation, route }) => {
         }
         setIsModalVisible(true);
     };
-    const BookSeats =  () => {
-        const ticketInfo = {
-            seatArray: ticketData.seatArray,
-            time: ticketData.time,
-            date: ticketData.date,
-            month: ticketData.month,
-            year: ticketData.year,
-            note: ticketData.note,
-            total: ticketData.total,
-            totalSeats: ticketData.totalSeats,
-
-          };
-        
-          // Call the setTicketDataContext function with the ticket information
-          setTicketDataContext(ticketInfo);
-         // Linking.openURL(momoLink);
-          navigation.navigate('Ticket')
+    const [putData, setPutData] = useState({
+        user: user.userID,
+        movieScheduleRelationship:ticketData.movieScheduleID ,
+        numberOfTickets:ticketData.quantity,
+        totalAmount:ticketData.total*1000,
+        paymentStatus:'pending',
+        selectedSeats:ticketData.selectedSeats,
+      });
+    console.log(putData)
+    const BookSeats = async () => {
+        try {
+            await axios.post(`/booking`, putData);
+            const ticketInfo = {
+                seatArray: ticketData.seatArray,
+                time: ticketData.time,
+                date: ticketData.date,
+                month: ticketData.month,
+                year: ticketData.year,
+                note: ticketData.note,
+                total: ticketData.total,
+                totalSeats: ticketData.totalSeats,
+    
+              };
+            
+              // Call the setTicketDataContext function with the ticket information
+              setTicketDataContext(ticketInfo);
+             // Linking.openURL(momoLink);
+              navigation.navigate('Ticket')
+        } catch (error) {
+          console.error("Lỗi khi cập nhật pay:", error);
+        }
       };
     return (
         <View style={styles.container}>

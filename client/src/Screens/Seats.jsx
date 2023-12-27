@@ -19,7 +19,6 @@ const Seats = ({ navigation, route }) => {
     const total = selectedSeatArray.length * 45.0;
     const [scale, setScale] = useState(1);
     const [twoDSeatArray, setTwoDSeatArray] = useState();
-    
     const fetchData = async () => {
         try {
           const response = await axios.get('/movieSchedule');
@@ -32,23 +31,17 @@ const Seats = ({ navigation, route }) => {
           if (filteredSchedules.length > 0) {
             const matchingMovieScheduleID = filteredSchedules[0]._id;
             setMovieScheduleID(matchingMovieScheduleID);
-            console.log(matchingMovieScheduleID)
             const seatsResponse = await axios.get(`/movieSchedule/${matchingMovieScheduleID}`);
             const seatsData = seatsResponse.data.datas.seats;
             setSeats(seatsData)
             const sanitizedSeatsData = seatsData.map((row) => row.map(({ _id, ...rest }) => rest));
-            setTwoDSeatArray(sanitizedSeatsData);
-
+            setTwoDSeatArray(sanitizedSeatsData);   
           }
           setSelectedSeatArray([])
         } catch (error) {
           console.error('Something went wrong while getting Data', error);
         }
       };
-    
-      useEffect(() => {
-        fetchData();
-      }, []);
     
       useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
@@ -120,7 +113,6 @@ const Seats = ({ navigation, route }) => {
 
         ) {
             try {
-
                 await SecureStore.setItemAsync(
                     'ticket',
                     JSON.stringify({
@@ -148,6 +140,9 @@ const Seats = ({ navigation, route }) => {
                 total: total,
                 quantity: totalSeats,
                 ticketImage: route.params.PosterImage,
+                selectedSeats: seatsID,
+                movieScheduleID: movieScheduleID,
+
             });
         } else {
             ToastAndroid.showWithGravity(

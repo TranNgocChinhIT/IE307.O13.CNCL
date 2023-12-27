@@ -95,19 +95,25 @@ const LocationAndTime = ({ navigation, route }) => {
 
   const [showTimings, setShowTimings] = useState(false);
 
-  useEffect(() => {
-    // Fetch data from API using Axios
-    axios
-      .get("/schedule")
-      .then((response) => {
-        const data = response.data;
-        setCinemaData(data.datas);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
+  const fetchData = async () => {
+    try {
+      const response = await axios.get("/schedule");
+      const data = response.data;
+      setCinemaData(data.datas);
+      setScheduleID(null)
 
-      });
-  }, []);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      fetchData();
+    });
+
+    // Unsubscribe when the component is unmounted
+    return unsubscribe;
+  }, [navigation]); 
   const getTimingsForCinema = (cinema) => {
     const cinemaTimingsMap = {
       "Rạp 1": ["10:30", "14:30", "19:30"],
@@ -116,7 +122,6 @@ const LocationAndTime = ({ navigation, route }) => {
     const timings = cinemaTimingsMap[cinema] || [];
     return timings;
   };
-
   const handleBarClick = (cinema) => {
     if (selectedCinema === cinema) {
       // If the same cinema is clicked again, toggle the timings visibility
@@ -144,49 +149,47 @@ const LocationAndTime = ({ navigation, route }) => {
             month: selectedMonth,
             year: selectedYear,
             note: note,
-
             ticketImage: route.params.PosterImage,
           })
         );
-        let scheduleId; // Declare scheduleId in a higher scope
-
+  
+        let scheduleId;
         cinemaData.forEach((schedule) => {
           const screeningDate = schedule.screeningDate;
           const dateComponents = screeningDate.split("/");
           const dayPart = dateComponents[0];
           const scheduleTime = schedule.screeningTime;
-
           // Lấy giờ từ timeArray[selectedTimeIndex]
           const selectedTime = timeArray[selectedTimeIndex];
-          const Date = String(selectedDate.date);
-
+          const selectedDateDayPart = String(selectedDate.date);
+  
           // Kiểm tra xem dayPart và giờ của schedule có khớp với lựa chọn của người dùng không
           if (
-            dayPart === Date &&
+            dayPart === selectedDateDayPart &&
             scheduleTime === selectedTime
           ) {
             // Nếu khớp, lấy _id của schedule và thực hiện các xử lý tiếp theo
             scheduleId = schedule._id;
+
           }
         });
-        console.log("ID của schedule:", scheduleId);
-        setScheduleID(scheduleId)
+  
+        navigation.navigate("Seats", {
+          // seatArray: selectedSeatArray,
+          time: timeArray[selectedTimeIndex],
+          date: dateArray[selectedDateIndex],
+          month: selectedMonth,
+          year: selectedYear,
+          note: note,
+          ticketImage: route.params.PosterImage,
+          schedule: scheduleId,
+        });
       } catch (error) {
         console.error(
           "Something went Wrong while storing in BookSeats Functions",
           error
         );
       }
-      navigation.navigate("Seats", {
-        // seatArray: selectedSeatArray,
-        time: timeArray[selectedTimeIndex],
-        date: dateArray[selectedDateIndex],
-        month: selectedMonth,
-        year: selectedYear,
-        note: note,
-        ticketImage: route.params.PosterImage,
-        schedule:scheduleID,
-      });
     } else {
       ToastAndroid.showWithGravity(
         "Please Select Date and Time of the Show",
@@ -195,6 +198,7 @@ const LocationAndTime = ({ navigation, route }) => {
       );
     }
   };
+  
 
   return (
     <View style={styles.container}>
