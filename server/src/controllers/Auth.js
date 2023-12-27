@@ -152,10 +152,17 @@ export const confirmRegistration = async (req, res) => {
 const deleteUnconfirmedUsers = async () => {
   try {
     const cutoffTime = new Date(Date.now() - 5 * 60 * 1000); // 5 phút trước đây
-    await User.deleteMany({ confirmed: false, createdAt: { $lte: cutoffTime } });
+    const unconfirmedUsers = await User.find({ confirmed: false, createdAt: { $lte: cutoffTime } });
+
+    if (unconfirmedUsers.length > 0) {
+      await User.deleteMany({ _id: { $in: unconfirmedUsers.map(user => user._id) } });
+      console.log("Đã xóa người dùng không xác nhận thành công.");
+    } else {
+      console.log("Không có người dùng không xác nhận để xóa.");
+    }
   } catch (error) {
     console.error("Lỗi khi xóa người dùng không xác nhận:", error);
   }
 };
 
-schedule.scheduleJob("*/1 * * * *", deleteUnconfirmedUsers);
+schedule.scheduleJob("0 0 * * *", deleteUnconfirmedUsers);

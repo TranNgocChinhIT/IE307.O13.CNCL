@@ -74,7 +74,7 @@ const PayScreens = ({ navigation, route }) => {
             totalSeats: ticketData.totalSeats,
 
           };
-      
+        
           // Call the setTicketDataContext function with the ticket information
           setTicketDataContext(ticketInfo);
          // Linking.openURL(momoLink);
@@ -109,7 +109,7 @@ const PayScreens = ({ navigation, route }) => {
                         </Text>
                         <Text>
 
-                            Seats: {ticketData?.seatArray.slice(0, 3).map((item, index, arr) => (
+                            Seats: {ticketData?.seatArray.slice(0, 80).map((item, index, arr) => (
                                 <React.Fragment key={index}>
                                     {item}
                                     {index === arr.length - 1 ? '' : ', '}

@@ -9,6 +9,7 @@ import * as SecureStore from 'expo-secure-store';
 const Seats = ({ navigation, route }) => {
     const [movieScheduleID, setMovieScheduleID] = useState();
     const [seats, setSeats] = useState();
+    const [seatsID, setSeatsID] = useState([]);
     const [price, setPrice] = useState(0);
     const { note } = route.params;
     const { schedule } = route.params;
@@ -39,6 +40,7 @@ const Seats = ({ navigation, route }) => {
             setTwoDSeatArray(sanitizedSeatsData);
 
           }
+          setSelectedSeatArray([])
         } catch (error) {
           console.error('Something went wrong while getting Data', error);
         }
@@ -57,28 +59,43 @@ const Seats = ({ navigation, route }) => {
         return unsubscribe;
       }, [navigation]); 
 
-    const selectSeat = (index, subindex, num) => {
+      const selectSeat = (index, subindex, num) => {
         if (!twoDSeatArray[index][subindex].taken) {
             let array = [...selectedSeatArray];
             let temp = [...twoDSeatArray];
             temp[index][subindex].selected = !temp[index][subindex].selected;
-
+    
+            // Check if the seat number is already in the selectedSeatArray
             if (!array.includes(num)) {
                 array.push(num);
-                setSelectedSeatArray(array);
             } else {
+                // Remove the seat number from the array if already present
                 const tempindex = array.indexOf(num);
                 if (tempindex > -1) {
                     array.splice(tempindex, 1);
-                    setSelectedSeatArray(array);
                 }
             }
+            // Extract _id for selected seats from the seats array
+            const selectedSeatIds = array.map((seatNum) => {
+                for (let row of seats) {
+                    const seat = row.find((s) => s.number === seatNum);
+                    if (seat) {
+                        return seat._id;
+                    }
+                }
+                return null;
+            });
 
+            // Remove null values (for unmatched seat numbers)
+            const filteredSelectedSeatIds = selectedSeatIds.filter((id) => id !== null);
+            setSeatsID(filteredSelectedSeatIds);
+            setSelectedSeatArray(array);
             setPrice(array.length * 45.0);
             setTotalSeats(array.length * 1);
             setTwoDSeatArray(temp);
         }
     };
+    
     useEffect(() => {
         const fetchData = async () => {
             try {
