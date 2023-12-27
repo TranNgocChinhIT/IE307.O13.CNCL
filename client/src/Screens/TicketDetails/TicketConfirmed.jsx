@@ -1,7 +1,8 @@
 import { View, Text, StyleSheet, Image, Dimensions, FlatList } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState,useContext } from 'react';
 import axios from 'axios';
 import Casousel from 'react-native-snap-carousel';
+import { AuthContext } from '../../context/AuthContext';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 const { width: screenWidth } = Dimensions.get('window')
 const TicketConfirmed = ({ navigation }) => {
@@ -11,11 +12,11 @@ const TicketConfirmed = ({ navigation }) => {
   const sliderWidth = screenWidth;
   const itemWidth = screenWidth * 0.67;
   const itemWidthHeader = screenWidth * 0.8;
+  const { user, setUser } = useContext(AuthContext);
   useEffect(() => {
     const fetchUserBookings = async () => {
       try {
-        const user = '658737f3c077263ab5db1b08';
-        const response = await axios.get(`/booking/user/${user}`);
+        const response = await axios.get(`/booking/user/${user.userID}`);
         setUserBookings(response.data.datas);
       } catch (error) {
         console.error("Error fetching user bookings:", error);
