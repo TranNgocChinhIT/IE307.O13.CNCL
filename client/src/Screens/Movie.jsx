@@ -28,7 +28,7 @@ const Movie = () => {
     };
     const handleBookButtonPress = () => {
         if (isAuthenticated && user && user.userID) {
-          // Nếu đã đăng nhập và có userID, điều hướng đến màn hình LocationAndTime
+          
           navigation.navigate('LocationAndTime', { note });
         } else {
             ToastAndroid.showWithGravity(

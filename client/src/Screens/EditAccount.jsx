@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect, useLayoutEffect } from "react";
-import { ScrollView, View, Text, TextInput, StyleSheet } from "react-native";
+import { ScrollView, View, Text, TextInput, StyleSheet,Modal,Button,Alert } from "react-native";
 import axios from "axios";
 import { AuthContext } from "../context/AuthContext";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -31,19 +31,19 @@ const EditAccount = ({ navigation }) => {
     return unsubscribe;
   }, [navigation, user.userID]);
 
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerRight: () => (
-        <MaterialCommunityIcons
-          name="check"
-          size={30}
-          color="#2196f3"
-          style={styles.checkIcon}
-          onPress={handleUpdateProfile}
-        />
-      ),
-    });
-  }, [navigation, handleUpdateProfile]);
+  // useLayoutEffect(() => {
+  //   navigation.setOptions({
+  //     headerRight: () => (
+  //       <MaterialCommunityIcons
+  //         name="check"
+  //         size={30}
+  //         color="#2196f3"
+  //         style={styles.checkIcon}
+  //         onPress={handleUpdateProfile}
+  //       />
+  //     ),
+  //   });
+  // }, [navigation, handleUpdateProfile]);
 
   const handleInputChange = (field, value) => {
     setUpdatedUser((prev) => ({ ...prev, [field]: value }));
@@ -61,6 +61,7 @@ const EditAccount = ({ navigation }) => {
 
   const [loading, setLoading] = useState(false);
   const [posts, setPosts] = useState([]);
+  const [successModalVisible, setSuccessModalVisible] = useState(false);
   const handleUpdateProfile = async () => {
     try {
       setLoading(true);
@@ -70,25 +71,46 @@ const EditAccount = ({ navigation }) => {
       });
       setPosts([...posts, data?.post]);
       setLoading(false);
+      showAlert("Notice!", "Update succsess! Press Confirm to go back.");
     } catch (error) {
       console.error("Lỗi khi cập nhật thông tin người dùng:", error);
     }
-
+    
     console.log(user.userID)
     console.log(userNameUpdate)
     console.log(regionUpdate)
   };
+  const handleConfirm = () => {
+    setSuccessModalVisible(false);
+    navigation.goBack();
+  };
+  const showAlert = (title, message) => {
+    Alert.alert(
+      title,
+      message,
+      [
+        {
+          text: "Confirm",
+        
+          onPress: () => {
+            navigation.goBack();
+          },
+        },
+      ],
+      { cancelable: false }
+    );
+  };
   return (
     <ScrollView style={styles.container}>
       <View style={styles.headerTitle}>
-        <Text style={styles.textBold}>Tên người dùng:</Text>
+        <Text style={styles.textBold}>Full name</Text>
         <TextInput
           style={styles.input}
           value={updatedUser.userName}
           onChangeText={(text) => handleInputChange("userName", text)}
         />
 
-        <Text style={styles.textBold}>Email:</Text>
+        <Text style={styles.textBold}>Email</Text>
         <TextInput
           style={styles.input}
           value={updatedUser.email}
@@ -96,7 +118,7 @@ const EditAccount = ({ navigation }) => {
           editable={false}
         />
 
-        <Text style={styles.textBold}>Số điện thoại:</Text>
+        <Text style={styles.textBold}>Phone number</Text>
         <TextInput
           style={styles.input}
           value={updatedUser.phone}
@@ -104,16 +126,17 @@ const EditAccount = ({ navigation }) => {
           editable={false}
         />
 
-        <Text style={styles.textBold}>Khu vực:</Text>
+        <Text style={styles.textBold}>Address</Text>
         <TextInput
           style={styles.input}
           value={updatedUser.region}
           onChangeText={(text) => handleInputChange("region", text)}
         />
       </View>
-      <TouchableOpacity onPress={handleUpdateProfile}>
-        <Text>fvfv</Text>
+      <TouchableOpacity style={styles.button} onPress={handleUpdateProfile}>
+        <Text style={{alignSelf:'center',color:'white',fontWeight:'bold',fontSize:23,marginTop:10}}>UPDATE</Text>
       </TouchableOpacity>
+   
     </ScrollView>
   );
 };
@@ -142,5 +165,18 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     padding: 10,
   },
+  button: {
+    backgroundColor: '#FF3333',
+    width: 200,
+    height: 50,
+    borderRadius: 25,
+    marginTop: 8,
+    marginTop: 8,
+    activeOpacity: 0.8,
+    opacity: 0.8,
+    alignSelf:'center'
+  
+
+},
 });
 export default EditAccount;

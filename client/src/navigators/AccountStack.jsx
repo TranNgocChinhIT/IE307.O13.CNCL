@@ -17,7 +17,18 @@ const AccountStack = () => {
       <Stack.Screen
         name="EditAccount"
         component={EditAccount}
-        options={{ title: 'Edit Account' }}
+        options={{ title: 'User Information',animation: "slide_from_right",headerStyle: {
+          backgroundColor: '#FF3333',
+          borderBottomLeftRadius: 20,
+          borderBottomRightRadius: 20,
+          height: 80,
+        },
+        headerTitleStyle: {
+          color: 'white',
+        },
+        tabBarVisible: false,
+      }}
+
       />
     </Stack.Navigator>
   );

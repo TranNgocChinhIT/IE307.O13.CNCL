@@ -44,7 +44,15 @@ const AllStack = () => {
       <Stack.Screen
         name="Reviews"
         component={ReviewMovie}
-        options={{ animation: "slide_from_right", headerShown: true }}
+        options={{ title: 'User Information',animation: "slide_from_right", headerShown: true,headerStyle: {
+          backgroundColor: '#FF3333',
+          borderBottomLeftRadius: 90,
+          borderBottomRightRadius: 90,
+        
+        },
+        headerTitleStyle: {
+          color: 'white',
+        }, }}
       />
     </Stack.Navigator>
   

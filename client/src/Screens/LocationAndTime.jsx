@@ -127,7 +127,7 @@ const LocationAndTime = ({ navigation, route }) => {
       // If the same cinema is clicked again, toggle the timings visibility
       setShowTimings(!showTimings);
     } else {
-      // If a different cinema is clicked, update the selected cinema and show timings
+  
       setSelectedCinema(cinema);
       setSelectedCinemaTimings(getTimingsForCinema(cinema)); // Thêm hàm getTimingsForCinema để lấy giờ của rạp
       setShowTimings(true);
