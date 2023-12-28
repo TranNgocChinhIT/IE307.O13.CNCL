@@ -259,7 +259,7 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
     },
     button: {
-        backgroundColor: '#FF3333',
+        backgroundColor: '#7f0d00',
         alignSelf: 'center',
         justifyContent: 'center',
         width: 370,

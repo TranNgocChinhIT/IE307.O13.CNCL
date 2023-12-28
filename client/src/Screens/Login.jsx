@@ -101,13 +101,13 @@ const Login = () => {
         <MaterialIcons
           name="facebook"
           size={50}
-          color="#042f66"
+          color="#7f0d00"
           style={styles.logoStyle}
         />
         <Ionicons
           name="logo-google"
           size={50}
-          color="#042f66"
+          color="#7f0d00"
           style={styles.logoStyle}
         />
       </View>
@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
     marginTop: 50,
     fontSize: 25,
     fontWeight: "bold",
-    color: "#042f66",
+    color: "#7f0d00",
   },
   textInput: {
     height: 50,
@@ -152,7 +152,7 @@ const styles = StyleSheet.create({
     color: "#FF1493",
   },
   button: {
-    backgroundColor: "#154c79",
+    backgroundColor: "#7f0d00",
 
     padding: 10,
     borderRadius: 10,
@@ -185,7 +185,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   signUpText: {
-    color: "#042f66",
+    color: "#7f0d00",
   },
   forgotContainer: {
     alignItems: "flex-end",

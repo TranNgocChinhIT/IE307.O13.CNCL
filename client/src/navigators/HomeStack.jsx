@@ -37,7 +37,7 @@ const HomeStack = () => {
               <View
                 style={[
                   styles.activeTabBackground,
-                  focused ? { backgroundColor: '#FF3333' } : {},
+                  focused ? { backgroundColor: '#7f0d00' } : {},
                 ]}>
                 <Image source={iconImage} style={{ width: 25, height: 25,tintColor:'white' }} />
               </View>
@@ -57,7 +57,7 @@ const HomeStack = () => {
               <View
                 style={[
                   styles.activeTabBackground,
-                  focused ? { backgroundColor: '#FF3333' } : {},
+                  focused ? { backgroundColor: '#7f0d00' } : {},
                 ]}>
                 <Image source={iconImage} style={{ width: 25, height: 25,tintColor:'white' }} />
               </View>
@@ -77,7 +77,7 @@ const HomeStack = () => {
               <View
                 style={[
                   styles.activeTabBackground,
-                  focused ? { backgroundColor: '#FF3333' } : {},
+                  focused ? { backgroundColor: '#7f0d00' } : {},
                 ]}>
                 <Image source={iconImage} style={{ width: 25, height: 25,tintColor:'white' }} />
               </View>
@@ -98,7 +98,7 @@ const HomeStack = () => {
               <View
                 style={[
                   styles.activeTabBackground,
-                  focused ? { backgroundColor: '#FF3333' } : {},
+                  focused ? { backgroundColor: '#7f0d00' } : {},
                 ]}>
                <Image source={iconImage} style={{ width: 30, height: 30,tintColor:'white' }} />
              

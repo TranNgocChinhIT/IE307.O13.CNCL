@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     fontSize: 25,
     fontWeight: "bold",
-    color:"#042f66",
+    color:"#7f0d00",
   },
   inputContainer: {
     height: 50,
@@ -208,7 +208,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   button: {
-    backgroundColor: "#042f66",
+    backgroundColor: "#7f0d00",
     padding: 10,
     borderRadius: 10,
     marginTop: 15,
@@ -227,7 +227,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   signInText: {
-    color: "#042f66",
+    color: "#7f0d00",
   },
   successMessage: {
     marginTop: 15,

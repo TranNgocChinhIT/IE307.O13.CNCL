@@ -11,7 +11,7 @@ export const TicketProvider = ({ children }) => {
     setTicketData((prevTickets) => [...prevTickets, data]);
   };
   axios.defaults.baseURL =
-  "http://192.168.1.3:8000/api/";
+  "http://186.186.1.148:8000/api/";
   return (
     <TicketContext.Provider value={{ ticketDataContext, setTicketDataContext, bookedTickets }}>
       {children}

@@ -45,7 +45,7 @@ const AllStack = () => {
         name="Reviews"
         component={ReviewMovie}
         options={{ title: 'User Information',animation: "slide_from_right", headerShown: true,headerStyle: {
-          backgroundColor: '#FF3333',
+          backgroundColor: '#7f0d00',
           borderBottomLeftRadius: 90,
           borderBottomRightRadius: 90,
         

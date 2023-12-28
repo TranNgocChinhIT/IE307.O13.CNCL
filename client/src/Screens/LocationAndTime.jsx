@@ -263,7 +263,7 @@ const LocationAndTime = ({ navigation, route }) => {
                         styles.timeContainer,
 
                         index === selectedCinema
-                          ? { backgroundColor: "#CC0000" }
+                          ? { backgroundColor: "#7f0d00" }
                           : {},
                       ]}
                     >
@@ -449,7 +449,7 @@ const styles = StyleSheet.create({
     color: "white",
   },
   button: {
-    backgroundColor: "#FF3333",
+    backgroundColor: "#7f0d00",
     width: 300,
     height: 40,
     borderRadius: 25,

@@ -289,7 +289,7 @@ const styles = StyleSheet.create({
     square: {
         width: 30,
         height: 30,
-        backgroundColor: '#FF3333',
+        backgroundColor: '#7f0d00',
     },
     seatContainer: {
         //flex: 0.1,
@@ -338,7 +338,7 @@ const styles = StyleSheet.create({
     square1: {
         width: 30,
         height: 30,
-        backgroundColor: '#FF3333',
+        backgroundColor: '#7f0d00',
         marginHorizontal: 10,
     },
     square2: {
@@ -359,7 +359,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     button: {
-        backgroundColor: '#FF3333',
+        backgroundColor: '#7f0d00',
         width: 130,
         height: 40,
         borderRadius: 25,

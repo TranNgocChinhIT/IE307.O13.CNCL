@@ -243,7 +243,7 @@ const styles = StyleSheet.create({
         marginLeft: 90,
     },
     buttonBook: {
-        backgroundColor: '#FF3333',
+        backgroundColor: '#7f0d00',
         width: 100,
         height: 40,
         borderRadius: 18,

@@ -74,7 +74,6 @@ const PayScreens = ({ navigation, route }) => {
         paymentStatus:'pending',
         selectedSeats:ticketData.selectedSeats,
       });
-    console.log(putData)
     const BookSeats = async () => {
         try {
             await axios.post(`/booking`, putData);
@@ -305,7 +304,7 @@ const styles = StyleSheet.create({
         borderColor: 'rgba(0, 0, 0, 0.1)',
       },
     button: {
-        backgroundColor: '#FF3333',
+        backgroundColor: '#7f0d00',
         width: '80%',
         height: 35,
         alignItems: 'center',
