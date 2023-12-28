@@ -71,7 +71,7 @@ const CINEMA_DATA = [
   {
     id: 1,
     name: "Rạp 1",
-    address: "123 Nguyễn Tri Phương, Quận 3, Thành phố Hồ Chí Minh",
+    address: "Tầng 6 TTTM GIGAMALL, 240-24 Phạm Văn Đồng, Q. Thủ Đức, TPHCM.",
   },
 ];
 const LocationAndTime = ({ navigation, route }) => {
@@ -267,7 +267,7 @@ const LocationAndTime = ({ navigation, route }) => {
                           : {},
                       ]}
                     >
-                      <Text style={styles.nameText}>Rạp Dĩ An</Text>
+                      <Text style={styles.nameText}>CGV Giga Mall Thủ Đức</Text>
                     </View>
                   </TouchableOpacity>
                   <Text style={styles.addressText}>{item.address}</Text>

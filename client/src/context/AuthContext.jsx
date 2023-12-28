@@ -11,7 +11,7 @@ const AuthProvider = ({ children }) => {
   });
 
   const logout = () => {
-    // Clear user data and token from context
+  
     setisAuthenticated(false);
     setUser({
       userID: '',

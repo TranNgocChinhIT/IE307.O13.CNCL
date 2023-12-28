@@ -4,7 +4,7 @@ import axios from 'axios';
 import Casousel from 'react-native-snap-carousel';
 import { AuthContext } from '../../context/AuthContext';
 const { width: screenWidth } = Dimensions.get('window')
-const TicketPending = () => {
+const TicketPending = ({navigation}) => {
   const [userBookings, setUserBookings] = useState([]);
   const [movieSchedules, setMovieSchedules] = useState([]);
   const [error, setError] = useState(null);
