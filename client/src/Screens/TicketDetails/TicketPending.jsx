@@ -12,8 +12,8 @@ const TicketPending = () => {
   const itemWidth = screenWidth * 0.67;
   const itemWidthHeader = screenWidth * 0.8;
   const { user, setUser } = useContext(AuthContext);
-  useEffect(() => {
-    const fetchUserBookings = async () => {
+
+  const fetchUserBookings = async () => {
       try {
         const response = await axios.get(`/booking/user/${user.userID}`);
         setUserBookings(response.data.datas);
@@ -22,9 +22,13 @@ const TicketPending = () => {
         setError(error.message || "An error occurred while fetching user bookings.");
       }
     };
-
-    fetchUserBookings();
-  }, []);
+  // thêm dòng addListener để mỗi khi qua màn đó thì sẽ get lại dữ liệu
+  useEffect(() => {
+      const unsubscribe = navigation.addListener('focus', () => {
+        fetchUserBookings();
+      })
+      return unsubscribe;
+    }, [navigation]); 
   const filteredBookings = userBookings.filter(item => item.paymentStatus === 'pending');
   const renderItem = ({ item }) => (
     <View style={styles.ticketItem}>
