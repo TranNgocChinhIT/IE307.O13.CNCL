@@ -12,15 +12,15 @@ const Account = ({ navigation }) => {
   const [totalAmount, setTotalAmount] = useState(4000000);
   const [customerAmount, setCustomerAmount] = useState(2000000);
 
-  useEffect(() => {
+  // useEffect(() => {
   
-    const fetchDataFromDatabase = async () => {
-      const result = await fetchCustomerAmount(); 
-      setCustomerAmount(result);
-    };
+  //   const fetchDataFromDatabase = async () => {
+  //     const result = await fetchCustomerAmount(); 
+  //     setCustomerAmount(result);
+  //   };
 
-    fetchDataFromDatabase();
-  }, []);
+  //   fetchDataFromDatabase();
+  // }, []);
 
   const calculateProgress = () => {
  
