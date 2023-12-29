@@ -113,14 +113,6 @@ const TicketPending = ({ navigation }) => {
             <Text>Number of Tickets: {item.numberOfTickets}</Text>
             <Text>Total Amount: {item.totalAmount}</Text>
             <Text>Payment Status: {item.paymentStatus}</Text>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() =>
-                navigation.navigate("Reviews", { note: item })
-              }
-            >
-              <Text style={styles.textButton}>Reviews</Text>
-            </TouchableOpacity>
           </View>
         </View>
       </View>

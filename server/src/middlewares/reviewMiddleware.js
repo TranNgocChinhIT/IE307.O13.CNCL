@@ -1,4 +1,5 @@
 import Booking from "../models/Booking.js";
+import Review from "../models/Review.js";
 
 // Middleware to check if the user is eligible to create a review for a specific movie
 export const checkReviewEligibility = async (req, res, next) => {
@@ -27,6 +28,17 @@ export const checkReviewEligibility = async (req, res, next) => {
       if (completedMovieId.toString() !== movie.toString()) {
         return res.status(403).json({
           message: 'Bạn cần phải thanh toán một đơn đặt vé cho bộ phim này trước khi tạo đánh giá.',
+        });
+      }
+  
+      const existingReview = await Review.findOne({
+        user: user,
+        movie: movie,
+      });
+  
+      if (existingReview) {
+        return res.status(403).json({
+          message: 'Bạn đã đánh giá bộ phim này trước đó, mỗi người dùng chỉ được phép đánh giá một lần.',
         });
       }
   
