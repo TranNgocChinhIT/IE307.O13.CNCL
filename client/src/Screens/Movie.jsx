@@ -103,8 +103,8 @@ const Movie = () => {
                                 <Text style={styles.textInfor}>
                                     Genre
                                 </Text>
-                                <Text style={[styles.infor, { marginLeft: 103 }]}>
-                                    {note.gendre}
+                                <Text style={[styles.infor, { marginLeft: 111 }]}>
+                                    {note.genre}
                                 </Text>
                             </View>
                             <View style={{ flexDirection: 'row' }}>
