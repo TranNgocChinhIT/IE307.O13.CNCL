@@ -125,7 +125,6 @@ const styles = StyleSheet.create({
     height: "37%",
     width: "100%",
     resizeMode: "cover",
-    borderRadius: 8,
   },
   text: {
     alignSelf: "center",

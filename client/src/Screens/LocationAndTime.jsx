@@ -11,7 +11,7 @@ import {
   Alert,
   ToastAndroid,
 } from "react-native";
-import * as SecureStore from "expo-secure-store";
+
 import axios from "axios";
 
 const timeArray = [
@@ -140,19 +140,7 @@ const LocationAndTime = ({ navigation, route }) => {
       dateArray[selectedDateIndex] !== undefined
     ) {
       try {
-        await SecureStore.setItemAsync(
-          "ticket",
-          JSON.stringify({
-            // seatArray: selectedSeatArray,
-            time: timeArray[selectedTimeIndex],
-            date: dateArray[selectedDateIndex],
-            month: selectedMonth,
-            year: selectedYear,
-            note: note,
-            ticketImage: route.params.PosterImage,
-          })
-        );
-  
+      
         let scheduleId;
         cinemaData.forEach((schedule) => {
           const screeningDate = schedule.screeningDate;

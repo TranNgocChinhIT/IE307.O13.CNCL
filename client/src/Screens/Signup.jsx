@@ -1,6 +1,7 @@
 import React, { useState, useContext } from "react";
 import {
   View,
+  ScrollView,
   Text,
   Image,
   TextInput,
@@ -51,7 +52,7 @@ const Signup = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <Image
         style={styles.imageStyle}
         source={require("../assets/image/login.jpg")}
@@ -163,21 +164,21 @@ const Signup = () => {
           <Text style={{ color: "green" }}>Registration successful!</Text>
         </View>
       )}
-    </View>
+    </ScrollView>
   );
 };
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    // justifyContent: "center",
+    // alignItems: "center",
   },
   imageStyle: {
     width: 80,
     height: 80,
     borderRadius: 100,
     alignSelf: "center",
-    marginTop: 120,
+    marginTop: 60,
   },
   text: {
     alignSelf: "center",
