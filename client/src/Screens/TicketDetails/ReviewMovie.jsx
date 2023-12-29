@@ -4,6 +4,7 @@ import StarRating from 'react-native-star-rating';
 import { useRoute } from '@react-navigation/native';
 import axios from 'axios';
 import { AuthContext } from '../../context/AuthContext';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const ReviewMovie = () => {
   const route = useRoute();
@@ -44,7 +45,7 @@ const ReviewMovie = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <View style={styles.infor}>
         <Image source={{ uri: note.movieScheduleRelationship.movie.imagePath }} style={styles.cardImage} />
         <Text style={{ marginTop: 10, fontWeight: 'bold', fontSize: 18 }}>{note.movieScheduleRelationship.movie.title}</Text>
@@ -58,7 +59,7 @@ const ReviewMovie = () => {
           fullStarColor="#ffd700"
         />
       </View>
-      {/* Comment Input */}
+   
       <TextInput
         style={styles.commentInput}
         placeholder="Nhập ý kiến của bạn..."
@@ -68,11 +69,11 @@ const ReviewMovie = () => {
         onChangeText={(text) => setComment(text)}
       />
 
-      {/* Submit Button */}
+
       <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
         <Text style={styles.submitButtonText}>Submit Review</Text>
       </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -87,7 +88,7 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     borderRadius: 8,
     padding: 10,
-    marginBottom: 20,
+    marginBottom: 10,
     marginTop: 15,
   },
   submitButton: {
@@ -95,7 +96,7 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 20,
     alignItems: 'center',
-    marginTop: 15,
+   
   },
   submitButtonText: {
     color: 'white',

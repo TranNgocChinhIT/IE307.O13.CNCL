@@ -1,20 +1,19 @@
 import React, { useEffect, useState,useContext } from 'react';
-import { Text, View, StyleSheet, TouchableOpacity, ScrollView, StatusBar, FlatList, Dimensions, Image, ImageBackground,ToastAndroid } from 'react-native';
+import { Text, View, StyleSheet, TouchableOpacity, ScrollView , Dimensions, Image, ImageBackground,ToastAndroid } from 'react-native';
 import ShowListHeader from '../component/ShowListHeader';
-import { dataNowMovieList } from '../data/dataNowMovieList';
+
 import { dataHeaderAdvertisement } from '../data/dataHeaderAdvertisement';
 import Casousel from 'react-native-snap-carousel';
 const { width: screenWidth } = Dimensions.get('window')
-import { useNavigation } from '@react-navigation/native';
+
 import axios from "axios";
 import { AuthContext } from "../context/AuthContext";
-import { MovieContext } from '../context/movieContext';
+
 
 const Home = ({ navigation }) => {
     const sliderWidth = screenWidth;
     const itemWidth = screenWidth * 0.67;
     const itemWidthHeader = screenWidth * 0.8;
-    const [backgroundIndex, setBackgroundIndex] = useState(0);
 
     const [pressedButton, setPressedButton] = useState('Now');
     const [movies, setMovies] = useState([]);
@@ -251,7 +250,7 @@ const styles = StyleSheet.create({
         marginTop: 8,
         activeOpacity: 0.8,
         opacity: 0.8,
-        //elevation: 1000,
+  
 
     },
 

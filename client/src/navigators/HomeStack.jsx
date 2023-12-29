@@ -48,10 +48,11 @@ const HomeStack = () => {
           },
         }} />
         <Bottom.Screen name="Ticket" component={Ticket} options={{
-          tabBarShowLabel: true,
+         // tabBarShowLabel: true,
+         headerShown: false,
           tabBarIcon: ({ focused, color, size }) => {
             const iconImage = focused
-              ? require('../assets/image/tickets.png') // Đường dẫn đến hình ảnh icon khi được chọn
+              ? require('../assets/image/tickets.png') 
               : require('../assets/image/tickets.png');
             return (
               <View
