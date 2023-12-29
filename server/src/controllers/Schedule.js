@@ -1,6 +1,6 @@
 import Schedule from "../models/Schedule.js";
 import scheduleValidator from "../validation/Schedule.js";
-
+import cron from "node-cron";
 // Lấy danh sách Schedule
 export const getAllSchedules = async (req, res) => {
     try {
@@ -127,3 +127,40 @@ export const removeSchedule = async (req, res) => {
         });
     }
 };
+const formatDate = (date) => {
+    const day = date.getDate();
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  };
+  
+  // Hàm cập nhật screeningDate
+  const updateScreeningDate = async () => {
+    const currentDate = new Date();
+    const formattedDate = formatDate(currentDate);
+  
+    try {
+      const result = await Schedule.updateMany(
+        {},
+        { $set: { screeningDate: formattedDate } }
+      );
+      console.log(
+        `Cập nhật screeningDate thành công. Số lịch chiếu được cập nhật: ${result.nModified}`
+      );
+    } catch (error) {
+      console.error("Lỗi khi cập nhật screeningDate:", error);
+    }
+  };
+  
+  // Hàm chạy một lần khi server bắt đầu
+  const runOnServerStart = async () => {
+    console.log("Server bắt đầu. Chạy hàm cập nhật screeningDate lần đầu tiên.");
+    await updateScreeningDate();
+  };
+  
+  // Lên lịch chạy hàm cập nhật mỗi ngày lúc 00:00 (0 giờ 0 phút)
+  cron.schedule("0 0 * * *", updateScreeningDate);
+  
+  // Chạy hàm cập nhật khi server bắt đầu
+  runOnServerStart();
+  

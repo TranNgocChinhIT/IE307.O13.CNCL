@@ -13,7 +13,7 @@ const Account = ({ navigation }) => {
   const [customerAmount, setCustomerAmount] = useState(2000000);
 
   // useEffect(() => {
-
+  
   //   const fetchDataFromDatabase = async () => {
   //     const result = await fetchCustomerAmount(); 
   //     setCustomerAmount(result);
@@ -35,8 +35,8 @@ const Account = ({ navigation }) => {
           styleAttr="Horizontal"
           indeterminate={false}
           progress={progressValue}
-
-          style={{ borderRadius: 100, color: "#CDB79E" }}
+          
+          style={{ borderRadius: 100,color:"#CDB79E" }}
         />
       </View>;
     } else if (Platform.OS === 'ios') {
