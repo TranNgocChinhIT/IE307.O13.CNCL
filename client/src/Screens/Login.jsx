@@ -18,7 +18,7 @@ const Login = () => {
   const [email, setEmail] = useState("dangkihoa@gmail.com");
   const [password, setPassword] = useState("123456789");
   const [showPassword, setShowPassword] = useState(false); // Thêm state để theo dõi trạng thái hiển thị mật khẩu
-  const { login } = useContext(AuthContext);
+  const { login,setisAuthenticated } = useContext(AuthContext);
 
   const handleLogin = async (email, password) => {
     try {
@@ -34,6 +34,9 @@ const Login = () => {
 
   const handleOnPressSignup = () => {
     navigation.navigate("Signup");
+  };
+  const handleOnGoHome = () => {
+    setisAuthenticated(true)
   };
 
   return (
@@ -74,7 +77,10 @@ const Login = () => {
             onChangeText={setPassword}
           />
           {/* Thêm nút con mắt */}
-          <TouchableOpacity onPress={handleTogglePasswordVisibility} style={styles.eyeIcon}>
+          <TouchableOpacity
+            onPress={handleTogglePasswordVisibility}
+            style={styles.eyeIcon}
+          >
             <Ionicons
               name={showPassword ? "ios-eye" : "ios-eye-off"}
               size={20}
@@ -98,18 +104,14 @@ const Login = () => {
         </View>
       </View>
       <View style={styles.imageContainer}>
-        <MaterialIcons
-          name="facebook"
-          size={50}
-          color="#7f0d00"
-          style={styles.logoStyle}
-        />
-        <Ionicons
-          name="logo-google"
-          size={50}
-          color="#7f0d00"
-          style={styles.logoStyle}
-        />
+        <TouchableOpacity  onPress={handleOnGoHome}>
+          <Ionicons
+            name="home"
+            size={50}
+            color="#7f0d00"
+            style={styles.logoStyle}
+          />
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -231,8 +233,8 @@ const styles = StyleSheet.create({
     marginTop: 11,
     marginLeft: 12,
   },
-  logoStyle:{
-    marginLeft:5,
+  logoStyle: {
+    marginLeft: 5,
   },
   eyeIcon: {
     position: "absolute",

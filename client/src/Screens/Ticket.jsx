@@ -13,23 +13,23 @@ const TicketStack = () => {
     return (
         <Tab.Navigator
             screenOptions={({ route }) => ({
-                // tabBarIcon: ({ focused, color, size }) => {
-                //     let iconName;
-                //     if (route.name === 'TicketPending') {
-                //         iconName = focused
-                //             ? require('../assets/image/clock.png')
-                //             : require('../assets/image/clock.png');
+                tabBarIcon: ({ focused, color, size }) => {
+                    let iconName;
+                    if (route.name === 'TicketPending') {
+                        iconName = focused
+                            ? require('../assets/image/clock.png')
+                            : require('../assets/image/clock.png');
           
-                //     }
-                //      if (route.name === 'TicketConfirmed') {
-                //         iconName = focused
-                //             ? require('../assets/image/checklist.png')
-                //             : require('../assets/image/checklist.png');
-                //     }
+                    }
+                     if (route.name === 'TicketConfirmed') {
+                        iconName = focused
+                            ? require('../assets/image/checklist.png')
+                            : require('../assets/image/checklist.png');
+                    }
         
-                //     return <Image source={iconName} style={{ width: 30, height: 30 }} />;
+                    return <Image source={iconName} style={{ width: 30, height: 30 }} />;
 
-                // },
+                },
             })}
         >
             <Tab.Screen name="TicketPending" component={TicketPending} options={{

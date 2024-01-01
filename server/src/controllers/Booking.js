@@ -3,6 +3,7 @@ import User from "../models/User.js";
 import MovieScheduleRelationship from "../models/movieScheduleRelationship.js";
 import bookingValidator from "../validation/Booking.js";
 import mongoose from "mongoose";
+import schedule from "node-schedule";
 // Lấy danh sách Booking
 export const getAllBookings = async (req, res) => {
     try {
@@ -110,6 +111,16 @@ export const createBooking = async (req, res) => {
         }
         const newBooking = await Booking.create(req.body);
 
+        if (req.body.paymentStatus === 'pending') {
+            const movieScheduleRelationshipId = req.body.movieScheduleRelationship;
+            const updatedSeats = await updateSeatsStatusPending(movieScheduleRelationshipId, req.body.selectedSeats);
+            if (!updatedSeats) {
+                return res.status(500).json({
+                    message: "Cập nhật trạng thái ghế không thành công",
+                });
+            }
+          }
+
         if (!newBooking) {
             return res.status(400).json({
                 message: "Tạo đặt vé không thành công",
@@ -126,7 +137,55 @@ export const createBooking = async (req, res) => {
         });
     }
 };
+// Hàm cập nhật trạng thái ghế pending trong bảng movieScheduleRelationship
+const updateSeatsStatusPending = async (movieScheduleRelationshipId, selectedSeats) => {
+    try {
+        const movieScheduleRelationship = await MovieScheduleRelationship.findById(movieScheduleRelationshipId);
+        if (!movieScheduleRelationship) {
+            return null;
+        }
 
+        // Lặp qua các ghế được chọn và cập nhật trạng thái
+        for (const seatId of selectedSeats) {
+            const seatIndex = movieScheduleRelationship.seats.flat().findIndex(seat => seat._id == seatId);
+            if (seatIndex !== -1) {
+                movieScheduleRelationship.seats.flat()[seatIndex].taken = true;
+                movieScheduleRelationship.seats.flat()[seatIndex].selected = true;
+            }
+        }
+
+        // Lưu lại bảng movieScheduleRelationship
+        await movieScheduleRelationship.save();
+
+        return movieScheduleRelationship;
+    } catch (error) {
+        throw error;
+    }
+};
+const updateSeatsStatusCanceled = async (movieScheduleRelationshipId, selectedSeats) => {
+    try {
+        const movieScheduleRelationship = await MovieScheduleRelationship.findById(movieScheduleRelationshipId);
+        if (!movieScheduleRelationship) {
+            return null;
+        }
+
+        // Lặp qua các ghế được chọn và cập nhật trạng thái
+        for (const seatId of selectedSeats) {
+            const seatIndex = movieScheduleRelationship.seats.flat().findIndex(seat => seat._id == seatId);
+            if (seatIndex !== -1) {
+                movieScheduleRelationship.seats.flat()[seatIndex].taken = false;
+                movieScheduleRelationship.seats.flat()[seatIndex].selected = false;
+            }
+        }
+
+        // Lưu lại bảng movieScheduleRelationship
+        await movieScheduleRelationship.save();
+
+        return movieScheduleRelationship;
+    } catch (error) {
+        throw error;
+    }
+};
 // Hàm cập nhật trạng thái ghế trong bảng movieScheduleRelationship
 const updateSeatsStatus = async (movieScheduleRelationshipId, selectedSeats) => {
     try {
@@ -162,13 +221,13 @@ const updateSeatsStatus = async (movieScheduleRelationshipId, selectedSeats) => 
           message: errors,
         });
       }
-  
+      
       const updatedBooking = await Booking.findByIdAndUpdate(
         req.params.id,
         req.body,
         { new: true }
       );
-  
+      console.log(req.body.movieScheduleRelationship,req.body.selectedSeats)
       if (req.body.paymentStatus === 'completed') {
         const movieScheduleRelationshipId = req.body.movieScheduleRelationship;
         const updatedSeats = await updateSeatsStatus(movieScheduleRelationshipId, req.body.selectedSeats);
@@ -177,7 +236,19 @@ const updateSeatsStatus = async (movieScheduleRelationshipId, selectedSeats) => 
                 message: "Cập nhật trạng thái ghế không thành công",
             });
         }
-      }
+    } else if (req.body.paymentStatus === 'canceled') {
+        const movieScheduleRelationshipId = req.body.movieScheduleRelationship;
+        const updatedSeats = await updateSeatsStatusCanceled(movieScheduleRelationshipId, req.body.selectedSeats);
+        if (!updatedSeats) {
+            return res.status(500).json({
+                message: "Cập nhật trạng thái ghế không thành công",
+            });
+        }
+
+        // Xóa đặt vé
+        await Booking.findByIdAndDelete(req.params.id);
+    }
+
   
       if (!updatedBooking) {
         return res.status(404).json({
@@ -218,3 +289,47 @@ export const removeBooking = async (req, res) => {
         });
     }
 };
+// Hàm để tự động xóa các đặt vé có paymentStatus = 'pending' sau 1 ngày
+const autoDeletePendingBookings = async () => {
+    try {
+        // Lấy tất cả đặt vé chưa hoàn thành và có paymentStatus là 'pending'
+        const pendingBookings = await Booking.find({
+            paymentStatus: 'pending',
+            createdAt: { $lt: new Date(Date.now() -  1*60* 60 * 1000) } // Lọc các đặt vé tạo trước 1 ngày
+        });
+
+        // Xóa các đặt vé thỏa mãn điều kiện
+        for (const booking of pendingBookings) {
+            const movieScheduleRelationshipId = booking.movieScheduleRelationship.toString();
+            const selectedSeats = booking.selectedSeats.map(seat => seat.toString());
+            
+            // Hủy các ghế đã chọn
+            const updatedSeats = await updateSeatsStatusCanceled(movieScheduleRelationshipId,selectedSeats);
+            if (!updatedSeats) {
+                return res.status(500).json({
+                    message: "Cập nhật trạng thái ghế không thành công",
+                });
+            }
+
+            // Xóa đặt vé
+            await Booking.findByIdAndDelete(booking._id);
+
+            console.log(`Đặt vé có ID ${booking._id} đã được tự động xóa.`);
+        }
+
+        console.log("Quá trình tự động xóa đặt vé đã hoàn thành.");
+    } catch (error) {
+        console.error("Lỗi trong quá trình tự động xóa đặt vé:", error);
+    }
+};
+  // Hàm chạy một lần khi server bắt đầu
+  const runOnServerStart = async () => {
+    console.log("Server bắt đầu. Chạy hàm cập nhật xoa ve pending qua 1 ngay lần đầu tiên.");
+    await autoDeletePendingBookings();
+  };
+ 
+  // Chạy hàm cập nhật khi server bắt đầu
+  runOnServerStart();
+  
+// Gọi hàm tự động xóa hàng ngày (ví dụ: mỗi ngày lúc 3 giờ sáng)
+schedule.scheduleJob('0 3 * * *', autoDeletePendingBookings);
