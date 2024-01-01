@@ -18,6 +18,10 @@ const { width: screenWidth } = Dimensions.get("window");
 
 import axios from "axios";
 import { AuthContext } from "../context/AuthContext";
+import * as SplashScreen from "expo-splash-screen";
+import * as Font from "expo-font";
+import Entypo from "@expo/vector-icons/Entypo";
+SplashScreen.preventAutoHideAsync();
 
 const Home = ({ navigation }) => {
   const sliderWidth = screenWidth;
@@ -27,22 +31,42 @@ const Home = ({ navigation }) => {
   const [pressedButton, setPressedButton] = useState("Now");
   const [movies, setMovies] = useState([]);
   const { user, isAuthenticated } = useContext(AuthContext);
+  const [isLoading, setIsLoading] = useState(true);
+  const [appIsReady, setAppIsReady] = useState(false);
+
   useEffect(() => {
-    const fetchMovies = async () => {
+    async function fetchData() {
       try {
         const response = await axios.get("/movie");
         const nowShowingMovies = response.data?.datas.filter(
           (item) => item.categoryID.slug === "Now"
         );
         setMovies(response.data?.datas);
+
+        SplashScreen.hideAsync();
       } catch (error) {
         console.error("Error fetching movies:", error);
       }
-    };
+    }
 
-    fetchMovies();
+    async function prepare() {
+      try {
+        await Font.loadAsync(Entypo.font);
+        await fetchData(); // Fetch data after loading fonts
+      } catch (e) {
+        console.warn(e);
+      } finally {
+        setAppIsReady(true);
+        setIsLoading(false);
+      }
+    }
+
+    prepare();
   }, []);
-
+  if (!appIsReady) {
+    // You can render a loading screen or return null while the app is not ready
+    return null;
+  }
   const handlePress = (buttonName) => {
     setPressedButton(buttonName);
   };
@@ -111,57 +135,59 @@ const Home = ({ navigation }) => {
     }
     return true; // Default case, show all movies
   });
-  
+
   return (
     <ImageBackground
       source={require("../assets/image/aquaman.jpg")}
       style={styles.backgroundImage}
     >
-      <ScrollView style={styles.container}>
-        <Text style={styles.text} numberOfLines={1}>
-          CGV*
-        </Text>
+      {!isLoading && (
+        <ScrollView style={styles.container}>
+          <Text style={styles.text} numberOfLines={1}>
+            CGV*
+          </Text>
 
-        <Casousel
-          autoplay={true}
-          autoplayTimeout={5}
-          data={dataHeaderAdvertisement}
-          renderItem={renderItemHeader}
-          sliderWidth={sliderWidth}
-          itemWidth={itemWidthHeader}
-          loop
-        />
+          <Casousel
+            autoplay={true}
+            autoplayTimeout={5}
+            data={dataHeaderAdvertisement}
+            renderItem={renderItemHeader}
+            sliderWidth={sliderWidth}
+            itemWidth={itemWidthHeader}
+            loop
+          />
 
-        <View style={styles.title}>
-          <TouchableOpacity>
-            <ShowListHeader
-              title={"Now Showing"}
-              onPress={() => handlePress("Now Showing")}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <ShowListHeader
-              title={"     Special"}
-              onPress={() => handlePress("Special")}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <ShowListHeader
-              title={"Coming Soon"}
-              onPress={() => handlePress("Coming Soon")}
-            />
-          </TouchableOpacity>
-        </View>
+          <View style={styles.title}>
+            <TouchableOpacity>
+              <ShowListHeader
+                title={"Now Showing"}
+                onPress={() => handlePress("Now Showing")}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <ShowListHeader
+                title={"     Special"}
+                onPress={() => handlePress("Special")}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <ShowListHeader
+                title={"Coming Soon"}
+                onPress={() => handlePress("Coming Soon")}
+              />
+            </TouchableOpacity>
+          </View>
 
-        <Casousel
-          Layout="default"
-          //data={dataNowMovieList}
-          data={filteredMovies}
-          renderItem={renderItem}
-          sliderWidth={sliderWidth}
-          itemWidth={itemWidth}
-        />
-      </ScrollView>
+          <Casousel
+            Layout="default"
+            //data={dataNowMovieList}
+            data={filteredMovies}
+            renderItem={renderItem}
+            sliderWidth={sliderWidth}
+            itemWidth={itemWidth}
+          />
+        </ScrollView>
+      )}
     </ImageBackground>
   );
 };
@@ -191,8 +217,8 @@ const styles = StyleSheet.create({
     color: "white",
   },
   pressedText: {
-    color: '#7f0d00', // Màu của trạng thái được chọn
-    fontWeight: 'bold',
+    color: "#7f0d00", // Màu của trạng thái được chọn
+    fontWeight: "bold",
   },
   Special: {
     fontWeight: "bold",

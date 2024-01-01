@@ -9,6 +9,7 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@expo/vector-icons": "^13.0.0",
     "@react-native-async-storage/async-storage": "^1.21.0",
     "@react-native-community/progress-bar-android": "^1.0.5",
     "@react-native-community/progress-view": "^1.4.2",
@@ -22,8 +23,10 @@
     "axios": "^1.6.2",
     "deprecated-react-native-prop-types": "^5.0.0",
     "expo": "~49.0.15",
+    "expo-font": "~11.4.0",
     "expo-image-picker": "~14.3.2",
     "expo-secure-store": "^12.5.0",
+    "expo-splash-screen": "~0.20.5",
     "expo-status-bar": "~1.6.0",
     "node_module": "^0.0.0",
     "react": "18.2.0",
@@ -45,6 +48,7 @@
     "react-native-safe-area-context": "4.6.3",
     "react-native-screens": "~3.22.0",
     "react-native-snap-carousel": "^3.9.1",
+    "react-native-splash-screen": "^3.3.0",
     "react-native-star-rating": "^1.1.0",
     "react-native-svg": "13.9.0",
     "react-native-vector-icons": "^10.0.3",
