@@ -34,16 +34,16 @@ const Review = ({ navigation }) => {
           source={require("../../assets/image/star.png")}
           style={{ width: 13, height: 13, marginTop: 3 }}
         />
-        <Text style={{ color: 'white', marginLeft: 2 }}>{item.evaluate}</Text>
+        <Text style={{ color: 'black', marginLeft: 2 }}>{item.evaluate}</Text>
 
         <Image
           source={require("../../assets/image/time.png")}
-          style={{ width: 11, height: 11, marginLeft: 14, marginTop: 5, tintColor: 'white' }}
+          style={{ width: 11, height: 11, marginLeft: 14, marginTop: 5, tintColor: 'black' }}
         />
-        <Text style={{ color: 'white', marginLeft: 8 }}>{item.time}</Text>
+        <Text style={{ color: 'black', marginLeft: 8 }}>{item.time}</Text>
 
       </View >
-      <Text style={{ color: 'white', marginLeft: 2, fontWeight: 'bold' }}>{item.title}</Text>
+      <Text style={{ color: 'black', marginLeft: 2, fontWeight: 'bold' }}>{item.title}</Text>
       <TouchableOpacity style={styles.buttonBook} onPress={() => {
         console.log('Button Pressed!');
         navigation.navigate('ReviewDetails', { note: item });
@@ -82,7 +82,7 @@ const Review = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'black',
+    backgroundColor: '#F5F5F5',
 
   },
   ticketItem: {

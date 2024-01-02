@@ -15,11 +15,11 @@ const NewStack = () => {
             screenOptions={({ route }) => ({
                 tabBarLabelStyle: { fontSize: 10 },
                 tabBarStyle: {
-                    backgroundColor: 'red',
+                    backgroundColor: '#FFFFFF',
                     borderRadius: 5,
                 },
                 tabBarIndicatorStyle: {
-                    backgroundColor: 'white',
+                    backgroundColor: 'blue',
                    // height: 3,
                    // borderRadius: 2,
                 },
@@ -41,13 +41,13 @@ const NewStack = () => {
                             : require('../assets/image/character.png');
                     }
 
-                    return <Image source={iconName} style={{ width: 25, height: 25,tintColor:'white' }} />;
+                    return <Image source={iconName} style={{ width: 25, height: 25,tintColor:'#7f0d00' }} />;
                 },
             })}
         >
             <Tab.Screen name="Review" component={Review} options={{
                 tabBarLabel: 'Review',
-                tabBarLabelStyle: { fontSize: 10 },
+                tabBarLabelStyle: { fontSize: 12 , color:"#7f0d00" , fontWeight: "bold"},
             }} />
             {/* <Tab.Screen name="NewsMovie" component={NewMovie} options={{
                 tabBarLabel: 'News',
@@ -55,7 +55,7 @@ const NewStack = () => {
             }} /> */}
             <Tab.Screen name="Character" component={Character} options={{
                 tabBarLabel: 'Character',
-                tabBarLabelStyle: { fontSize: 10 },
+                tabBarLabelStyle: { fontSize: 12,  color:"#7f0d00" , fontWeight: "bold"},
             }} />
 
         </Tab.Navigator>
