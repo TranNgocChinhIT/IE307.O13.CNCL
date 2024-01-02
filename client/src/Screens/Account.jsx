@@ -12,6 +12,7 @@ const Account = ({ navigation }) => {
   const [totalAmount, setTotalAmount] = useState(4000000);
   const [customerAmount, setCustomerAmount] = useState(2000000);
 
+  
   // useEffect(() => {
   
   //   const fetchDataFromDatabase = async () => {
@@ -120,7 +121,7 @@ const Account = ({ navigation }) => {
                 <View>
 
                   <StatusBar
-                    backgroundColor="white"
+                    backgroundColor="black"
                     barStyle="light-content"
                   />
 

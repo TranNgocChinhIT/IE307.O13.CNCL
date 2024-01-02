@@ -71,10 +71,10 @@ const Home = ({ navigation }) => {
     )
     const handleBookButtonPress = (movie) => {
         if (isAuthenticated && user && user.userID) {
-          // Nếu đã đăng nhập, điều hướng đến màn hình LocationAndTime
+       
           navigation.navigate('LocationAndTime', { note: movie });
         } else {
-          // Nếu chưa đăng nhập, hiển thị thông báo lỗi
+
           ToastAndroid.showWithGravity(
             "Please Login to book tickets.",
             ToastAndroid.SHORT,

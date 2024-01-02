@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Text, View, StyleSheet, Linking, Button,Image } from 'react-native';
+import { Text, View, StyleSheet, Linking, Button, Image } from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import Review from './NewDetails/Review';
 import NewMovie from './NewDetails/NewMovie';
@@ -9,29 +9,39 @@ const Tab = createMaterialTopTabNavigator();
 
 const NewStack = () => {
     return (
+
         <Tab.Navigator
+
             screenOptions={({ route }) => ({
+                tabBarLabelStyle: { fontSize: 10 },
+                tabBarStyle: {
+                    backgroundColor: 'red',
+                    borderRadius: 5,
+                },
+                tabBarIndicatorStyle: {
+                    backgroundColor: 'white',
+                   // height: 3,
+                   // borderRadius: 2,
+                },
                 tabBarIcon: ({ focused, color, size }) => {
                     let iconName;
                     if (route.name === 'Review') {
                         iconName = focused
                             ? require('../assets/image/feedback.png')
                             : require('../assets/image/feedback.png');
-          
-                    }
-                    else if (route.name === 'NewsMovie') {
-                        iconName = focused
-                            ? require('../assets/image/newspaper.png')
-                            : require('../assets/image/newspaper.png');
-                    }
+                    } 
+                    // else if (route.name === 'NewsMovie') {
+                    //     iconName = focused
+                    //         ? require('../assets/image/newspaper.png')
+                    //         : require('../assets/image/newspaper.png');
+                    // } 
                     else if (route.name === 'Character') {
                         iconName = focused
                             ? require('../assets/image/character.png')
                             : require('../assets/image/character.png');
                     }
-                  
-                    return <Image source={iconName} style={{ width: 20, height: 20 }} />;
 
+                    return <Image source={iconName} style={{ width: 25, height: 25,tintColor:'white' }} />;
                 },
             })}
         >
@@ -39,15 +49,15 @@ const NewStack = () => {
                 tabBarLabel: 'Review',
                 tabBarLabelStyle: { fontSize: 10 },
             }} />
-            <Tab.Screen name="NewsMovie" component={NewMovie} options={{
+            {/* <Tab.Screen name="NewsMovie" component={NewMovie} options={{
                 tabBarLabel: 'News',
                 tabBarLabelStyle: { fontSize: 10 },
-            }} /> 
+            }} /> */}
             <Tab.Screen name="Character" component={Character} options={{
                 tabBarLabel: 'Character',
                 tabBarLabelStyle: { fontSize: 10 },
             }} />
-            
+
         </Tab.Navigator>
 
     );

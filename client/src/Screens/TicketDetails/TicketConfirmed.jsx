@@ -35,7 +35,7 @@ const TicketConfirmed = ({ navigation }) => {
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
-      setIsFocused(true); // Đặt giá trị isFocused là true khi có sự kiện focus
+      setIsFocused(true); 
     });
     return unsubscribe;
   }, [navigation]);
@@ -43,7 +43,7 @@ const TicketConfirmed = ({ navigation }) => {
   useEffect(() => {
     if (isFocused) {
       fetchUserBookings();
-      setIsFocused(false); // Đặt lại giá trị isFocused là false sau khi xử lý sự kiện
+      setIsFocused(false); 
     }
   }, [isFocused]);
 

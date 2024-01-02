@@ -6,7 +6,7 @@ import Casousel from 'react-native-snap-carousel';
 const { width: screenWidth } = Dimensions.get('window');
 import MapView from 'react-native-maps';
 // import Communications from 'react-native-communications';
-//import call from 'react-native-phone-call'
+import call from 'react-native-phone-call'
 const Theater = () => {
   const [mapHeight, setMapHeight] = useState(200);
   const sliderWidth = screenWidth;
@@ -32,13 +32,15 @@ const Theater = () => {
       }
     });
   };
-  // const makeCall = () => {
-  //   const args={
-  //     number: inputValue,
-  //     prompt: true,
-  //   };
-  //   call(args).catch(console.error);
-  // };
+  const [inputValue,setInputValue]=useState('0946439471');
+  const triggerCall = () => {
+    const args = {
+      number: inputValue,
+      prompt: true,
+    };
+  
+    call(args).catch(console.error);
+  };
   return (
     <ScrollView style={styles.container}>
       <View style={{ marginTop: 15, marginHorizontal: 10, flexDirection: 'row' }}>
@@ -78,7 +80,7 @@ const Theater = () => {
             Showtime
           </Text>
         </View>
-        <TouchableOpacity >
+        <TouchableOpacity onPress={triggerCall}>
         <View style={{ flexDirection: 'row' }}>
           <Image
             source={require("../../assets/image/call.png")}

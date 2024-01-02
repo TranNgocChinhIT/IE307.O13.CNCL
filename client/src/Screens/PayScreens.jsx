@@ -91,7 +91,7 @@ const PayScreens = ({ navigation, route }) => {
             
               // Call the setTicketDataContext function with the ticket information
               setTicketDataContext(ticketInfo);
-             // Linking.openURL(momoLink);
+             Linking.openURL(momoLink);
               navigation.navigate('Ticket')
         } catch (error) {
           console.error("Lỗi khi cập nhật pay:", error);
@@ -185,7 +185,7 @@ const PayScreens = ({ navigation, route }) => {
                         </Text>
 
                         <Text style={styles.txtQuantity}>
-                            {ticketData.quantity}
+                            0
                         </Text>
                     </View>
                     <View style={styles.separator}></View>
@@ -195,7 +195,7 @@ const PayScreens = ({ navigation, route }) => {
                         </Text>
 
                         <Text style={styles.txtQuantity}>
-                            {ticketData.total}.000 đ
+                            0.000 đ
                         </Text>
                     </View>
                     <View style={styles.separator}></View>

@@ -9,6 +9,7 @@ import LocationAndTime from "../Screens/LocationAndTime";
 import PayScreens from "../Screens/PayScreens";
 import Review from "../Screens/NewDetails/Review";
 import ReviewMovie from "../Screens/TicketDetails/ReviewMovie";
+import ReviewDetails from "../Screens/NewDetails/ReviewDetails";
 const Stack = createNativeStackNavigator();
 
 
@@ -53,6 +54,23 @@ const AllStack = () => {
         headerTitleStyle: {
           color: 'white',
         }, }}
+      />
+      <Stack.Screen
+        name="ReviewDetails"
+        component={ReviewDetails}
+        options={{
+          title: 'See Reviews',
+          animation: "slide_from_right",  // Ensure this animation is supported
+          headerShown: true,
+          headerStyle: {
+            backgroundColor: '#7f0d00',
+            borderBottomLeftRadius: 90,
+            borderBottomRightRadius: 90,
+          },
+          headerTitleStyle: {
+            color: 'white',
+          },
+        }}
       />
     </Stack.Navigator>
   
