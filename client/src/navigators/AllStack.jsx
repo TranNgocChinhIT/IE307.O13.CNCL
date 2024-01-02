@@ -10,6 +10,7 @@ import PayScreens from "../Screens/PayScreens";
 import Review from "../Screens/NewDetails/Review";
 import ReviewMovie from "../Screens/TicketDetails/ReviewMovie";
 import ReviewDetails from "../Screens/NewDetails/ReviewDetails";
+import ArticleDetail from "../Screens/NewDetails/ArticleDetail";
 const Stack = createNativeStackNavigator();
 
 
@@ -71,6 +72,11 @@ const AllStack = () => {
             color: 'white',
           },
         }}
+      />
+      <Stack.Screen
+        name="ArticleDetail"
+        component={ArticleDetail}
+        options={{ animation: "slide_from_right" }}
       />
     </Stack.Navigator>
   

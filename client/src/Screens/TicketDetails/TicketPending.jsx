@@ -4,9 +4,10 @@ import {
   StyleSheet,
   Image,
   Dimensions,
+  ToastAndroid,
   FlatList,
 } from "react-native";
-import React, { useEffect, useState, useContext, useRef } from "react";
+import React, { useEffect, useState, useContext, } from "react";
 import axios from "axios";
 import { AuthContext } from "../../context/AuthContext";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -17,22 +18,62 @@ const TicketPending = ({ navigation }) => {
   const [userBookings, setUserBookings] = useState([]);
   const [error, setError] = useState(null);
   const [isFocused, setIsFocused] = useState(false); // Thêm state để theo dõi sự kiện focus
-  const { user } = useContext(AuthContext);
+  const { user,logout } = useContext(AuthContext);
   const [seatNumbers, setSeatNumbers] = useState([]);
-  const numRef = useRef(0);
+
 
   const fetchUserBookings = async () => {
     try {
       const response = await axios.get(`/booking/user/${user.userID}`);
-      setUserBookings(response.data.datas);
-    } catch (error) {
-      console.error("Error fetching user bookings:", error);
-      setError(
-        error.message || "An error occurred while fetching user bookings."
+      const allUserBookings = response.data.datas;
+
+      // Filter bookings with paymentStatus === "pending"
+      const pendingBookings = allUserBookings.filter(
+        (booking) => booking.paymentStatus === "pending"
+      );
+  
+      setUserBookings(pendingBookings);
+    } catch  {
+
+      ToastAndroid.showWithGravity(
+        "Please Login to view tickets.",
+        ToastAndroid.LONG,
+        ToastAndroid.BOTTOM
       );
     }
   };
+  const renderSeatNumbers = async () => {
+    try {
+      const seatNumbersArray = [];
 
+      for (const booking of userBookings) {
+        const { movieScheduleRelationship, selectedSeats } = booking;
+        const { _id: movieScheduleId } = movieScheduleRelationship;
+
+
+        const response = await axios.get(`/movieSchedule/${movieScheduleId}`);
+        const seatInfo = response.data.datas.seats;
+
+        const seatNumbersTest = selectedSeats.map((selectedSeatId) => {
+          for (const row of seatInfo) {
+            const seat = row.find((seat) => seat._id === selectedSeatId);
+            if (seat) {
+              return seat.number;
+            }
+          }
+          return "";
+        });
+
+        // Push the seat numbers array for the current booking to seatNumbersArray
+        seatNumbersArray.push(seatNumbersTest);
+
+      }
+      setSeatNumbers(seatNumbersArray);
+    } catch (error) {
+      console.error("Error fetching seat information:", error);
+      // Handle error appropriately
+    }
+  };
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
       setIsFocused(true); // Đặt giá trị isFocused là true khi có sự kiện focus
@@ -41,56 +82,21 @@ const TicketPending = ({ navigation }) => {
   }, [navigation]);
 
   useEffect(() => {
+    const fetchData = async () => {
+      setSeatNumbers([]);
+      await fetchUserBookings();
+      await renderSeatNumbers();
+      setIsFocused(false);
+    };
+
     if (isFocused) {
-      fetchUserBookings();
-      setIsFocused(false); // Đặt lại giá trị isFocused là false sau khi xử lý sự kiện
+      fetchData();
     }
   }, [isFocused]);
 
-  const filteredBookings = userBookings.filter(
-    (item) => item.paymentStatus === "pending"
-  );
-
+  
   const renderItem = ({ item, index }) => {
-    const renderSeatNumbers = async (movieScheduleId, selectedSeats) => {
-      try {
-        const response = await axios.get(`/movieSchedule/${movieScheduleId}`);
-        const seatInfo = response.data.datas.seats;
 
-        const seatNumbers = selectedSeats.map((selectedSeatId) => {
-          for (const row of seatInfo) {
-            const seat = row.find(
-              (seat) => seat._id === selectedSeatId
-            );
-            if (seat) {
-              return seat.number;
-            }
-          }
-          return "";
-        });
-
-        setSeatNumbers((prevSeatNumbers) => {
-          const newSeatNumbers = [...prevSeatNumbers];
-          newSeatNumbers[index] = seatNumbers.join(", ");
-          return newSeatNumbers;
-        });
-      } catch (error) {
-        console.error("Error fetching seat information:", error);
-        return "";
-      }
-    };
-
-    const fetchSeatNumbers = async () => {
-      await renderSeatNumbers(
-        item.movieScheduleRelationship._id,
-        item.selectedSeats
-      );
-    };
-
-    if (numRef.current < filteredBookings.length) {
-      fetchSeatNumbers();
-      numRef.current += 1;
-    }
 
     return (
       <View style={styles.ticketItem}>
@@ -109,35 +115,41 @@ const TicketPending = ({ navigation }) => {
               {item.movieScheduleRelationship.schedule.screeningTime},{" "}
               {item.movieScheduleRelationship.schedule.screeningDate}
             </Text>
-            <Text>Seats: {seatNumbers[index]}</Text>
+            <Text>Seats: {seatNumbers[index]?.join(", ") || "Loading..."}</Text>
             <Text>Number of Tickets: {item.numberOfTickets}</Text>
             <Text>Total Amount: {item.totalAmount}</Text>
             <Text>Payment Status: {item.paymentStatus}</Text>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() =>
-                navigation.navigate("Reviews", { note: item })
-              }
-            >
-              <Text style={styles.textButton}>Reviews</Text>
-            </TouchableOpacity>
           </View>
         </View>
       </View>
     );
   };
+  if ( !user.userID) {
+    return (
+      <View style={styles.containerNoData}>
 
+        <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+          <TouchableOpacity style={styles.button2} onPress={logout}>
+            <Text style={{ fontWeight: 'bold', color: 'white', marginTop: 6, fontSize: 18, alignSelf: 'center' }}>
+              Login
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  }
+  else {
   return (
     <View style={styles.container}>
       <FlatList
-        data={filteredBookings}
+        data={userBookings}
         renderItem={renderItem}
         keyExtractor={(item, index) => index.toString()}
         horizontal={false}
       />
     </View>
   );
-};
+}};
 
 const styles = StyleSheet.create({
   container: {
@@ -145,6 +157,12 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     marginHorizontal: 10,
     marginTop: 10,
+  },
+  containerNoData: {
+    flex: 1,
+    justifyContent: 'center',
+    alignContent:'center',
+    backgroundColor: "#FFFFFF",
   },
   ticketItem: {
     marginBottom: 10,
@@ -155,7 +173,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: 100,
-    height: 150,
+    height: 120,
   },
   button: {
     backgroundColor: "#7f0d00",
@@ -163,6 +181,18 @@ const styles = StyleSheet.create({
     height: 30,
     borderRadius: 10,
     marginTop: 8,
+    activeOpacity: 0.8,
+    opacity: 0.8,
+  },
+  button2: {
+
+    backgroundColor: '#7f0d00',
+    width: 100,
+    height: 40,
+    borderRadius: 18,
+    marginTop: 8,
+    margin:15,
+
     activeOpacity: 0.8,
     opacity: 0.8,
   },

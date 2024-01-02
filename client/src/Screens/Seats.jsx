@@ -4,8 +4,6 @@ import { Text, View, StyleSheet, ScrollView, TouchableOpacity, Image, ToastAndro
 import { PinchGestureHandler, State } from 'react-native-gesture-handler';
 import axios from 'axios';
 
-import * as SecureStore from 'expo-secure-store';
-
 const Seats = ({ navigation, route }) => {
     const [movieScheduleID, setMovieScheduleID] = useState();
     const [seats, setSeats] = useState();
@@ -89,20 +87,6 @@ const Seats = ({ navigation, route }) => {
         }
     };
     
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const ticket = await SecureStore.getItemAsync('ticket'); // Use getItemAsync instead of getItem
-                if (ticket !== null) {
-                    setTicketData(JSON.parse(ticket));
-                }
-            } catch (error) {
-                console.error('Something went wrong while getting Data', error);
-            }
-        };
-
-        fetchData(); // Invoke the async function
-    }, []);
 
     if (ticketData !== route.params && route.params != undefined) {
         setTicketData(route.params);
@@ -112,24 +96,7 @@ const Seats = ({ navigation, route }) => {
             selectedSeatArray.length !== 0
 
         ) {
-            try {
-                await SecureStore.setItemAsync(
-                    'ticket',
-                    JSON.stringify({
-                        seatArray: selectedSeatArray,
-                        time: ticketData.time,
-                        date: ticketData.date,
-                        month: ticketData.month,
-                        year: ticketData.year,
-                        note: ticketData.note,
-                        total: total,
-                        quantity: totalSeats,
-                        ticketImage: route.params.PosterImage,
-                    })
-                );
-            } catch (error) {
-                console.error('Something went Wrong while storing in BookSeats Functions', error);
-            }
+            
             navigation.navigate('PayScreens', {
                 seatArray: selectedSeatArray,
                 time: ticketData.time,

@@ -32,15 +32,13 @@ const Theater = () => {
       }
     });
   };
-  const [inputValue,setInputValue]=useState('0946439471');
-  const triggerCall = () => {
-    const args = {
-      number: inputValue,
-      prompt: true,
-    };
-  
-    call(args).catch(console.error);
-  };
+ 
+  dialCall = (number) => {
+    let phoneNumber = '';
+    if (Platform.OS === 'android') { phoneNumber = `tel:${number}`; }
+    else {phoneNumber = `telprompt:${number}`; }
+    Linking.openURL(phoneNumber);
+ };
   return (
     <ScrollView style={styles.container}>
       <View style={{ marginTop: 15, marginHorizontal: 10, flexDirection: 'row' }}>
@@ -80,7 +78,7 @@ const Theater = () => {
             Showtime
           </Text>
         </View>
-        <TouchableOpacity onPress={triggerCall}>
+        <TouchableOpacity  onPress={()=>{this.dialCall(+84946439471)}}>
         <View style={{ flexDirection: 'row' }}>
           <Image
             source={require("../../assets/image/call.png")}

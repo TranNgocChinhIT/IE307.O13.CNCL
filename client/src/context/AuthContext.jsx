@@ -46,6 +46,7 @@ const AuthProvider = ({ children }) => {
     <AuthContext.Provider
       value={{
         isAuthenticated,
+        setisAuthenticated,
         login,
         logout,
         user,

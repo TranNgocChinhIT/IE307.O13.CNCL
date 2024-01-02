@@ -3,7 +3,7 @@ import React from 'react';
 import { Text, View, StyleSheet, Linking, Button, Image } from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import Review from './NewDetails/Review';
-import NewMovie from './NewDetails/NewMovie';
+import NewMovie from './NewDetails/ArticleDetail';
 import Character from './NewDetails/Character';
 const Tab = createMaterialTopTabNavigator();
 

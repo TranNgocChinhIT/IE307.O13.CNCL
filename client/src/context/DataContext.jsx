@@ -10,6 +10,7 @@ export const TicketProvider = ({ children }) => {
    
     setTicketData((prevTickets) => [...prevTickets, data]);
   };
+
   axios.defaults.baseURL ="http://192.168.1.23:8000/api/";
 
   return (
