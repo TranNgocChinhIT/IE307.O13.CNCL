@@ -1,8 +1,17 @@
-import { View, Text, StyleSheet, Image, Dimensions, TouchableOpacity, FlatList } from 'react-native'
-import React, { useEffect, useState, useRoute } from 'react'
-import Casousel from 'react-native-snap-carousel';
-const { width: screenWidth } = Dimensions.get('window')
-import { StatusBar } from 'expo-status-bar';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  Dimensions,
+  TouchableOpacity,
+  FlatList,
+  ImageBackground,
+} from "react-native";
+import React, { useEffect, useState, useRoute } from "react";
+import Casousel from "react-native-snap-carousel";
+const { width: screenWidth } = Dimensions.get("window");
+import { StatusBar } from "expo-status-bar";
 import axios from "axios";
 
 const Review = ({ navigation }) => {
@@ -24,65 +33,65 @@ const Review = ({ navigation }) => {
   }, []);
 
   const renderItem = ({ item }) => (
-
     <View style={styles.itemContainer}>
-
       <Image source={{ uri: item.imagePath }} style={styles.itemImg}></Image>
 
-      <View style={{ flexDirection: 'row' }}>
+      <View style={{ flexDirection: "row" }}>
         <Image
           source={require("../../assets/image/star.png")}
           style={{ width: 13, height: 13, marginTop: 3 }}
         />
-        <Text style={{ color: 'black', marginLeft: 2 }}>{item.evaluate}</Text>
+        <Text style={{ color: "white", marginLeft: 2 }}>{item.evaluate}</Text>
 
         <Image
           source={require("../../assets/image/time.png")}
-          style={{ width: 11, height: 11, marginLeft: 14, marginTop: 5, tintColor: 'black' }}
+          style={{
+            width: 11,
+            height: 11,
+            marginLeft: 14,
+            marginTop: 5,
+            tintColor: "white",
+          }}
         />
-        <Text style={{ color: 'black', marginLeft: 8 }}>{item.time}</Text>
-
-      </View >
-      <Text style={{ color: 'black', marginLeft: 2, fontWeight: 'bold' }}>{item.title}</Text>
-      <TouchableOpacity style={styles.buttonBook} onPress={() => {
-        console.log('Button Pressed!');
-        navigation.navigate('ReviewDetails', { note: item });
-      }}
+        <Text style={{ color: "white", marginLeft: 8 }}>{item.time}</Text>
+      </View>
+      <Text style={{ color: "white", marginLeft: 2, fontWeight: "bold" }}>
+        {item.title}
+      </Text>
+      <TouchableOpacity
+        style={styles.buttonBook}
+        onPress={() => {
+          console.log("Button Pressed!");
+          navigation.navigate("ReviewDetails", { note: item });
+        }}
       >
-
         <Text style={styles.overlayText}>See Reviews</Text>
-
       </TouchableOpacity>
     </View>
-  )
+  );
   return (
-    <View style={styles.container}>
+    <ImageBackground
+      source={require("../../assets/image/background.png")}
+      style={styles.backgroundImage}
+    >
+      <View style={styles.container}>
+        <Casousel
+          layout="default"
+          data={movies}
+          renderItem={renderItem}
+          sliderWidth={sliderWidth}
+          itemWidth={itemWidth}
+          horizontal={false}
+        />
 
-
-
-      <Casousel
-
-        layout='default'
-        data={movies}
-        renderItem={renderItem}
-        sliderWidth={sliderWidth}
-        itemWidth={itemWidth}
-        horizontal={false}
-      />
-
-      <StatusBar
-        backgroundColor="black"
-        barStyle="light-content"
-      />
-
-
-    </View >
-  )
-}
+        <StatusBar backgroundColor="black" barStyle="light-content" />
+      </View>
+    </ImageBackground>
+  );
+};
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5F5F5',
 
   },
   ticketItem: {
@@ -92,88 +101,77 @@ const styles = StyleSheet.create({
     borderColor: "gray",
     borderRadius: 5,
   },
-  headerContainer: {
-
+  backgroundImage: {
+    flex: 1,
+    resizeMode: "cover",
+    justifyContent: "center",
   },
+  headerContainer: {},
   itemHeaderContainer: {
     marginTop: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   itemContainer: {
     marginTop: 100,
     borderRadius: 8,
     marginHorizontal: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     height: 420,
   },
   normalText: {
-    color: 'white',
+    color: "white",
   },
   pressedText: {
-    color: 'black',
+    color: "black",
   },
   Special: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   backgroundImage: {
     flex: 1,
-    resizeMode: 'cover',
-    justifyContent: 'center',
-
-
-
+    resizeMode: "cover",
+    justifyContent: "center",
   },
   slide: {
-    alignItems: 'center',
+    alignItems: "center",
     flex: 1,
-
   },
   itemImg: {
     width: 260,
     height: 360,
     borderRadius: 2,
 
-    justifyContent: 'center',
+    justifyContent: "center",
     marginBottom: 10,
-
   },
   title: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginTop: 20,
-    color: 'white',
-
+    color: "white",
   },
   headerText: {
-    color: 'white',
-
+    color: "white",
   },
-  movieCard: {
-
-
-  },
+  movieCard: {},
   flatList: {
-
     marginTop: 10,
     marginRight: 20,
-    alignSelf: 'center',
+    alignSelf: "center",
   },
   text: {
-    alignSelf: 'center',
+    alignSelf: "center",
     fontSize: 21,
-    fontWeight: 'bold',
-    color: 'white',
-
+    fontWeight: "bold",
+    color: "white",
   },
   Special: {
-
-
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginLeft: 90,
   },
   buttonBook: {
-    backgroundColor: '#7f0d00',
+    backgroundColor: "#7f0d00",
     width: 200,
     height: 40,
     borderRadius: 18,
@@ -181,30 +179,25 @@ const styles = StyleSheet.create({
 
     activeOpacity: 0.8,
     opacity: 0.8,
-
-
   },
 
   imageBackground: {
     width: 65,
     height: 30,
-    resizeMode: 'cover',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#FF3333',
+    resizeMode: "cover",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#FF3333",
 
     marginTop: 10,
   },
   overlayText: {
-    color: 'white',
+    color: "white",
     fontSize: 18,
-    fontWeight: 'bold',
-    alignSelf: 'center',
-    justifyContent: 'center',
+    fontWeight: "bold",
+    alignSelf: "center",
+    justifyContent: "center",
     marginTop: 7,
-
-
-
   },
   imageBanner: {
     borderRadius: 10,
@@ -213,19 +206,19 @@ const styles = StyleSheet.create({
     heigh: 360,
     marginRight: 20,
     marginLeft: 20,
-    alignSelf: 'center',
+    alignSelf: "center",
     marginTop: 10,
   },
   itemHeader: {
     width: 280,
     height: 120,
-    justifyContent: 'center',
+    justifyContent: "center",
     borderRadius: 15,
-    resizeMode: 'cover',
+    resizeMode: "cover",
     borderWidth: 3,
   },
   swiper: {
     flex: 0.1,
-  }
+  },
 });
-export default Review
+export default Review;

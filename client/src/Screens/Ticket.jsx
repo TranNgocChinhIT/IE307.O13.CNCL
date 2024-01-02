@@ -34,11 +34,11 @@ const TicketStack = () => {
         >
             <Tab.Screen name="TicketPending" component={TicketPending} options={{
                 tabBarLabel: 'Pending Ticket',
-                tabBarLabelStyle: { fontSize: 15},
+                tabBarLabelStyle: { fontSize: 15,marginTop: 10},
             }} />
             <Tab.Screen name="TicketConfirmed" component={TicketConfirmed} options={{
                 tabBarLabel: 'Confirmed Ticket',
-                tabBarLabelStyle: { fontSize: 15 },
+                tabBarLabelStyle: { fontSize: 15,marginTop: 10 },
             }} />
             
             

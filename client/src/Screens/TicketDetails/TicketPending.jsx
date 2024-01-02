@@ -126,6 +126,7 @@ const TicketPending = ({ navigation }) => {
   };
   if ( !user.userID) {
     return (
+      
       <View style={styles.containerNoData}>
 
         <View style={{ flexDirection: 'row', justifyContent: 'center' }}>

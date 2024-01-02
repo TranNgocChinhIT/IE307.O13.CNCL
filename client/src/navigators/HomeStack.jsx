@@ -88,7 +88,7 @@ const HomeStack = () => {
             color:'white',
           },
         }}/>
-        <Bottom.Screen name="AccountStack" component={AccountStack} options={{
+        <Bottom.Screen name="Account" component={AccountStack} options={{
           tabBarShowLabel: true,
           tabBarShowLabelColor: 'black',
           tabBarIcon: ({ focused, color, size }) => {

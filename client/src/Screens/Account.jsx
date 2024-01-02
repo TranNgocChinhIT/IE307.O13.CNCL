@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { View, Text, Button, Image, StyleSheet, TouchableOpacity, ProgressBarAndroid, ProgressBarIOS, Platform } from "react-native";
+import { View, Text, Button, Image, StyleSheet, TouchableOpacity, ProgressBarAndroid, ProgressBarIOS, Platform ,ToastAndroid} from "react-native";
 import axios from "axios";
 import Icon from "react-native-vector-icons/Ionicons";
 import { AuthContext } from "../context/AuthContext";
@@ -22,8 +22,12 @@ const Account = ({ navigation }) => {
       try {
         const response = await axios.get(`/booking/user/${user.userID}`);
         setBooking(response.data?.datas);
-      } catch (error) {
-        console.error("Error fetching movies:", error);
+      } catch {
+        ToastAndroid.showWithGravity(
+          "Please Login to view account.",
+          ToastAndroid.LONG,
+          ToastAndroid.BOTTOM
+        );
       }
     };
 
@@ -72,7 +76,7 @@ const Account = ({ navigation }) => {
               Login
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Signup')}>
+          <TouchableOpacity style={styles.button} onPress={logout}>
             <Text style={{ fontWeight: 'bold', color: 'white', marginTop: 6, fontSize: 18, alignSelf: 'center' }}>
               Register
             </Text>

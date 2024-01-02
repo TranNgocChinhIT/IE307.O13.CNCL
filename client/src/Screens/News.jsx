@@ -17,11 +17,11 @@ const NewStack = () => {
                 tabBarStyle: {
                     backgroundColor: '#FFFFFF',
                     borderRadius: 5,
+                    marginTop: 3,
                 },
                 tabBarIndicatorStyle: {
                     backgroundColor: 'blue',
-                   // height: 3,
-                   // borderRadius: 2,
+            
                 },
                 tabBarIcon: ({ focused, color, size }) => {
                     let iconName;
@@ -41,7 +41,7 @@ const NewStack = () => {
                             : require('../assets/image/character.png');
                     }
 
-                    return <Image source={iconName} style={{ width: 25, height: 25,tintColor:'#7f0d00' }} />;
+                    return <Image source={iconName} style={{ width: 25, height: 25,tintColor:'#7f0d00', marginTop: 3 }} />;
                 },
             })}
         >

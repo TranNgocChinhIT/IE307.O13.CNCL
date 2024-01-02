@@ -12,7 +12,7 @@ const AccountStack = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="Account"
+        name="Accounts"
         component={Account}
         options={{ headerShown: false }}
       />

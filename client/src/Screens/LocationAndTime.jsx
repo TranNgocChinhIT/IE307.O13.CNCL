@@ -89,7 +89,6 @@ const LocationAndTime = ({ navigation, route }) => {
   const [selectedCinemaTimings, setSelectedCinemaTimings] = useState([]);
   const { note } = route.params;
 
-
   const selectedDate =
     selectedDateIndex !== undefined ? dateArray[selectedDateIndex] : null;
 
@@ -100,20 +99,19 @@ const LocationAndTime = ({ navigation, route }) => {
       const response = await axios.get("/schedule");
       const data = response.data;
       setCinemaData(data.datas);
-      setScheduleID(null)
-
+      setScheduleID(null);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
   useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
+    const unsubscribe = navigation.addListener("focus", () => {
       fetchData();
     });
 
     // Unsubscribe when the component is unmounted
     return unsubscribe;
-  }, [navigation]); 
+  }, [navigation]);
   const getTimingsForCinema = (cinema) => {
     const cinemaTimingsMap = {
       "Rạp 1": ["10:30", "14:30", "19:30"],
@@ -127,7 +125,6 @@ const LocationAndTime = ({ navigation, route }) => {
       // If the same cinema is clicked again, toggle the timings visibility
       setShowTimings(!showTimings);
     } else {
-  
       setSelectedCinema(cinema);
       setSelectedCinemaTimings(getTimingsForCinema(cinema)); // Thêm hàm getTimingsForCinema để lấy giờ của rạp
       setShowTimings(true);
@@ -140,7 +137,6 @@ const LocationAndTime = ({ navigation, route }) => {
       dateArray[selectedDateIndex] !== undefined
     ) {
       try {
-      
         let scheduleId;
         cinemaData.forEach((schedule) => {
           const screeningDate = schedule.screeningDate;
@@ -150,7 +146,7 @@ const LocationAndTime = ({ navigation, route }) => {
           // Lấy giờ từ timeArray[selectedTimeIndex]
           const selectedTime = timeArray[selectedTimeIndex];
           const selectedDateDayPart = String(selectedDate.date);
-  
+
           // Kiểm tra xem dayPart và giờ của schedule có khớp với lựa chọn của người dùng không
           if (
             dayPart === selectedDateDayPart &&
@@ -158,20 +154,35 @@ const LocationAndTime = ({ navigation, route }) => {
           ) {
             // Nếu khớp, lấy _id của schedule và thực hiện các xử lý tiếp theo
             scheduleId = schedule._id;
-
           }
         });
-  
-        navigation.navigate("Seats", {
-          // seatArray: selectedSeatArray,
-          time: timeArray[selectedTimeIndex],
-          date: dateArray[selectedDateIndex],
-          month: selectedMonth,
-          year: selectedYear,
-          note: note,
-          ticketImage: route.params.PosterImage,
-          schedule: scheduleId,
-        });
+        const response = await axios.get("/movieSchedule");
+        const data = response.data.datas;
+        const filteredSchedules = data.filter(
+          (movieSchedule) =>
+            movieSchedule.movie._id === note._id &&
+            movieSchedule.schedule._id === scheduleId
+        );
+        if (filteredSchedules.length > 0) {
+          navigation.navigate("Seats", {
+            // seatArray: selectedSeatArray,
+            time: timeArray[selectedTimeIndex],
+            date: dateArray[selectedDateIndex],
+            month: selectedMonth,
+            year: selectedYear,
+            note: note,
+            ticketImage: route.params.PosterImage,
+            schedule: scheduleId,
+          });
+        } else {
+          ToastAndroid.showWithGravity(
+            "No available schedule for the selected date and time.",
+            ToastAndroid.SHORT,
+            ToastAndroid.BOTTOM
+          );
+          return; 
+        }
+
       } catch (error) {
         console.error(
           "Something went Wrong while storing in BookSeats Functions",
@@ -186,7 +197,6 @@ const LocationAndTime = ({ navigation, route }) => {
       );
     }
   };
-  
 
   return (
     <View style={styles.container}>
