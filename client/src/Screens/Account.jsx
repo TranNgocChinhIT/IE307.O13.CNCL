@@ -5,57 +5,31 @@ import Icon from "react-native-vector-icons/Ionicons";
 import { AuthContext } from "../context/AuthContext";
 import { StatusBar } from 'expo-status-bar';
 import Slider from '@react-native-community/slider';
-
+import * as Progress from 'react-native-progress';
 const Account = ({ navigation }) => {
   const { user, logout } = useContext(AuthContext);
   const [userData, setUserData] = useState(null);
   const [totalAmount, setTotalAmount] = useState(4000000);
   const [customerAmount, setCustomerAmount] = useState(2000000);
+ const [booking,setBooking] = useState([]);
+ 
 
+ const calculateProgress = () => {
+  return calculateTotalAmount() / 4000000;
+};
+  useEffect(() => {
+    const fetchMovies = async () => {
+      try {
+        const response = await axios.get(`/booking/user/${user.userID}`);
+        setBooking(response.data?.datas);
+      } catch (error) {
+        console.error("Error fetching movies:", error);
+      }
+    };
+
+    fetchMovies();
+  }, [user.userID]);
   
-  // useEffect(() => {
-  
-  //   const fetchDataFromDatabase = async () => {
-  //     const result = await fetchCustomerAmount(); 
-  //     setCustomerAmount(result);
-  //   };
-
-  //   fetchDataFromDatabase();
-  // }, []);
-
-  const calculateProgress = () => {
-
-    return customerAmount / totalAmount;
-  };
-  const renderProgressBar = () => {
-    const progressValue = calculateProgress();
-
-    if (Platform.OS === 'android') {
-      return <View style={{ transform: [{ scaleY: 4.5 }], overflow: 'hidden' }}>
-        <ProgressBarAndroid
-          styleAttr="Horizontal"
-          indeterminate={false}
-          progress={progressValue}
-          
-          style={{ borderRadius: 100,color:"#CDB79E" }}
-        />
-      </View>;
-    } else if (Platform.OS === 'ios') {
-      return <ProgressBarIOS progress={progressValue}
-
-        style={{ height: 40, transform: [{ scaleY: 4.5 }], color: "#FF3333" }}
-      />;
-    } else {
-      return (
-        <View style={{ height: 40, transform: [{ scaleY: 4.5 }] }}>
-        </View>
-      );
-    }
-  };
-  const handleAddExpense = () => {
-
-    setCurrentExpenses(currentExpenses + 50);
-  };
   const fetchUserData = async () => {
     try {
       const response = await axios.get(`/user/${user.userID}`);
@@ -63,6 +37,15 @@ const Account = ({ navigation }) => {
     } catch (error) {
       console.error("Error fetching user data:", error);
     }
+  };
+  const calculateTotalAmount = () => {
+    let totalAmount = 0;
+
+    booking.forEach((bookingItem) => {
+      totalAmount += bookingItem.totalAmount || 0;
+    });
+
+    return totalAmount;
   };
 
   useEffect(() => {
@@ -129,7 +112,7 @@ const Account = ({ navigation }) => {
               </View>
               <View style={{ flexDirection: 'row', margin: 10, justifyContent: 'center' }}>
                 <Text style={{ color: "#FF3333" }}>Total Spending : </Text>
-                <Text >{customerAmount} đ</Text>
+                <Text >{calculateTotalAmount()} đ</Text>
               </View>
               <Image
                 source={require("../assets/image/vip.png")}
@@ -138,10 +121,12 @@ const Account = ({ navigation }) => {
               />
               <View style={{ width: 360, alignSelf: 'center', height: 40, borderRadius: 100, marginTop: 10, }}>
 
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-
+                <View style={{ justifyContent:'center',alignItems:'center' }}>
+                <Progress.Bar progress={calculateProgress()} width={320} color={"#CDB79E"} height={18} borderRadius={100}/>
                 </View>
-                {renderProgressBar()}
+               
+              
+          
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 5 }}>
                   <Text style={{ fontSize: 11 }}>0.000.000</Text>
                   <Text style={{ fontSize: 11 }}>2.000.000</Text>
