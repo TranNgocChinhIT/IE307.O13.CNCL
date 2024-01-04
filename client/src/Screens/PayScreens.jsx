@@ -59,13 +59,14 @@ const PayScreens = ({ navigation, route }) => {
         setIsMomoSelected(!isMomoSelected);
         if (!isMomoSelected) { 
             Alert.alert(
-                'Hướng dẫn thanh toán',
-                'Quý khách vui lòng thanh toán số tiền chuyển khoản qua MOMO\nNội dung chuyển khoản: SDT+HOVATEN',
+                'Payment Instructions',
+                'Please transfer the amount via MOMO\nTransfer details: PHONE_NUMBER+FULL_NAME',
                 [{ text: 'OK', onPress: () => console.log('OK Pressed') }]
             );
         }
         setIsModalVisible(true);
     };
+    
     const [putData, setPutData] = useState({
         user: user.userID,
         movieScheduleRelationship:ticketData.movieScheduleID ,
