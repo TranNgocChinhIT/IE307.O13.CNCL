@@ -62,7 +62,7 @@ const ReviewMovie = () => {
    
       <TextInput
         style={styles.commentInput}
-        placeholder="Nhập ý kiến của bạn..."
+        placeholder="Write your comment..."
         multiline
         numberOfLines={4}
         value={comment}
