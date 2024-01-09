@@ -259,6 +259,7 @@ const styles = StyleSheet.create({
     fontSize: 21,
     fontWeight: "bold",
     color: "white",
+    marginTop:20,
   },
   Special: {
     fontWeight: "bold",
