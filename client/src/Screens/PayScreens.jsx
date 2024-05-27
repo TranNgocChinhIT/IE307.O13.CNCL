@@ -75,29 +75,43 @@ const PayScreens = ({ navigation, route }) => {
         paymentStatus:'pending',
         selectedSeats:ticketData.selectedSeats,
       });
+    
     const BookSeats = async () => {
         try {
-            await axios.post(`/booking`, putData);
-            const ticketInfo = {
-                seatArray: ticketData.seatArray,
-                time: ticketData.time,
-                date: ticketData.date,
-                month: ticketData.month,
-                year: ticketData.year,
-                note: ticketData.note,
-                total: ticketData.total,
-                totalSeats: ticketData.totalSeats,
-    
-              };
-            
-              // Call the setTicketDataContext function with the ticket information
-              setTicketDataContext(ticketInfo);
-             Linking.openURL(momoLink);
-              navigation.navigate('Ticket')
+            const response = await axios.get('/booking');
+            const bookings = response.data.datas;
+            const selectedSeats = new Set(putData.selectedSeats.map(seat => seat.toString()));
+            const seatsConflict = bookings.some(booking =>
+                booking.selectedSeats.some(seat => selectedSeats.has(seat.toString()))
+            );
+            console.log(seatsConflict);
+            if (seatsConflict) {
+                ToastAndroid.showWithGravity(
+                    "The chair you choose has been purchased before. Please choose another seat.",
+                    ToastAndroid.SHORT,
+                    ToastAndroid.BOTTOM
+                );
+            } else {
+                await axios.post('/booking', putData);
+                const ticketInfo = {
+                    seatArray: ticketData.seatArray,
+                    time: ticketData.time,
+                    date: ticketData.date,
+                    month: ticketData.month,
+                    year: ticketData.year,
+                    note: ticketData.note,
+                    total: ticketData.total,
+                    totalSeats: ticketData.totalSeats,
+                };
+                setTicketDataContext(ticketInfo);
+                Linking.openURL(momoLink);
+                navigation.navigate('Ticket');
+            }
         } catch (error) {
-          console.error("Lỗi khi cập nhật pay:", error);
+            console.error("Error when checking seats or booking tickets:", error);
         }
-      };
+    };
+
     return (
         <View style={styles.container}>
             <View style={{ flex: 0.25, marginTop: 30, marginBottom: 25 }}>
