@@ -19,4 +19,5 @@ router.use("/movieSchedule", routerMovieScheduleRelationship);
 router.use("/booking", routerBooking);
 router.use("/review", routerReview);
 router.use("/map", routerMap);
+
 export default router;

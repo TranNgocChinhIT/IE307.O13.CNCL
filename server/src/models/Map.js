@@ -6,17 +6,30 @@ const mapSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    location_name: {
+    image: {
+      type: String,
+      required: true,
+      default: "",
+    },
+    location: {
+      type: {
+        type: String,
+        default: "Point",
+      },
+      coordinates: {
+        type: [Number],
+        index: "2dsphere",
+      },
+    },
+    address: {
       type: String,
       required: true,
     },
-    latitude: {
+    rating: {
       type: Number,
       required: true,
-    },
-    longitude: {
-      type: Number,
-      required: true,
+      min: 1,
+      max: 5,
     },
     hasManyAmenities: {
       type: Boolean,

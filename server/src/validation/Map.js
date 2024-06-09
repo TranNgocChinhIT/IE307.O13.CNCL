@@ -5,19 +5,27 @@ const mapValidator = Joi.object({
     "string.empty": "Tên rạp chiếu phim không được để trống",
     "any.required": "Tên rạp chiếu phim là bắt buộc",
   }),
-  location_name: Joi.string().required().messages({
-    "string.empty": "Tên địa điểm không được để trống",
-    "any.required": "Tên địa điểm là bắt buộc",
+  image: Joi.string().allow("").required().messages({
+    "any.required": "Hình ảnh là bắt buộc",
   }),
-  latitude: Joi.number().required().messages({
-    "number.base": "Vĩ độ phải là một số",
-    "number.empty": "Vĩ độ không được để trống",
-    "any.required": "Vĩ độ là bắt buộc",
+  location: Joi.object({
+    type: Joi.string().valid("Point").default("Point"),
+    coordinates: Joi.array().items(Joi.number()).length(2).required().messages({
+      "array.base": "Tọa độ phải là một mảng",
+      "array.length": "Tọa độ phải chứa đúng 2 phần tử",
+      "number.base": "Tọa độ phải là số",
+      "any.required": "Tọa độ là bắt buộc",
+    }),
+  }).required(),
+  address: Joi.string().required().messages({
+    "string.empty": "Địa chỉ không được để trống",
+    "any.required": "Địa chỉ là bắt buộc",
   }),
-  longitude: Joi.number().required().messages({
-    "number.base": "Kinh độ phải là một số",
-    "number.empty": "Kinh độ không được để trống",
-    "any.required": "Kinh độ là bắt buộc",
+  rating: Joi.number().min(1).max(5).required().messages({
+    "number.base": "Đánh giá phải là một số",
+    "number.min": "Đánh giá tối thiểu là 1",
+    "number.max": "Đánh giá tối đa là 5",
+    "any.required": "Đánh giá là bắt buộc",
   }),
   hasManyAmenities: Joi.boolean().required().messages({
     "boolean.base": "Thông tin tiện ích phải là đúng hoặc sai",

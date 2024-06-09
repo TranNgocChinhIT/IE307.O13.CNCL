@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useContext } from "react";
 import axios from "axios";
 const TicketContext = createContext();
 
@@ -7,13 +7,14 @@ export const TicketProvider = ({ children }) => {
   const [bookedTickets, setBookedTickets] = useState([]); // Uncomment this line
 
   const setTicketDataContext = (data) => {
-   
     setTicketData((prevTickets) => [...prevTickets, data]);
   };
 
-  axios.defaults.baseURL ="http://192.168.225.98:8000/api/";
+  axios.defaults.baseURL = "http://10.0.131.131:8000/api/";
   return (
-    <TicketContext.Provider value={{ ticketDataContext, setTicketDataContext, bookedTickets }}>
+    <TicketContext.Provider
+      value={{ ticketDataContext, setTicketDataContext, bookedTickets }}
+    >
       {children}
     </TicketContext.Provider>
   );
@@ -22,7 +23,7 @@ export const TicketProvider = ({ children }) => {
 export const useTicketContext = () => {
   const context = useContext(TicketContext);
   if (!context) {
-    throw new Error('useTicketContext must be used within a TicketProvider');
+    throw new Error("useTicketContext must be used within a TicketProvider");
   }
   return context;
 };
