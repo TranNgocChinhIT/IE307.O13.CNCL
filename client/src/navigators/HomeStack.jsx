@@ -5,7 +5,9 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Text, View, StyleSheet, Image, ImageBackground } from "react-native";
 import AccountStack from "./AccountStack";
 import NewStack from "../Screens/News";
-import Map from "../Screens/Map";
+import Map from "../Screens/MapH/Map";
+// import Map from "../Screens/MapC/Map";
+
 const Bottom = createBottomTabNavigator();
 
 const HomeStack = () => {

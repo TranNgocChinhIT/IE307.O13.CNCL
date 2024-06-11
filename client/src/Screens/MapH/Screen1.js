@@ -10,9 +10,9 @@ import {
   TouchableOpacity,
 } from "react-native";
 import * as Location from "expo-location";
-import axios from "axios";
+import cinemaData from "./data/db.json";
 
-const MapList = () => {
+const Screen1 = ({ route, navigation }) => {
   const [userLocation, setUserLocation] = useState(null);
   const [nearbyMovies, setNearbyMovies] = useState([]);
   const [filteredMovies, setFilteredMovies] = useState([]);
@@ -39,10 +39,7 @@ const MapList = () => {
       const { status } = await Location.requestForegroundPermissionsAsync();
       if (status === "granted") {
         const location = await Location.getCurrentPositionAsync({});
-        setUserLocation({
-          latitude: location.coords.latitude,
-          longitude: location.coords.longitude,
-        });
+        setUserLocation(location.coords);
       } else {
         console.log("Permission to access location was denied");
       }
@@ -51,38 +48,31 @@ const MapList = () => {
     }
   }, []);
 
-  const fetchDataAndCalculateDistances = useCallback(async () => {
-    try {
-      if (!userLocation) {
-        await getUserLocation();
-      }
+  const fetchDataAndCalculateDistances = useCallback(() => {
+    if (userLocation) {
+      const updatedMovies = cinemaData.map((movie) => {
+        const distance = calculateDistance(
+          userLocation.latitude,
+          userLocation.longitude,
+          movie.location.coordinates[1],
+          movie.location.coordinates[0]
+        ).toFixed(2);
+        return { ...movie, distance };
+      });
 
-      if (userLocation) {
-        const response = await axios.get("/map");
-        console.log(response);
-        const moviesWithDistance = response.data.datas.map((movie) => {
-          const distance = calculateDistance(
-            userLocation.latitude,
-            userLocation.longitude,
-            movie.location.coordinates[1],
-            movie.location.coordinates[0]
-          ).toFixed(2);
-          return { ...movie, distance };
-        });
-
-        setNearbyMovies(moviesWithDistance);
-        setFilteredMovies(moviesWithDistance);
-        setShowMovies(true); // Show the movie list after fetching data
-        console.log(nearbyMovies);
-      }
-    } catch (error) {
-      console.error("Error fetching or calculating distances:", error);
+      setNearbyMovies(updatedMovies);
+      setFilteredMovies(updatedMovies);
+      setShowMovies(true); // Show the movie list after fetching data
     }
-  }, [userLocation, getUserLocation]);
+  }, [userLocation]);
+
+  useEffect(() => {
+    getUserLocation();
+  }, [getUserLocation]);
 
   useEffect(() => {
     fetchDataAndCalculateDistances();
-  }, [fetchDataAndCalculateDistances]);
+  }, [userLocation, fetchDataAndCalculateDistances]);
 
   const handleSearch = () => {
     const query = searchQuery.toLowerCase();
@@ -94,42 +84,57 @@ const MapList = () => {
     setFilteredMovies(filtered);
   };
 
+  const handlePressItem = (coordinates_2) => {
+    navigation.navigate("HomeScreen", { coordinates_2 });
+  };
+
   return (
     <SafeAreaView style={styles.safeAreaView}>
+      <View style={styles.headerContainer}>
+        <Text style={styles.headerTitle}>Tìm kiếm rạp phim</Text>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("HomeScreen")}
+          style={styles.headerButton}
+        >
+          <Text style={styles.headerButtonText}>Back</Text>
+        </TouchableOpacity>
+      </View>
       <View style={styles.searchContainer}>
         <TextInput
           style={styles.searchInput}
-          placeholder="Search cinema or address"
+          placeholder="Tìm kiếm rạp phim hoặc địa chỉ..."
           value={searchQuery}
           onChangeText={setSearchQuery}
         />
         <TouchableOpacity style={styles.searchButton} onPress={handleSearch}>
-          <Text style={styles.searchButtonText}>Search</Text>
+          <Text style={styles.searchButtonText}>Tìm Kiếm</Text>
         </TouchableOpacity>
       </View>
       {showMovies && (
         <FlatList
           style={styles.movieList}
           data={filteredMovies}
-          keyExtractor={(item) => item._id}
+          keyExtractor={(item) => item._id.$oid}
           renderItem={({ item }) => (
-            <View style={styles.listItem}>
-              <Image source={{ uri: item.image }} style={styles.image} />
-              <View style={styles.infoContainer}>
-                <Text style={styles.cinemaName}>{item.cinema_name}</Text>
-                <View style={styles.detailsContainer}>
-                  <Image
-                    source={require("../assets/image/placeholder.png")}
-                    style={styles.imgicon}
-                  />
-                  <Text style={styles.address}>{item.address}</Text>
-                </View>
-                <View style={styles.detailsContainer}>
-                  <Text style={styles.rating}>⭐ {item.rating}</Text>
-                  <Text style={styles.distance}>📍 {item.distance} km</Text>
+            <TouchableOpacity onPress={() => handlePressItem(item)}>
+              <View style={styles.listItem}>
+                <Image source={{ uri: item.image }} style={styles.image} />
+                <View style={styles.infoContainer}>
+                  <Text style={styles.cinemaName}>{item.cinema_name}</Text>
+                  <View style={styles.detailsContainer}>
+                    <Image
+                      source={require("../assets/map.png")}
+                      style={styles.imgicon}
+                    />
+                    <Text style={styles.address}>{item.address}</Text>
+                  </View>
+                  <View style={styles.detailsContainer}>
+                    <Text style={styles.rating}>⭐ {item.rating}</Text>
+                    <Text style={styles.distance}>📍 {item.distance} km</Text>
+                  </View>
                 </View>
               </View>
-            </View>
+            </TouchableOpacity>
           )}
         />
       )}
@@ -137,9 +142,32 @@ const MapList = () => {
   );
 };
 
-export default MapList;
+export default Screen1;
 
 const styles = StyleSheet.create({
+  headerContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    backgroundColor: "#7f0d00",
+    padding: 15,
+    paddingTop: 40, // Để tránh trùng với status bar trên iOS
+  },
+  headerTitle: {
+    color: "#fff",
+    fontSize: 20,
+    fontWeight: "bold",
+  },
+  headerButton: {
+    backgroundColor: "#fff",
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    borderRadius: 5,
+  },
+  headerButtonText: {
+    color: "#7f0d00",
+    fontSize: 16,
+  },
   safeAreaView: {
     flex: 1,
     backgroundColor: "#fff",
@@ -148,7 +176,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     paddingHorizontal: 20,
     marginVertical: 10,
-    marginTop: 40,
+    marginTop: 30,
     marginBottom: 30,
   },
   searchInput: {
@@ -174,7 +202,8 @@ const styles = StyleSheet.create({
   },
   movieList: {
     flex: 1,
-    marginHorizontal: 20,
+    marginHorizontal: 5,
+    padding: 5,
   },
   listItem: {
     flexDirection: "row",

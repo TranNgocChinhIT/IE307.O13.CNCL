@@ -17,28 +17,20 @@ const INITIAL_COORDINATES = {
   longitude: 106.78181022475557,
 };
 
-const routeCoordinates = [
-  { latitude: 10.88452370136126, longitude: 106.7800316577081 },
-  { latitude: 10.88316990325859, longitude: 106.78116079373672 },
-  { latitude: 10.88368563659445, longitude: 106.78181726817166 },
-  { latitude: 10.882705742493116, longitude: 106.78265755544942 },
-  { latitude: 10.881983713199205, longitude: 106.78268381442564 },
-  { latitude: 10.880565436279753, longitude: 106.78474514415348 },
-];
-
-const MapNearPolyline = () => {
+const MapPolyline = () => {
   const navigation = useNavigation();
   const [userLocation, setUserLocation] = useState(INITIAL_COORDINATES);
-  const [closestMovie, setClosestMovie] = useState(null);
+  const [nearbyMovies, setNearbyMovies] = useState([]);
+  const [selectedMovie, setSelectedMovie] = useState(null);
 
   const handleOrderNow = () => {
-    if (closestMovie) {
-      navigation.navigate("Map", { ...closestMovie });
+    if (selectedMovie) {
+      navigation.navigate("Map", { ...selectedMovie });
     }
   };
 
   const handleClose = () => {
-    setClosestMovie(null);
+    setSelectedMovie(null);
   };
 
   const calculateDistance = (lat1, lon1, lat2, lon2) => {
@@ -80,29 +72,22 @@ const MapNearPolyline = () => {
       }
 
       if (userLocation) {
-        const response = await axios.get(
-          "http://10.0.131.131:8000/api/map/v1/intersect-near-movies",
-          {
-            params: {
-              latitude: userLocation.latitude,
-              longitude: userLocation.longitude,
-            },
-          }
-        );
-        console.log(response);
-        const movie = response.data.closestMovie;
-
-        if (movie) {
+        const response = await axios.get("map/v1/intersect-movies", {
+          params: {
+            latitude: userLocation.latitude,
+            longitude: userLocation.longitude,
+          },
+        });
+        const moviesWithDistance = response.data.nearbyMovies.map((movie) => {
           const distance = calculateDistance(
             userLocation.latitude,
             userLocation.longitude,
             movie.location.coordinates[1],
             movie.location.coordinates[0]
           ).toFixed(2);
-
-          const movieWithDistance = { ...movie, distance };
-          setClosestMovie(movieWithDistance);
-        }
+          return { ...movie, distance };
+        });
+        setNearbyMovies(moviesWithDistance);
       }
     } catch (error) {
       console.error("Error fetching or calculating distances:", error);
@@ -114,6 +99,7 @@ const MapNearPolyline = () => {
   }, [fetchDataAndCalculateDistances]);
 
   const handleReturnToUserLocation = () => {
+    // setUserLocation(null);
     getUserLocation();
   };
 
@@ -129,7 +115,14 @@ const MapNearPolyline = () => {
         }}
       >
         <Polyline
-          coordinates={routeCoordinates}
+          coordinates={[
+            { latitude: 10.87134873423389, longitude: 106.77040692662854 },
+            { latitude: 10.870249571924859, longitude: 106.77368942486049 },
+            { latitude: 10.869353613098099, longitude: 106.7769437067754 },
+            { latitude: 10.867940394222146, longitude: 106.77668975992015 },
+            { latitude: 10.869067275173663, longitude: 106.77747041136092 },
+            { latitude: 10.868485361771278, longitude: 106.77933268829412 },
+          ]}
           strokeWidth={12}
           strokeColor="#7f0d00"
         />
@@ -141,32 +134,33 @@ const MapNearPolyline = () => {
             pinColor="#f97316"
           >
             <Image
-              source={require("../assets/image/placeholder.png")}
+              source={require("../../assets/image/placeholder.png")}
               style={{ width: 40, height: 40 }}
               resizeMode="cover"
             />
           </Marker>
         )}
 
-        {closestMovie && (
+        {nearbyMovies.map((movie) => (
           <Marker
+            key={movie._id}
             coordinate={{
-              latitude: closestMovie.location.coordinates[1],
-              longitude: closestMovie.location.coordinates[0],
+              latitude: movie.location.coordinates[1],
+              longitude: movie.location.coordinates[0],
             }}
-            title={closestMovie.cinema_name}
-            onPress={() => setClosestMovie(closestMovie)}
+            title={movie.cinema_name}
+            onPress={() => setSelectedMovie(movie)}
           >
             <Image
-              source={require("../assets/image/tracking.png")}
+              source={require("../../assets/image/tracking.png")}
               style={{ width: 40, height: 40 }}
               resizeMode="cover"
             />
           </Marker>
-        )}
+        ))}
       </MapView>
 
-      {closestMovie && (
+      {selectedMovie && (
         <View
           style={{
             position: "absolute",
@@ -182,7 +176,7 @@ const MapNearPolyline = () => {
           <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
             <TouchableOpacity onPress={handleClose}>
               <Image
-                source={require("../assets/image/close.png")}
+                source={require("../../assets/image/close.png")}
                 style={{
                   width: 20,
                   height: 20,
@@ -193,20 +187,20 @@ const MapNearPolyline = () => {
             </TouchableOpacity>
           </View>
           <View style={styles.listItem}>
-            <Image source={{ uri: closestMovie.image }} style={styles.image} />
+            <Image source={{ uri: selectedMovie.image }} style={styles.image} />
             <View style={styles.infoContainer}>
-              <Text style={styles.cinemaName}>{closestMovie.cinema_name}</Text>
+              <Text style={styles.cinemaName}>{selectedMovie.cinema_name}</Text>
               <View style={styles.detailsContainer}>
                 <Image
-                  source={require("../assets/image/placeholder.png")}
+                  source={require("../../assets/image/placeholder.png")}
                   style={styles.imgicon}
                 />
-                <Text style={styles.address}>{closestMovie.address}</Text>
+                <Text style={styles.address}>{selectedMovie.address}</Text>
               </View>
               <View style={styles.detailsContainer}>
-                <Text style={styles.rating}>⭐ {closestMovie.rating}</Text>
+                <Text style={styles.rating}>⭐ {selectedMovie.rating}</Text>
                 <Text style={styles.distance}>
-                  📍 {closestMovie.distance} km
+                  📍 {selectedMovie.distance} km
                 </Text>
               </View>
             </View>
@@ -216,7 +210,6 @@ const MapNearPolyline = () => {
     </SafeAreaView>
   );
 };
-
 const styles = StyleSheet.create({
   listItem: {
     flexDirection: "row",
@@ -272,5 +265,4 @@ const styles = StyleSheet.create({
     padding: 10,
   },
 });
-
-export default MapNearPolyline;
+export default MapPolyline;

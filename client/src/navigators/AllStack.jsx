@@ -11,10 +11,10 @@ import Review from "../Screens/NewDetails/Review";
 import ReviewMovie from "../Screens/TicketDetails/ReviewMovie";
 import ReviewDetails from "../Screens/NewDetails/ReviewDetails";
 import ArticleDetail from "../Screens/NewDetails/ArticleDetail";
-import Map2d from "../Screens/Map2d";
-import MapList from "../Screens/MapList";
-import MapPolyline from "../Screens/MapPolyline";
-import MapNearPolyline from "../Screens/MapNearPolyline";
+import Map2d from "../Screens/MapC/Map2d";
+import MapList from "../Screens/MapC/MapList";
+import MapPolyline from "../Screens/MapC/MapPolyline";
+import MapNearPolyline from "../Screens/MapC/MapNearPolyline";
 const Stack = createNativeStackNavigator();
 
 const AllStack = () => {

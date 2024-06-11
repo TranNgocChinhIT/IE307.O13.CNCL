@@ -12,7 +12,7 @@ const Map = () => {
         >
           <View style={styles.iconContainer}>
             <Image
-              source={require("../assets/image/news.png")}
+              source={require("../../assets/image/news.png")}
               style={styles.icon}
             />
           </View>
@@ -24,7 +24,7 @@ const Map = () => {
         >
           <View style={styles.iconContainer}>
             <Image
-              source={require("../assets/image/news.png")}
+              source={require("../../assets/image/news.png")}
               style={styles.icon}
             />
           </View>
@@ -38,7 +38,7 @@ const Map = () => {
         >
           <View style={styles.iconContainer}>
             <Image
-              source={require("../assets/image/news.png")}
+              source={require("../../assets/image/news.png")}
               style={styles.icon}
             />
           </View>
@@ -50,7 +50,7 @@ const Map = () => {
         >
           <View style={styles.iconContainer}>
             <Image
-              source={require("../assets/image/news.png")}
+              source={require("../../assets/image/news.png")}
               style={styles.icon}
             />
           </View>
@@ -61,7 +61,7 @@ const Map = () => {
         <TouchableOpacity style={styles.item}>
           <View style={styles.iconContainer}>
             <Image
-              source={require("../assets/image/news.png")}
+              source={require("../../assets/image/news.png")}
               style={styles.icon}
             />
           </View>
@@ -70,7 +70,7 @@ const Map = () => {
         <TouchableOpacity style={styles.item}>
           <View style={styles.iconContainer}>
             <Image
-              source={require("../assets/image/news.png")}
+              source={require("../../assets/image/news.png")}
               style={styles.icon}
             />
           </View>

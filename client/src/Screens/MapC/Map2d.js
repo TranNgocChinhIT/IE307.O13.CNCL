@@ -14,7 +14,7 @@ import * as Location from "expo-location";
 import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
 import MapView, { Marker } from "react-native-maps";
-import trackingImage from "../assets/image/tracking.png";
+import trackingImage from "../../assets/image/tracking.png";
 const { GOOGLE_MAPS_API_KEY } = process.env;
 
 const INITIAL_COORDINATES = {
@@ -125,6 +125,9 @@ const Map2d = () => {
     const { latitude, longitude } = event.nativeEvent.coordinate;
     setUserLocation({ latitude, longitude });
   };
+  const cleanImageUrl = (url) => {
+    return url.replace(/\\/g, ""); // Loại bỏ dấu \ trong URL
+  };
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
@@ -195,7 +198,7 @@ const Map2d = () => {
                 <Text style={styles.cinemaName}>{item.cinema_name}</Text>
                 <View style={styles.detailsContainer}>
                   <Image
-                    source={require("../assets/image/placeholder.png")}
+                    source={require("../../assets/image/placeholder.png")}
                     style={styles.imgicon}
                   />
                   <Text style={styles.address}>{item.address}</Text>
