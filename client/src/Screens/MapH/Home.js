@@ -1,22 +1,35 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity, Button, Dimensions, ScrollView, TextInput, Modal, TurboModuleRegistry } from 'react-native';
-import React, { useState, useEffect } from 'react';
-import MapView, { Marker, Polyline, Polygon, Circle } from 'react-native-maps';
-import * as Location from 'expo-location';
-import cinemaData from './data/db.json';
-import axios from 'axios';
-import districtData from './data/districtPolygons.json';
-import jsonData from './data/export2.json';
-import jsonTrafficData from './data/updated_data.json'
-import { parseData, dijkstra } from './Dijkstra';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  Button,
+  Dimensions,
+  ScrollView,
+  TextInput,
+  Modal,
+  TurboModuleRegistry,
+  Alert,
+} from "react-native";
+import React, { useState, useEffect } from "react";
+import MapView, { Marker, Polyline, Polygon, Circle } from "react-native-maps";
+import * as Location from "expo-location";
+import cinemaData from "./data/db.json";
+import axios from "axios";
+import districtData from "./data/districtPolygons.json";
+import jsonData from "./data/export2.json";
+import jsonTrafficData from "./data/updated_data.json";
+import { parseData, dijkstra } from "./Dijkstra";
+const turf = require("@turf/turf");
 
 const { nodes, edges } = parseData(jsonData);
-const customIcon = require('../assets/placeholder.png'); //Icon Map
-const cinemaIcon = require('../assets/cinema.png'); //Icon Map
-const trafficIcon = require('../assets/traffic-lights.png'); //Icon Map
-
+const customIcon = require("../assets/placeholder.png"); //Icon Map
+const cinemaIcon = require("../assets/cinema.png"); //Icon Map
+const trafficIcon = require("../assets/traffic-lights.png"); //Icon Map
+const roadIcon = require("../assets/destination.png"); //Icon Map
 
 export default function Home({ route, navigation }) {
-
   const defaultLocation = () => {
     return {
       latitude: 10.859313791905437,
@@ -27,40 +40,42 @@ export default function Home({ route, navigation }) {
   };
 
   const defaultUserLocation = {
-    latitude: 10.847388306318624,
-    longitude: 106.83729892481165,
+    latitude: 10.78411461274901,
+    longitude: 106.69196227693206,
   };
 
   const [currentLocation, setCurrentLocation] = useState(null); // No default location
   const [region, setRegion] = useState(defaultLocation());
-  const [formattedAddress, setFormattedAddress] = useState('');
+  const [formattedAddress, setFormattedAddress] = useState("");
   const [nearestCinema, setNearestCinema] = useState(null);
   const [theaterMarkers, setTheaterMarkers] = useState([]);
   const [showDirections, setShowDirections] = useState(false);
   const [routeCoords, setRouteCoords] = useState([]);
-  const [district, setDistrict] = useState(''); // State để lưu quận được nhập
+  const [district, setDistrict] = useState(""); // State để lưu quận được nhập
   const [cinemasInDistrict, setCinemasInDistrict] = useState([]); // State để lưu các rạp phim trong quận
   const [districtBoundary, setDistrictBoundary] = useState(null);
-  const [searchAddress, setSearchAddress] = useState(''); // New state for search input
-  const [radius, setRadius] = useState('');
+  const [radius, setRadius] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
   const [modalVisible2, setModalVisible2] = useState(false);
   const [modalVisible3, setModalVisible3] = useState(false);
   const [modalVisible4, setModalVisible4] = useState(false);
-  const [roadName, setRoadName] = useState('');
-  const [ratingThreshold, setRatingThreshold] = useState('');
+  const [modalVisible5, setModalVisible5] = useState(false);
+  const [modalVisible6, setModalVisible6] = useState(false);
+  const [distance, setDistance] = useState(null);
+  const [Lights, setLights] = useState(null);
+  const [roadName, setRoadName] = useState("");
+  const [ratingThreshold, setRatingThreshold] = useState("");
   const [functionX, setFunctionX] = useState(false);
-  const [optimalRouteCoords, setOptimalRouteCoords] = useState([]);
-  const [showOptimizedDirections, setShowOptimizedDirections] = useState(false);
   const [trafficLights, setTrafficLights] = useState([]);
   const [trafficShow, setTrafficShow] = useState(false);
   const [showCircle, setShowCircle] = useState(false);
+  const [roadCoordinates, setRoadCoordinates] = useState([]);
 
   //
   useEffect(() => {
     (async () => {
       const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
+      if (status !== "granted") {
       } else {
         const location = await Location.getCurrentPositionAsync({});
         setCurrentLocation(location.coords);
@@ -93,30 +108,31 @@ export default function Home({ route, navigation }) {
   //Function: Lấy vị trí hiện tại
   const getCurrentLocation = async () => {
     setShowDirections(false);
+    setRoadCoordinates("");
 
-    // lấy vị trí mặc định nếu xài máy ảo 
-    setCurrentLocation(defaultUserLocation);
-    setRegion({
-      latitude: defaultUserLocation.latitude,
-      longitude: defaultUserLocation.longitude,
-      latitudeDelta: 0.0922,
-      longitudeDelta: 0.0421,
-    });
+    // lấy vị trí mặc định nếu xài máy ảo
+    // setCurrentLocation(defaultUserLocation);
+    // setRegion({
+    //   latitude: defaultUserLocation.latitude,
+    //   longitude: defaultUserLocation.longitude,
+    //   latitudeDelta: 0.0922,
+    //   longitudeDelta: 0.0421,
+    // });
 
     //Lấy vị trí hiện tại của user nếu xài điện thoại
-    // const { status } = await Location.requestForegroundPermissionsAsync();
-    // if (status === 'granted') {
-    //   const location = await Location.getCurrentPositionAsync({});
-    //   const { latitude, longitude } = location.coords;
-    //   setCurrentLocation(location.coords);
+    const { status } = await Location.requestForegroundPermissionsAsync();
+    if (status === "granted") {
+      const location = await Location.getCurrentPositionAsync({});
+      const { latitude, longitude } = location.coords;
+      setCurrentLocation(location.coords);
 
-    //   setRegion({
-    //     latitude: latitude,
-    //     longitude: longitude,
-    //     latitudeDelta: 0.0922,
-    //     longitudeDelta: 0.0421,
-    //   });
-    // }
+      setRegion({
+        latitude: latitude,
+        longitude: longitude,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+      });
+    }
 
     try {
       const address = await Location.reverseGeocodeAsync(defaultUserLocation);
@@ -125,12 +141,12 @@ export default function Home({ route, navigation }) {
           (address) =>
             `${address.streetNumber} ${address.street}, ${address.city}, ${address.region}, ${address.country}`
         )
-        .join(', ');
+        .join(", ");
 
       setFormattedAddress(newFormattedAddress);
-      console.log('Current Address:', newFormattedAddress);
+      console.log("Current Address:", newFormattedAddress);
     } catch (error) {
-      console.error('Error getting address:', error);
+      console.error("Error getting address:", error);
     }
   };
 
@@ -145,15 +161,21 @@ export default function Home({ route, navigation }) {
     setTheaterMarkers([]);
     setShowCircle(false);
     setShowDirections(false);
+    setRoadCoordinates("");
     setDistrictBoundary(null);
     try {
       if (currentLocation) {
         let nearestCinema = null;
         let nearestDistance = Infinity;
 
-        cinemaData.forEach(cinema => {
+        cinemaData.forEach((cinema) => {
           const { coordinates } = cinema.location;
-          const distance = calculateDistance(currentLocation.latitude, currentLocation.longitude, coordinates[1], coordinates[0]);
+          const distance = calculateDistance(
+            currentLocation.latitude,
+            currentLocation.longitude,
+            coordinates[1],
+            coordinates[0]
+          );
           if (distance < nearestDistance) {
             nearestDistance = distance;
             nearestCinema = cinema;
@@ -180,18 +202,18 @@ export default function Home({ route, navigation }) {
               (address) =>
                 `${address.streetNumber} ${address.street}, ${address.city}, ${address.region}, ${address.country}`
             )
-            .join(', ');
+            .join(", ");
 
           setFormattedAddress(newFormattedAddress);
-          console.log('Nearest Cinema Address:', newFormattedAddress);
+          console.log("Nearest Cinema Address:", newFormattedAddress);
         } else {
-          console.log('No cinema found');
+          console.log("No cinema found");
         }
       } else {
-        console.log('Current location not available');
+        console.log("Current location not available");
       }
     } catch (error) {
-      console.error('Error finding nearest cinema:', error);
+      console.error("Error finding nearest cinema:", error);
     }
   };
 
@@ -200,6 +222,7 @@ export default function Home({ route, navigation }) {
     setNearestCinema(null);
     setTheaterMarkers([]);
     setShowCircle(false);
+    setRoadCoordinates("");
     setShowDirections(false);
     setDistrictBoundary(null);
     try {
@@ -207,17 +230,26 @@ export default function Home({ route, navigation }) {
         const radiusInKm = parseFloat(radius);
         const nearbyTheaters = [];
 
-        cinemaData.forEach(cinema => {
+        cinemaData.forEach((cinema) => {
           const { coordinates } = cinema.location;
-          const distance = calculateDistance(currentLocation.latitude, currentLocation.longitude, coordinates[1], coordinates[0]);
-          if (distance <= (radiusInKm * 500)) { // Check if distance is less than or equal to entered km
+          const distance = calculateDistance(
+            currentLocation.latitude,
+            currentLocation.longitude,
+            coordinates[1],
+            coordinates[0]
+          );
+          if (distance <= radiusInKm * 500) {
+            // Check if distance is less than or equal to entered km
             nearbyTheaters.push(cinema);
           }
         });
 
         if (nearbyTheaters.length > 0) {
-          const theaterMarkers = nearbyTheaters.map(cinema => ({
-            coordinate: { latitude: cinema.location.coordinates[1], longitude: cinema.location.coordinates[0] },
+          const theaterMarkers = nearbyTheaters.map((cinema) => ({
+            coordinate: {
+              latitude: cinema.location.coordinates[1],
+              longitude: cinema.location.coordinates[0],
+            },
             title: cinema.cinema_name,
             description: cinema.location_name,
           }));
@@ -225,28 +257,33 @@ export default function Home({ route, navigation }) {
           setTheaterMarkers(theaterMarkers);
           setShowCircle(true);
 
-          const addresses = await Promise.all(nearbyTheaters.map(async (cinema) => {
-            const address = await Location.reverseGeocodeAsync({
-              latitude: cinema.location.coordinates[1],
-              longitude: cinema.location.coordinates[0],
-            });
-            return address.map(addr =>
-              `${addr.streetNumber} ${addr.street}, ${addr.city}, ${addr.region}, ${addr.country}`
-            ).join(', ');
-          }));
+          const addresses = await Promise.all(
+            nearbyTheaters.map(async (cinema) => {
+              const address = await Location.reverseGeocodeAsync({
+                latitude: cinema.location.coordinates[1],
+                longitude: cinema.location.coordinates[0],
+              });
+              return address
+                .map(
+                  (addr) =>
+                    `${addr.streetNumber} ${addr.street}, ${addr.city}, ${addr.region}, ${addr.country}`
+                )
+                .join(", ");
+            })
+          );
 
-          const formattedAddresses = addresses.join('\n');
-          console.log('Nearby Movie Theaters Addresses:', formattedAddresses);
+          const formattedAddresses = addresses.join("\n");
+          console.log("Nearby Movie Theaters Addresses:", formattedAddresses);
         } else {
-          console.log('No nearby movie theaters found');
+          console.log("No nearby movie theaters found");
         }
       } else {
-        console.log('Current location or radius not available');
-        setRadius('');
+        console.log("Current location or radius not available");
+        setRadius("");
       }
     } catch (error) {
-      console.error('Error finding nearby movie theaters:', error);
-      setRadius('');
+      console.error("Error finding nearby movie theaters:", error);
+      setRadius("");
     }
   };
 
@@ -267,47 +304,57 @@ export default function Home({ route, navigation }) {
     return d;
   };
 
-  //Function: Tìm đường đi ngắn nhất 
+  //Function: Tìm đường đi ngắn nhất
   const handleShowDirections = () => {
     setTheaterMarkers([]);
     setShowCircle(false);
     setShowDirections(false);
+    setRoadCoordinates("");
     setDistrictBoundary(null);
     if (nearestCinema && currentLocation) {
       const fetchRoute = async () => {
-        const apiKey = '5b3ce3597851110001cf62484ed9d53e837c4fc695df13f6acd4455a'; // Thay YOUR_API_KEY bằng API key của bạn
+        const apiKey =
+          "5b3ce3597851110001cf62484ed9d53e837c4fc695df13f6acd4455a"; // Thay YOUR_API_KEY bằng API key của bạn
         const url = `https://api.openrouteservice.org/v2/directions/driving-car?api_key=${apiKey}&start=${currentLocation.longitude},${currentLocation.latitude}&end=${nearestCinema.location.coordinates[0]},${nearestCinema.location.coordinates[1]}`;
 
         try {
           const response = await axios.get(url);
-          console.log('Đã lấy thông tin đường đi');
+          console.log("Đã lấy thông tin đường đi");
 
           // Kiểm tra xem response.data có tồn tại và có chứa features hay không
-          if (response.data && response.data.features && response.data.features.length > 0) {
+          if (
+            response.data &&
+            response.data.features &&
+            response.data.features.length > 0
+          ) {
             const features = response.data.features[0];
 
             // Kiểm tra xem features.geometry có tồn tại
             if (features.geometry && features.geometry.coordinates) {
-              const coords = features.geometry.coordinates.map(point => ({
+              const coords = features.geometry.coordinates.map((point) => ({
                 latitude: point[1], // latitude
                 longitude: point[0], // longitude
               }));
               setRouteCoords(coords);
+              const distanceInMeters = features.properties.summary.distance;
+              const distanceInKm = distanceInMeters / 1000;
+              setDistance(distanceInKm.toFixed(2));
+              setModalVisible5(true);
             } else {
-              console.error('Missing geometry in features:', features);
+              console.error("Missing geometry in features:", features);
             }
           } else {
-            console.error('No features found in response:', response.data);
+            console.error("No features found in response:", response.data);
           }
         } catch (error) {
-          console.error('Error fetching route:', error);
+          console.error("Error fetching route:", error);
         }
       };
 
       fetchRoute();
       setShowDirections(true);
     } else {
-      console.log('Nearest cinema or current location not available');
+      console.log("Nearest cinema or current location not available");
     }
   };
 
@@ -316,32 +363,45 @@ export default function Home({ route, navigation }) {
     return route.reduce((count, point) => {
       const lat = point[1];
       const lon = point[0];
-      return count + trafficLights.filter(light =>
-        Math.abs(light.latitude - lat) < 0.0005 && Math.abs(light.longitude - lon) < 0.0005
-      ).length;
+      return (
+        count +
+        trafficLights.filter(
+          (light) =>
+            Math.abs(light.latitude - lat) < 0.0005 &&
+            Math.abs(light.longitude - lon) < 0.0005
+        ).length
+      );
     }, 0);
   };
   const handleFindOptimizedPath = () => {
     setTheaterMarkers([]);
     setShowCircle(false);
     setShowDirections(false);
+    setRoadCoordinates("");
     setDistrictBoundary(null);
     if (nearestCinema && currentLocation) {
       const fetchRoute = async () => {
-        const apiKey = '5b3ce3597851110001cf62484ed9d53e837c4fc695df13f6acd4455a'; // Thay YOUR_API_KEY bằng API key của bạn
+        const apiKey =
+          "5b3ce3597851110001cf62484ed9d53e837c4fc695df13f6acd4455a"; // Thay YOUR_API_KEY bằng API key của bạn
         const url = `https://api.openrouteservice.org/v2/directions/driving-car?api_key=${apiKey}&start=${currentLocation.longitude},${currentLocation.latitude}&end=${nearestCinema.location.coordinates[0]},${nearestCinema.location.coordinates[1]}`;
 
         try {
           const response = await axios.get(url);
-          console.log('Đã lấy thông tin đường đi (đèn giao thông)');
-          if (response.data && response.data.features && response.data.features.length > 0) {
+          console.log("Đã lấy thông tin đường đi (đèn giao thông)");
+          if (
+            response.data &&
+            response.data.features &&
+            response.data.features.length > 0
+          ) {
             const routes = response.data.features;
             let minTrafficLights = Infinity;
             let bestRoute = [];
 
-            routes.forEach(route => {
+            routes.forEach((route) => {
               if (route.geometry && route.geometry.coordinates) {
-                const numTrafficLights = countTrafficLights(route.geometry.coordinates);
+                const numTrafficLights = countTrafficLights(
+                  route.geometry.coordinates
+                );
                 if (numTrafficLights < minTrafficLights) {
                   minTrafficLights = numTrafficLights;
                   bestRoute = route.geometry.coordinates;
@@ -350,48 +410,58 @@ export default function Home({ route, navigation }) {
             });
 
             if (bestRoute.length > 0) {
-              const coords = bestRoute.map(point => ({
+              const coords = bestRoute.map((point) => ({
                 latitude: point[1], // latitude
                 longitude: point[0], // longitude
               }));
               setRouteCoords(coords);
+              setLights(minTrafficLights);
+              setModalVisible6(true);
             } else {
-              console.error('No suitable route found');
+              console.error("No suitable route found");
             }
           } else {
-            console.error('No features found in response:', response.data);
+            console.error("No features found in response:", response.data);
           }
         } catch (error) {
-          console.error('Error fetching route:', error);
+          console.error("Error fetching route:", error);
         }
       };
 
       fetchRoute();
       setShowDirections(true);
     } else {
-      console.log('Nearest cinema or current location not available');
+      console.log("Nearest cinema or current location not available");
     }
   };
 
-  //Function 2: Tìm các rạp phim nằm trong 1 khu vực quận 
+  //Function 2: Tìm các rạp phim nằm trong 1 khu vực quận
   const handleFindCinemasInDistrict = () => {
     setNearestCinema(null);
     setTheaterMarkers([]);
     setShowCircle(false);
+    setRoadCoordinates("");
     setShowDirections(false);
     setDistrictBoundary(null);
     if (district) {
-      const cinemas = cinemaData.filter(cinema => cinema.address.includes(district));
+      const cinemas = cinemaData.filter((cinema) =>
+        cinema.address.includes(district)
+      );
       setCinemasInDistrict(cinemas);
 
-      const districtInfo = districtData.features.find(feature => feature.properties.Ten_Huyen === district);
+      const districtInfo = districtData.features.find(
+        (feature) => feature.properties.Ten_Huyen === district
+      );
       if (districtInfo) {
         setDistrictBoundary(districtInfo.geometry.coordinates[0]);
       }
 
       if (cinemas.length > 0) {
-        const districtMarkers = cinemas.map(cinema => ({
-          coordinate: { latitude: cinema.location.coordinates[1], longitude: cinema.location.coordinates[0] },
+        const districtMarkers = cinemas.map((cinema) => ({
+          coordinate: {
+            latitude: cinema.location.coordinates[1],
+            longitude: cinema.location.coordinates[0],
+          },
           title: cinema.cinema_name,
           description: cinema.address,
         }));
@@ -403,34 +473,43 @@ export default function Home({ route, navigation }) {
           longitudeDelta: 0.0421,
         });
       } else {
-        console.log('No cinemas found in the district');
+        console.log("No cinemas found in the district");
       }
-      setDistrict('');
+      setDistrict("");
     } else {
-      setDistrict('');
-      console.log('Please enter a district');
+      setDistrict("");
+      console.log("Please enter a district");
     }
   };
 
-  //Function 3: Tìm các rạp phim có rating cao 
+  //Function 3: Tìm các rạp phim có rating cao
   const handleFindCinemasInDistrict2 = () => {
     setNearestCinema(null);
     setTheaterMarkers([]);
     setShowCircle(false);
+    setRoadCoordinates("");
     setShowDirections(false);
     setDistrictBoundary(null);
     if (ratingThreshold) {
-      const cinemas = cinemaData.filter(cinema => cinema.address.includes(district) && cinema.rating > ratingThreshold);
+      const cinemas = cinemaData.filter(
+        (cinema) =>
+          cinema.address.includes(district) && cinema.rating > ratingThreshold
+      );
       setCinemasInDistrict(cinemas);
 
-      const districtInfo = districtData.features.find(feature => feature.properties.Ten_Huyen === district);
+      const districtInfo = districtData.features.find(
+        (feature) => feature.properties.Ten_Huyen === district
+      );
       if (districtInfo) {
         setDistrictBoundary(districtInfo.geometry.coordinates[0]);
       }
 
       if (cinemas.length > 0) {
-        const districtMarkers = cinemas.map(cinema => ({
-          coordinate: { latitude: cinema.location.coordinates[1], longitude: cinema.location.coordinates[0] },
+        const districtMarkers = cinemas.map((cinema) => ({
+          coordinate: {
+            latitude: cinema.location.coordinates[1],
+            longitude: cinema.location.coordinates[0],
+          },
           title: cinema.cinema_name,
           description: cinema.address,
         }));
@@ -442,12 +521,12 @@ export default function Home({ route, navigation }) {
           longitudeDelta: 0.0421,
         });
       } else {
-        console.log('No cinemas found in the district');
+        console.log("No cinemas found in the district");
       }
-      setRatingThreshold('');
+      setRatingThreshold("");
     } else {
-      setRatingThreshold('');
-      console.log('Please enter a district');
+      setRatingThreshold("");
+      console.log("Please enter a district");
     }
   };
 
@@ -457,15 +536,21 @@ export default function Home({ route, navigation }) {
     setTheaterMarkers([]);
     setShowCircle(false);
     setShowDirections(false);
+    setRoadCoordinates("");
     setDistrictBoundary(null);
     if (true) {
       console.log(district);
-      const cinemas = cinemaData.filter(cinema => cinema.cinema_name.includes('CGV'));
+      const cinemas = cinemaData.filter((cinema) =>
+        cinema.cinema_name.includes("CGV")
+      );
       setCinemasInDistrict(cinemas);
 
       if (cinemas.length > 0) {
-        const districtMarkers = cinemas.map(cinema => ({
-          coordinate: { latitude: cinema.location.coordinates[1], longitude: cinema.location.coordinates[0] },
+        const districtMarkers = cinemas.map((cinema) => ({
+          coordinate: {
+            latitude: cinema.location.coordinates[1],
+            longitude: cinema.location.coordinates[0],
+          },
           title: cinema.cinema_name,
           description: cinema.address,
         }));
@@ -477,20 +562,139 @@ export default function Home({ route, navigation }) {
           longitudeDelta: 0.0421,
         });
       } else {
-        console.log('No cinemas found in the district');
+        console.log("No cinemas found in the district");
       }
-      setDistrict('');
+      setDistrict("");
     }
+  };
+  const calculateDistanceToRoute = (point, route) => {
+    const pointGeoJSON = turf.point([point.longitude, point.latitude]);
+    const lineGeoJSON = turf.lineString(route);
+    const distance = turf.pointToLineDistance(pointGeoJSON, lineGeoJSON, {
+      units: "meters",
+    });
+    return distance;
   };
 
   //Function 6: Tìm kiếm rạp phim gần một đoạn đường
   const handleFindCinemasNearRoad = async () => {
-    console.log('F6');
+    setNearestCinema(null);
+    setTheaterMarkers([]);
+    setShowCircle(false);
+    setShowDirections(false);
+    setDistrictBoundary(null);
+    setRoadCoordinates("");
+
+    if (roadName) {
+      try {
+        // Construct the OpenRouteService geocode API URL
+        const apiKey =
+          "5b3ce3597851110001cf62484ed9d53e837c4fc695df13f6acd4455a"; // Thay YOUR_API_KEY bằng API key của bạn
+        const geocodeUrl = `https://api.openrouteservice.org/geocode/search?api_key=${apiKey}&text=${encodeURIComponent(
+          roadName
+        )}`;
+
+        // Fetch coordinates for the specified road name
+        const geocodeResponse = await axios.get(geocodeUrl);
+        console.log(geocodeResponse.data);
+        // Check if response contains valid data
+        if (
+          geocodeResponse.data &&
+          geocodeResponse.data.features &&
+          geocodeResponse.data.features.length > 0
+        ) {
+          // Extract coordinates of the first feature
+          const coordinates =
+            geocodeResponse.data.features[0].geometry.coordinates;
+          const [longitude, latitude] = coordinates;
+
+          // console.log(geocodeResponse);
+          const features = geocodeResponse.data.features;
+
+          const firstFeature = features[0];
+          const newCoordinates = [
+            {
+              latitude: firstFeature.geometry.coordinates[1],
+              longitude: firstFeature.geometry.coordinates[0],
+            },
+          ];
+
+          setRoadCoordinates(newCoordinates);
+
+          setRegion({
+            latitude,
+            longitude,
+            latitudeDelta: 0.05,
+            longitudeDelta: 0.05,
+          });
+
+          // Define the search radius in km
+          const radiusInKm = 5; // Example radius
+
+          // Find nearby cinemas using the coordinates
+          const nearbyCinemas = cinemaData.filter((cinema) => {
+            const { coordinates } = cinema.location;
+            const distance = calculateDistance(
+              latitude,
+              longitude,
+              coordinates[1],
+              coordinates[0]
+            );
+            return distance <= radiusInKm * 500;
+          });
+
+          if (nearbyCinemas.length > 0) {
+            const cinemaMarkers = nearbyCinemas.map((cinema) => ({
+              coordinate: {
+                latitude: cinema.location.coordinates[1],
+                longitude: cinema.location.coordinates[0],
+              },
+              title: cinema.cinema_name,
+              description: cinema.location_name,
+            }));
+            setTheaterMarkers(cinemaMarkers);
+            setRegion({
+              latitude: nearbyCinemas[0].location.coordinates[1],
+              longitude: nearbyCinemas[0].location.coordinates[0],
+              latitudeDelta: 0.0922,
+              longitudeDelta: 0.0421,
+            });
+          } else {
+            console.log("No nearby cinemas found");
+          }
+        } else {
+          console.log("No coordinates found for the specified road name");
+        }
+        const examplePoint = {
+          longitude: 106.78116079373672,
+          latitude: 10.88316990325859,
+        };
+
+        // Ví dụ về đoạn đường
+        const exampleRoute = [
+          [106.7800316577081, 10.88452370136126],
+          [106.78116079373672, 10.88316990325859],
+          [106.78181726817166, 10.88368563659445],
+          [106.78265755544942, 10.882705742493116],
+          [106.78268381442564, 10.881983713199205],
+          [106.78474514415348, 10.880565436279753],
+        ];
+        const calculatedistance = calculateDistanceToRoute(
+          examplePoint,
+          exampleRoute
+        );
+        console.log(calculatedistance);
+      } catch (error) {
+        console.error("Error finding cinemas near road:", error);
+      }
+    } else {
+      console.log("Please enter a road name");
+    }
   };
-  
+
   //Function x: Thuật toán Dijkstra
-  const [start, setStart] = useState('106.8021132,10.870311');
-  const [end, setEnd] = useState('106.8000559,10.8752837');
+  const [start, setStart] = useState("106.8021132,10.870311");
+  const [end, setEnd] = useState("106.8000559,10.8752837");
   const [path, setPath] = useState([]);
 
   const handleFindPath = () => {
@@ -499,12 +703,13 @@ export default function Home({ route, navigation }) {
       setPath(shortestPath);
       setFunctionX(true);
     } else {
-      Alert.alert('Invalid start or end point');
+      Alert.alert("Invalid start or end point");
     }
   };
 
   //Xóa
   const handleDeleteAll = () => {
+    setRoadCoordinates("");
     setCurrentLocation(null);
     setNearestCinema(null);
     setTheaterMarkers([]);
@@ -512,6 +717,7 @@ export default function Home({ route, navigation }) {
     setShowDirections(false);
     setDistrictBoundary(null);
     setFunctionX(false);
+    setRouteCoords([]);
   };
 
   const handleShowTrafficLights = () => {
@@ -522,7 +728,7 @@ export default function Home({ route, navigation }) {
   return (
     <ScrollView>
       <View style={styles.container}>
-        <View >
+        <View>
           <View>
             {region ? (
               <View style={{ width: 400, height: 850 }}>
@@ -530,11 +736,17 @@ export default function Home({ route, navigation }) {
                   {/* Hiển thị Marker cho vị trí hiện tại */}
                   {currentLocation && (
                     <Marker
-                      coordinate={{ latitude: currentLocation.latitude, longitude: currentLocation.longitude }}
+                      coordinate={{
+                        latitude: currentLocation.latitude,
+                        longitude: currentLocation.longitude,
+                      }}
                       title="Vị trí của bạn"
                       description="Ở đây!"
                     >
-                      <Image source={customIcon} style={{ width: 50, height: 50 }} />
+                      <Image
+                        source={customIcon}
+                        style={{ width: 50, height: 50 }}
+                      />
                     </Marker>
                   )}
                   {showCircle && (
@@ -553,24 +765,36 @@ export default function Home({ route, navigation }) {
                       title={marker.title}
                       description={marker.description}
                     >
-                      <Image source={cinemaIcon} style={{ width: 50, height: 50 }} />
+                      <Image
+                        source={cinemaIcon}
+                        style={{ width: 50, height: 50 }}
+                      />
                     </Marker>
                   ))}
 
                   {/* Hiển thị Marker cho rạp chiếu phim gần nhất */}
                   {nearestCinema && (
                     <Marker
-                      coordinate={{ latitude: nearestCinema.location.coordinates[1], longitude: nearestCinema.location.coordinates[0] }}
+                      coordinate={{
+                        latitude: nearestCinema.location.coordinates[1],
+                        longitude: nearestCinema.location.coordinates[0],
+                      }}
                       title={nearestCinema.cinema_name}
                       description={nearestCinema.location_name}
                     >
-                      <Image source={cinemaIcon} style={{ width: 50, height: 50 }} />
+                      <Image
+                        source={cinemaIcon}
+                        style={{ width: 50, height: 50 }}
+                      />
                     </Marker>
                   )}
                   {/* Hiển thị các rạp phim trong một quận */}
                   {districtBoundary && (
                     <Polygon
-                      coordinates={districtBoundary.map(coord => ({ latitude: coord[1], longitude: coord[0] }))}
+                      coordinates={districtBoundary.map((coord) => ({
+                        latitude: coord[1],
+                        longitude: coord[0],
+                      }))}
                       strokeColor="#FF0000"
                       fillColor="rgba(255,0,0,0.2)"
                       strokeWidth={2}
@@ -579,51 +803,88 @@ export default function Home({ route, navigation }) {
 
                   {/* Hiển thị tuyến đường đến rạp chiếu phim gần nhất */}
                   {showDirections && (
-                    <Polyline coordinates={routeCoords} strokeColor="#7f0d00" strokeWidth={3} />
-                  )}
-
-                  {/* Hiển thị tuyến đường */}
-                  {showOptimizedDirections && (
                     <Polyline
-                      coordinates={optimalRouteCoords}
+                      coordinates={routeCoords}
                       strokeColor="#7f0d00"
                       strokeWidth={3}
                     />
                   )}
 
+                  {/* Hiển thị tuyến đường đến rạp chiếu phim gần nhất */}
+                  {roadCoordinates.length > 0 && (
+                    <Marker coordinate={roadCoordinates[0]}>
+                      <Image
+                        source={roadIcon}
+                        style={{ width: 50, height: 50 }}
+                      />
+                    </Marker>
+                  )}
+                  {roadCoordinates.length > 0 && (
+                    <Circle
+                      center={roadCoordinates[0]}
+                      radius={5 * 500}
+                      strokeColor="#FF0000"
+                      fillColor="rgba(255,0,0,0.3)"
+                    />
+                  )}
+
                   {/* Hiển thị tuyến đường đến rạp chiếu phim gần nhất UIT*/}
-                  {functionX && (<Polyline
-                    coordinates={path.map(coord => ({ latitude: coord[1], longitude: coord[0] }))}
-                    strokeColor="#7f0d00"
-                    strokeWidth={3}
-                  />)}
+                  {functionX && (
+                    <Polyline
+                      coordinates={path.map((coord) => ({
+                        latitude: coord[1],
+                        longitude: coord[0],
+                      }))}
+                      strokeColor="#7f0d00"
+                      strokeWidth={3}
+                    />
+                  )}
                   {functionX && (
                     <Marker
-                      coordinate={{ latitude: 10.870311, longitude: 106.8021132 }}
+                      coordinate={{
+                        latitude: 10.870311,
+                        longitude: 106.8021132,
+                      }}
                       title="Vị trí của bạn"
                       description="You are here"
                     >
-                      <Image source={customIcon} style={{ width: 50, height: 50 }} />
+                      <Image
+                        source={customIcon}
+                        style={{ width: 50, height: 50 }}
+                      />
                     </Marker>
                   )}
                   {functionX && (
                     <Marker
-                      coordinate={{ latitude: 10.8752837, longitude: 106.8000559 }}
+                      coordinate={{
+                        latitude: 10.8752837,
+                        longitude: 106.8000559,
+                      }}
                       title="Vị trí của rạp phim"
                     >
-                      <Image source={cinemaIcon} style={{ width: 50, height: 50 }} />
+                      <Image
+                        source={cinemaIcon}
+                        style={{ width: 50, height: 50 }}
+                      />
                     </Marker>
                   )}
                   {/*Hiển thị đèn giao thông*/}
-                  {trafficShow && (trafficLights.map((light, index) => (
-                    <Marker
-                      key={index}
-                      coordinate={{ latitude: light.latitude, longitude: light.longitude }}
-                      title={`Đèn giao thông ${light.id}`}
-                    >
-                      <Image source={trafficIcon} style={{ width: 25, height: 25 }} />
-                    </Marker>
-                  )))}
+                  {trafficShow &&
+                    trafficLights.map((light, index) => (
+                      <Marker
+                        key={index}
+                        coordinate={{
+                          latitude: light.latitude,
+                          longitude: light.longitude,
+                        }}
+                        title={`Đèn giao thông ${light.id}`}
+                      >
+                        <Image
+                          source={trafficIcon}
+                          style={{ width: 25, height: 25 }}
+                        />
+                      </Marker>
+                    ))}
                   {routeCoords.length > 0 && (
                     <Polyline
                       coordinates={routeCoords}
@@ -641,7 +902,15 @@ export default function Home({ route, navigation }) {
               </View>
             )}
           </View>
-          <View style={{ position: 'absolute', width: '100%', top: '3%', flexDirection: 'row', alignItems: 'center' }}>
+          <View
+            style={{
+              position: "absolute",
+              width: "100%",
+              top: "3%",
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
             <TouchableOpacity
               style={styles.input}
               onPress={() => {
@@ -650,59 +919,159 @@ export default function Home({ route, navigation }) {
                 setShowCircle(false);
                 setShowDirections(false);
                 setDistrictBoundary(null);
-                navigation.navigate('Screen1')
+                setRoadCoordinates("");
+                navigation.navigate("Screen1");
               }}
             >
               <Text style={{ paddingTop: 3 }}>Tìm rạp phim...</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.greenBorder} onPress={handleFindNearestCinema}><Image source={require('../assets/cinema_icon.png')} style={styles.image2} /></TouchableOpacity>
-            <TouchableOpacity style={styles.greenBorder} onPress={() => { trafficShow ? handleFindOptimizedPath() : handleShowDirections() }}><Image source={require('../assets/destination.png')} style={styles.image2} /></TouchableOpacity>
-
+            <TouchableOpacity
+              style={styles.greenBorder}
+              onPress={handleFindNearestCinema}
+            >
+              <Image
+                source={require("../assets/cinema_icon.png")}
+                style={styles.image2}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.greenBorder}
+              onPress={() => {
+                trafficShow
+                  ? handleFindOptimizedPath()
+                  : handleShowDirections();
+              }}
+            >
+              <Image
+                source={require("../assets/destination.png")}
+                style={styles.image2}
+              />
+            </TouchableOpacity>
+            {/* <TouchableOpacity style={styles.greenBorder} onPress={ handleShowDirections }><Image source={require('../assets/destination.png')} style={styles.image2} /></TouchableOpacity> */}
           </View>
-          <View style={{ position: 'absolute', bottom: '16%', right: 10 }}>
-            <TouchableOpacity style={styles.greenBorder} onPress={getCurrentLocation}><Image source={require('../assets/placeholder.png')} style={styles.image2} /></TouchableOpacity>
+          <View style={{ position: "absolute", bottom: "16%", right: 10 }}>
+            <TouchableOpacity
+              style={styles.greenBorder}
+              onPress={getCurrentLocation}
+            >
+              <Image
+                source={require("../assets/placeholder.png")}
+                style={styles.image2}
+              />
+            </TouchableOpacity>
           </View>
-          <View style={{ position: 'absolute', bottom: '16%', flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 15, marginTop: 5 }}>
-            <TouchableOpacity onPress={() => navigation.navigate('Locate')}>
+          <View
+            style={{
+              position: "absolute",
+              bottom: "16%",
+              flexDirection: "row",
+              justifyContent: "space-between",
+              marginHorizontal: 15,
+              marginTop: 5,
+            }}
+          >
+            <TouchableOpacity onPress={() => navigation.navigate("Locate")}>
               <View style={styles.greenBorder}>
-                <Image source={require('../assets/google-maps.png')} style={styles.image2} />
+                <Image
+                  source={require("../assets/google-maps.png")}
+                  style={styles.image2}
+                />
               </View>
             </TouchableOpacity>
           </View>
-          <View style={{ flexDirection: 'row', padding: 10, position: 'absolute', top: '10%' }}>
+          <View
+            style={{
+              flexDirection: "row",
+              padding: 10,
+              position: "absolute",
+              top: "10%",
+            }}
+          >
             <ScrollView horizontal>
-              <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.menu}>
-                <Text style={{ color: "white", fontWeight: 'bold' }}>Các rạp chiếu phim gần bạn nhất</Text>
+              <TouchableOpacity
+                onPress={() => setModalVisible(true)}
+                style={styles.menu}
+              >
+                <Text style={{ color: "white", fontWeight: "bold" }}>
+                  Các rạp chiếu phim gần bạn nhất
+                </Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => setModalVisible2(true)} style={styles.menu}>
-                <Text style={{ color: "white", fontWeight: 'bold' }}>Tìm rạp phim trong khu vực quận</Text>
+              <TouchableOpacity
+                onPress={() => setModalVisible2(true)}
+                style={styles.menu}
+              >
+                <Text style={{ color: "white", fontWeight: "bold" }}>
+                  Tìm rạp phim trong khu vực quận
+                </Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => setModalVisible3(true)} style={styles.menu}>
-                <Text style={{ color: "white", fontWeight: 'bold' }}>Tìm các rạp phim có đánh giá tốt nhất</Text>
+              <TouchableOpacity
+                onPress={() => setModalVisible4(true)}
+                style={styles.menu}
+              >
+                <Text style={{ color: "white", fontWeight: "bold" }}>
+                  Tìm rạp phim gần đoạn đường
+                </Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={handleFindCinemasInMall} style={styles.menu}>
-                <Text style={{ color: "white", fontWeight: 'bold' }}>Tìm các rạp phim thuộc trung tâm thương mại</Text>
+              <TouchableOpacity
+                onPress={handleShowTrafficLights}
+                style={styles.menu}
+              >
+                <Text style={{ color: "white", fontWeight: "bold" }}>
+                  {trafficShow
+                    ? "Ẩn đèn giao thông"
+                    : "Hiển thị đèn giao thông"}
+                </Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={handleShowTrafficLights} style={styles.menu}>
-                <Text style={{ color: "white", fontWeight: 'bold' }}>{trafficShow ? 'Ẩn đèn giao thông' : 'Hiển thị đèn giao thông'}</Text>
+              <TouchableOpacity
+                onPress={() => setModalVisible3(true)}
+                style={styles.menu}
+              >
+                <Text style={{ color: "white", fontWeight: "bold" }}>
+                  Tìm các rạp phim có đánh giá tốt nhất
+                </Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={handleFindCinemasNearRoad} style={styles.menu}>
-                <Text style={{ color: "white", fontWeight: 'bold' }}>Tìm rạp phim gần đoạn đường</Text>
+              <TouchableOpacity
+                onPress={handleFindCinemasInMall}
+                style={styles.menu}
+              >
+                <Text style={{ color: "white", fontWeight: "bold" }}>
+                  Tìm các rạp phim thuộc trung tâm thương mại
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={handleFindPath} style={styles.menu}>
-                <Text style={{ color: "white", fontWeight: 'bold' }}>Tìm rạp phim gần UIT</Text>
+                <Text style={{ color: "white", fontWeight: "bold" }}>
+                  Tìm rạp phim gần UIT
+                </Text>
               </TouchableOpacity>
               {/* Thêm tùy chọn khác nếu cần */}
             </ScrollView>
           </View>
-          <View style={{ position: 'absolute', bottom: '16%', left: '40%', backgroundColor: '#7f0d00', borderRadius: 10, width: 100, height: 30 }}>
-            <TouchableOpacity title="xóa" onPress={handleDeleteAll} >
-              <Text style={{ color: "white", fontWeight: 'bold', padding: 5, alignSelf: 'center' }}>Xóa</Text>
+          <View
+            style={{
+              position: "absolute",
+              bottom: "16%",
+              left: "40%",
+              backgroundColor: "#7f0d00",
+              borderRadius: 10,
+              width: 100,
+              height: 30,
+            }}
+          >
+            <TouchableOpacity title="xóa" onPress={handleDeleteAll}>
+              <Text
+                style={{
+                  color: "white",
+                  fontWeight: "bold",
+                  padding: 5,
+                  alignSelf: "center",
+                }}
+              >
+                Xóa
+              </Text>
             </TouchableOpacity>
             {/* <TouchableOpacity onPress={handleShowTrafficLights} style={styles.menu}>
               <Text style={{ color: "white", fontWeight: 'bold' }}>Hiển thị đèn giao thông</Text>
             </TouchableOpacity> */}
-
           </View>
         </View>
         <Modal
@@ -718,11 +1087,11 @@ export default function Home({ route, navigation }) {
               <TextInput
                 style={{
                   borderWidth: 2,
-                  borderColor: '#7f0d00',
-                  backgroundColor: '#eee',
+                  borderColor: "#7f0d00",
+                  backgroundColor: "#eee",
                   padding: 10,
                   marginTop: 10,
-                  width: '95%',
+                  width: "95%",
                   borderRadius: 10,
                   height: 50,
                 }}
@@ -730,11 +1099,24 @@ export default function Home({ route, navigation }) {
                 value={district}
                 onChangeText={setDistrict}
               />
-              <TouchableOpacity title="Xác nhận" onPress={() => {
-                setModalVisible2(false);
-                handleFindCinemasInDistrict();
-              }} >
-                <Text style={{ color: "white", fontWeight: 'bold', marginTop: 10, marginBottom: 5, alignSelf: 'center' }}>Xác Nhận</Text>
+              <TouchableOpacity
+                title="Xác nhận"
+                onPress={() => {
+                  setModalVisible2(false);
+                  handleFindCinemasInDistrict();
+                }}
+              >
+                <Text
+                  style={{
+                    color: "white",
+                    fontWeight: "bold",
+                    marginTop: 10,
+                    marginBottom: 5,
+                    alignSelf: "center",
+                  }}
+                >
+                  Xác Nhận
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -750,14 +1132,6 @@ export default function Home({ route, navigation }) {
         >
           <View style={styles.modalBackground}>
             <View style={styles.modalView}>
-              {/* <TextInput
-                style={
-                  styles.input2
-                }
-                placeholder="Nhập khu vực quận"
-                value={district}
-                onChangeText={setDistrict}
-              /> */}
               <TextInput
                 style={styles.input2}
                 placeholder="Nhập chất lượng đánh giá"
@@ -765,17 +1139,30 @@ export default function Home({ route, navigation }) {
                 onChangeText={setRatingThreshold}
                 keyboardType="numeric"
               />
-              <TouchableOpacity title="Xác nhận" onPress={() => {
-                setModalVisible3(false);
-                handleFindCinemasInDistrict2();
-              }} >
-                <Text style={{ color: "white", fontWeight: 'bold', marginTop: 10, marginBottom: 5, alignSelf: 'center' }}>Xác Nhận</Text>
+              <TouchableOpacity
+                title="Xác nhận"
+                onPress={() => {
+                  setModalVisible3(false);
+                  handleFindCinemasInDistrict2();
+                }}
+              >
+                <Text
+                  style={{
+                    color: "white",
+                    fontWeight: "bold",
+                    marginTop: 10,
+                    marginBottom: 5,
+                    alignSelf: "center",
+                  }}
+                >
+                  Xác Nhận
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
         </Modal>
 
-        {/* <Modal
+        <Modal
           animationType="slide"
           transparent={true}
           visible={modalVisible4}
@@ -784,16 +1171,120 @@ export default function Home({ route, navigation }) {
           <View style={styles.modalBackground}>
             <View style={styles.modalView}>
               <TextInput
-                style={styles.input}
+                style={styles.input2}
                 placeholder="Nhập tên đường đi"
                 value={roadName}
                 onChangeText={setRoadName}
               />
-              <Button title="Tìm kiếm" onPress={handleFindCinemasNearRoad} />
-              <Button title="Đóng" onPress={() => setModalVisible4(false)} />
+              <TouchableOpacity
+                title="Tìm Kiếm"
+                onPress={() => {
+                  setModalVisible4(false);
+                  handleFindCinemasNearRoad();
+                }}
+              >
+                <Text
+                  style={{
+                    color: "white",
+                    fontWeight: "bold",
+                    marginTop: 10,
+                    marginBottom: 5,
+                    alignSelf: "center",
+                  }}
+                >
+                  Tìm Kiếm
+                </Text>
+              </TouchableOpacity>
             </View>
           </View>
-        </Modal> */}
+        </Modal>
+
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible5}
+          onRequestClose={() => {
+            setModalVisible5(!modalVisible5);
+          }}
+        >
+          <View style={styles.modalBackground}>
+            <View style={styles.modalView}>
+              <Text
+                style={{
+                  color: "white",
+                  fontWeight: "bold",
+                  marginTop: 10,
+                  marginBottom: 5,
+                  alignSelf: "center",
+                }}
+              >
+                Khoảng cách: {distance} km
+              </Text>
+              <TouchableOpacity
+                title="Xác nhận"
+                onPress={() => {
+                  setModalVisible5(false);
+                }}
+              >
+                <Text
+                  style={{
+                    color: "white",
+                    fontWeight: "bold",
+                    marginTop: 10,
+                    marginBottom: 5,
+                    alignSelf: "center",
+                  }}
+                >
+                  Xác Nhận
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible6}
+          onRequestClose={() => {
+            setModalVisible6(!modalVisible6);
+          }}
+        >
+          <View style={styles.modalBackground}>
+            <View style={styles.modalView}>
+              {/* <Text style={{ color: "white", fontWeight: 'bold', marginTop: 10, marginBottom: 5, alignSelf: 'center' }}>Khoảng cách: {distance} km</Text> */}
+              <Text
+                style={{
+                  color: "white",
+                  fontWeight: "bold",
+                  marginTop: 5,
+                  marginBottom: 5,
+                  alignSelf: "center",
+                }}
+              >
+                Số đèn giao thông: {Lights}{" "}
+              </Text>
+              <TouchableOpacity
+                title="Xác nhận"
+                onPress={() => {
+                  setModalVisible6(false);
+                }}
+              >
+                <Text
+                  style={{
+                    color: "white",
+                    fontWeight: "bold",
+                    marginTop: 10,
+                    marginBottom: 5,
+                    alignSelf: "center",
+                  }}
+                >
+                  Xác Nhận
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
 
         <Modal
           animationType="slide"
@@ -812,11 +1303,24 @@ export default function Home({ route, navigation }) {
                 value={radius}
                 onChangeText={setRadius}
               />
-              <TouchableOpacity title="Xác nhận" onPress={() => {
-                setModalVisible(false);
-                handleFindNearbyMovieTheaters();
-              }} >
-                <Text style={{ color: "white", fontWeight: 'bold', marginTop: 10, marginBottom: 5, alignSelf: 'center' }}>Xác Nhận</Text>
+              <TouchableOpacity
+                title="Xác nhận"
+                onPress={() => {
+                  setModalVisible(false);
+                  handleFindNearbyMovieTheaters();
+                }}
+              >
+                <Text
+                  style={{
+                    color: "white",
+                    fontWeight: "bold",
+                    marginTop: 10,
+                    marginBottom: 5,
+                    alignSelf: "center",
+                  }}
+                >
+                  Xác Nhận
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -838,35 +1342,35 @@ const styles = StyleSheet.create({
   noImageContainer: {
     width: 340,
     height: 210,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#e0e1dd',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#e0e1dd",
     marginHorizontal: 10,
   },
   greenBorder: {
     borderWidth: 2,
-    borderColor: '#7f0d00',
+    borderColor: "#7f0d00",
     width: 50,
     height: 50,
-    backgroundColor: '#eee',
+    backgroundColor: "#eee",
     borderRadius: 10,
     marginTop: 10,
     marginLeft: 5,
-    alignItems: 'center',
+    alignItems: "center",
   },
   greenBorder1: {
     width: 50,
     height: 50,
-    backgroundColor: '#eee',
+    backgroundColor: "#eee",
     borderRadius: 10,
     marginTop: 10,
     marginLeft: 5,
-    alignItems: 'center',
+    alignItems: "center",
   },
   text: {
-    justifyContent: 'center',
+    justifyContent: "center",
     fontSize: 13,
-    textAlignVertical: 'center',
+    textAlignVertical: "center",
     marginRight: 20,
   },
   image2: {
@@ -876,10 +1380,10 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 2,
-    borderColor: '#7f0d00',
-    backgroundColor: '#eee',
+    borderColor: "#7f0d00",
+    backgroundColor: "#eee",
     padding: 10,
-    width: '68%',
+    width: "68%",
     borderRadius: 10,
     marginTop: 10,
     marginLeft: 10,
@@ -887,11 +1391,11 @@ const styles = StyleSheet.create({
   },
   input2: {
     borderWidth: 2,
-    borderColor: '#7f0d00',
-    backgroundColor: '#eee',
+    borderColor: "#7f0d00",
+    backgroundColor: "#eee",
     padding: 10,
     marginTop: 10,
-    width: '95%',
+    width: "95%",
     borderRadius: 10,
     height: 50,
   },
@@ -899,23 +1403,23 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 5,
     marginRight: 10,
-    backgroundColor: '#7f0d00',
+    backgroundColor: "#7f0d00",
     borderRadius: 20,
   },
   centeredView: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   modalView: {
     margin: 20,
-    backgroundColor: '#7f0d00',
+    backgroundColor: "#7f0d00",
     borderRadius: 20,
     padding: 5,
     paddingHorizontal: 10,
-    width: '80%',
-    alignItems: 'center',
-    shadowColor: '#000',
+    width: "80%",
+    alignItems: "center",
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 2,
@@ -926,8 +1430,8 @@ const styles = StyleSheet.create({
   },
   modalBackground: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Màu nền mờ
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)", // Màu nền mờ
   },
 });
